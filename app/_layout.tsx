@@ -30,7 +30,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="index" options={{ title: 'Welcome' }} />
+        <Stack.Screen name="index" options={{ title: 'SignIn' }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
         <Stack.Screen name="ad-redirect" options={{ title: 'Ad Redirect'}} />

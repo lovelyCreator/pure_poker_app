@@ -1,11 +1,12 @@
 import { StyleSheet, Image, Platform } from 'react-native';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
+import React, { lazy, Suspense } from 'react';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+
+const SignInCard = lazy(() => import('"@/components/custom/login/signInCard'));
 
 export default function TabTwoScreen() {
   return (
