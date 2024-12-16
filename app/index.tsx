@@ -1,19 +1,14 @@
 import { StyleSheet, Image, Platform, ScrollView, Text, View, TextInput } from 'react-native';
 
 import React, { lazy, Suspense, useState,  useRef } from 'react';
-import { CustomSlider } from '@/components/ui/slider';
+import SignInScreen from '@/components/custom/login/signInCard';
 
 // const SignInCard = lazy(() => import('"@/components/custom/login/signInCard'));
 
 export default function SignIn() {
-  const [sliderValue, setSliderValue] = useState(50);
   return (
       <View style={styles.titleContainer}>
-        <Text>Slider Value: {sliderValue}</Text>
-        <CustomSlider
-          value={sliderValue}
-          onValueChange={setSliderValue}
-        />
+        <SignInScreen />
       </View>
   );
 }
