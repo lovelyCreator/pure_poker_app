@@ -1,29 +1,20 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+import { StyleSheet, Image, Platform, ScrollView, Text, View, TextInput } from 'react-native';
 
-import React, { lazy, Suspense } from 'react';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import React, { lazy, Suspense, useState,  useRef } from 'react';
+import { CustomSlider } from '@/components/ui/slider';
 
-const SignInCard = lazy(() => import('"@/components/custom/login/signInCard'));
+// const SignInCard = lazy(() => import('"@/components/custom/login/signInCard'));
 
-export default function TabTwoScreen() {
+export default function SignIn() {
+  const [sliderValue, setSliderValue] = useState(50);
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-        size={310}
-        color="#808080"
-        name="chevron.left.forwardslash.chevron.right"
-        style={styles.headerImage}
+      <View style={styles.titleContainer}>
+        <Text>Slider Value: {sliderValue}</Text>
+        <CustomSlider
+          value={sliderValue}
+          onValueChange={setSliderValue}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText>Welcome to You!</ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      </View>
   );
 }
 
@@ -35,7 +26,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   titleContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     gap: 8,
   },
 });

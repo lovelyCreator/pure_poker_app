@@ -1,105 +1,104 @@
-import React, { forwardRef, ReactNode } from 'react';
-import { View, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
-// Type definitions for props (adjust as needed)
-interface CardProps extends StyleProp<ViewStyle> {
-    children: ReactNode;
-}
-interface CardHeaderProps extends StyleProp<ViewStyle> {
-    children: ReactNode;
-}
-interface CardTitleProps extends StyleProp<ViewStyle> {
-    children: ReactNode;
-}
-interface CardDescriptionProps extends StyleProp<ViewStyle> {
-    children: ReactNode;
-}
-interface CardContentProps extends StyleProp<ViewStyle> {
-    children: ReactNode;
-}
-interface CardFooterProps extends StyleProp<ViewStyle> {
-    children: ReactNode;
+interface CardProps extends React.ComponentPropsWithoutRef<typeof View> {
+  style?: ViewStyle;
 }
 
-
-const Card = forwardRef<View, CardProps>((props, ref) => (
-  <View ref={ref} style={[styles.card, props]}>
-    {props.children}
-  </View>
+const Card = React.forwardRef<View, CardProps>(({ style, ...props }, ref) => (
+  <View ref={ref} style={[styles.card, style]} {...props} />
 ));
-Card.displayName = 'Card';
+Card.displayName = "Card";
 
-const CardHeader = forwardRef<View, CardHeaderProps>((props, ref) => (
-  <View ref={ref} style={[styles.cardHeader, props]}>
-    {props.children}
-  </View>
+interface CardHeaderProps extends React.ComponentPropsWithoutRef<typeof View> {
+  style?: ViewStyle;
+}
+
+const CardHeader = React.forwardRef<View, CardHeaderProps>(({ style, ...props }, ref) => (
+  <View ref={ref} style={[styles.cardHeader, style]} {...props} />
 ));
-CardHeader.displayName = 'CardHeader';
+CardHeader.displayName = "CardHeader";
 
-const CardTitle = forwardRef<Text, CardTitleProps>((props, ref) => (
-  <Text ref={ref} style={[styles.cardTitle, props]}>
-    {props.children}
-  </Text>
+interface CardTitleProps extends React.ComponentPropsWithoutRef<typeof Text> {
+  style?: TextStyle;
+}
+
+const CardTitle = React.forwardRef<Text, CardTitleProps>(({ style, ...props }, ref) => (
+  <Text ref={ref} style={[styles.cardTitle, style]} {...props} />
 ));
-CardTitle.displayName = 'CardTitle';
+CardTitle.displayName = "CardTitle";
 
-const CardDescription = forwardRef<Text, CardDescriptionProps>((props, ref) => (
-  <Text ref={ref} style={[styles.cardDescription, props]}>
-    {props.children}
-  </Text>
+interface CardDescriptionProps extends React.ComponentPropsWithoutRef<typeof Text> {
+  style?: TextStyle;
+}
+
+const CardDescription = React.forwardRef<Text, CardDescriptionProps>(({ style, ...props }, ref) => (
+  <Text ref={ref} style={[styles.cardDescription, style]} {...props} />
 ));
-CardDescription.displayName = 'CardDescription';
+CardDescription.displayName = "CardDescription";
 
-const CardContent = forwardRef<View, CardContentProps>((props, ref) => (
-  <View ref={ref} style={[styles.cardContent, props]}>
-    {props.children}
-  </View>
+interface CardContentProps extends React.ComponentPropsWithoutRef<typeof View> {
+  style?: ViewStyle;
+}
+
+const CardContent = React.forwardRef<View, CardContentProps>(({ style, ...props }, ref) => (
+  <View ref={ref} style={[styles.cardContent, style]} {...props} />
 ));
-CardContent.displayName = 'CardContent';
+CardContent.displayName = "CardContent";
 
-const CardFooter = forwardRef<View, CardFooterProps>((props, ref) => (
-  <View ref={ref} style={[styles.cardFooter, props]}>
-    {props.children}
-  </View>
+interface CardFooterProps extends React.ComponentPropsWithoutRef<typeof View> {
+  style?: ViewStyle;
+}
+
+const CardFooter = React.forwardRef<View, CardFooterProps>(({ style, ...props }, ref) => (
+  <View ref={ref} style={[styles.cardFooter, style]} {...props} />
 ));
-CardFooter.displayName = 'CardFooter';
-
+CardFooter.displayName = "CardFooter";
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 8,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: '#414a60',
-    backgroundColor: '#2c324199',
+    backgroundColor: 'rgba(44, 50, 65, 0.1)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
     shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
-    padding: 10, // Add padding as needed
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   cardHeader: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: 10,
+    padding: 16,
   },
   cardTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: '600',
+    lineHeight: 28,
   },
   cardDescription: {
     fontSize: 14,
-    color: 'gray',
+    color: '#888',
   },
   cardContent: {
-    padding: 10,
+    padding: 24,
+    paddingTop: 0,
   },
   cardFooter: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    padding: 24,
+    paddingTop: 0,
   },
 });
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+};
