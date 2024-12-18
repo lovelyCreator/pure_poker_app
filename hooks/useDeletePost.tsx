@@ -1,13 +1,24 @@
-import { communityApi } from "@/api";
+import { communityApi } from "@/api/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation } from "@tanstack/react-query";
+const NEXT_PUBLIC_COMMUNITY_URL="https://ffbv7v2te1.execute-api.us-east-1.amazonaws.com/prod";
 
 export function useDeletePost() {
   async function INNER_deletePost(postId: string) {
-    const res = await communityApi.post[":id"].$delete({
-      param: {
-        id: postId,
+    const token = await AsyncStorage.getItem('PP_TOKEN')
+    const res = await fetch(`${NEXT_PUBLIC_COMMUNITY_URL}/post/${postId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        // Add any other headers if needed, e.g., Authorization
       },
     });
+    // const res = await communityApi.post[":id"].$delete({
+    //   param: {
+    //     id: postId,
+    //   },
+    // });
 
     if (res.ok) {
       return false;

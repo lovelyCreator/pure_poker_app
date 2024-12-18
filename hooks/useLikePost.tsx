@@ -1,13 +1,22 @@
 import { communityApi } from "@/api/api";
 import { useMutation } from "@tanstack/react-query";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const NEXT_PUBLIC_COMMUNITY_URL="https://ffbv7v2te1.execute-api.us-east-1.amazonaws.com/prod";
 
 export default function useLikePost() {
   async function INNER_likePost(postId: string) {
-    const res = await communityApi.like.$post({
-      json: {
-        postId: postId,
+    const token = await AsyncStorage.getItem('PP_TOKEN')
+    const res = await fetch(`${NEXT_PUBLIC_COMMUNITY_URL}/like`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        // Add any other headers if needed, e.g., Authorization
       },
-    });
+      body: JSON.stringify({
+        postId: postId,
+      })
+    })
     if (res.ok) {
       return false;
     }
@@ -40,11 +49,15 @@ export default function useLikePost() {
 
 export function useDislikePost() {
   async function INNER_dislikePost(postId: string) {
-    const res = await communityApi.like[":id"].$delete({
-      param: {
-        id: postId,
+    const token = await AsyncStorage.getItem('PP_TOKEN')
+    const res = await fetch(`${NEXT_PUBLIC_COMMUNITY_URL}/like/${postId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        // Add any other headers if needed, e.g., Authorization
       },
-    });
+    })
     if (res.ok) {
       return false;
     }

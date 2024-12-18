@@ -44,17 +44,25 @@ export const chipsToBB = (chips: number, initialBigBlind: number): number => {
  * @param {string} gameId - The ID of the game.
  * @returns {Promise<GameState | null>} - The game state or null if not found/unauthorized.
  */
+
+  interface GetItemQuery {
+    gameId: any
+  }
+  
 export async function fetchGameState(gameId: string): Promise<GameState | null> {
     async function fetchFromApi(gameId: string): Promise<[GameState | null, boolean]> {
+      const query = { gameId };
+      const url = new URL(NEXT_PUBLIC_POKER_URL);
+
+      Object.keys(query).forEach(key => url.searchParams.append(key, query[key as keyof GetItemQuery]));
       const token = await AsyncStorage.getItem('PP_TOKEN');
-      const res = await fetch(`${NEXT_PUBLIC_POKER_URL}/poker`, {
+      const res = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
           // Add any other headers if needed, e.g., Authorization
         },
-        body: JSON.stringify({ query: { gameId } })
       });
       // const res = await pokerApi.poker.$get({ query: { gameId } });
       if (res.ok) {

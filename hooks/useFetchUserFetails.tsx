@@ -60,11 +60,11 @@ export default function useUserDetails() {
     return user;
   }
 
-  // return useSuspenseQuery({
-  //   queryKey: ["user"],
-  //   queryFn: fetchUserDetails,
-  //   retry: 1,
-  //   retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
-  // });
-  return {'user': fetchUserDetails()}
+  return useSuspenseQuery({
+    queryKey: ["user"],
+    queryFn: fetchUserDetails,
+    retry: 1,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
+  });
+  // return {'user': fetchUserDetails()}
 }

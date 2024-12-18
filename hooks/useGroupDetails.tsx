@@ -3,14 +3,26 @@ import { groupApi } from "@/api/api";
 import { refreshToken } from "@/lib/fetch";
 import type { GroupDetails } from "@/types/group";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const NEXT_PUBLIC_GROUP_URL="https://mit6px8qoa.execute-api.us-east-1.amazonaws.com/prod";
 
 export default function useGroupDetails(groupId: string) {
   // Inner function to handle the actual API call
   async function INNER_getGroupDetails() {
-    const res = await groupApi.getGroupDetails.$get({ query: { groupId } });
+    const token = await AsyncStorage.getItem('PP_TOKEN')
+    const res = await fetch(`${NEXT_PUBLIC_GROUP_URL}/getGroupDetails/${groupId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        // Add any other headers if needed, e.g., Authorization
+      },
+    });
+
+    // const res = await groupApi.getGroupDetails.$get({ query: { groupId } });
 
     // Handle token expiration and retry
-    //@ts-expect-error - Middleware aren't accounted for in the types so we know more than the types
+    
     if (res.status === 401) {
       return [null, true]; // Token expired, need refresh
     }

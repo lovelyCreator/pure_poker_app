@@ -1,7 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { groupApi } from "@/api/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { refreshToken } from "@/lib/fetch";
+const NEXT_PUBLIC_COMMUNITY_URL="https://ffbv7v2te1.execute-api.us-east-1.amazonaws.com/prod";
 
 export default function useCommunityPosts() {
   const queryClient = useQueryClient();
@@ -12,13 +14,27 @@ export default function useCommunityPosts() {
     description: string,
     privacy: "public" | "private"
   ): Promise<[string, boolean]> {
-    const res = await groupApi.createGroup.$post({
-      json: {
+    const token = await AsyncStorage.getItem('PP_TOKEN')
+    const res = await fetch(`${NEXT_PUBLIC_COMMUNITY_URL}/createGroup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        // Add any other headers if needed, e.g., Authorization
+      },
+      body: JSON.stringify({
         groupName,
         description,
         privacy,
-      },
-    });
+      })
+    })
+    // const res = await groupApi.createGroup.$post({
+    //   json: {
+    //     groupName,
+    //     description,
+    //     privacy,
+    //   },
+    // });
 
     // Handle success case
     if (res.status === 200) {

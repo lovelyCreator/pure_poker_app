@@ -2,15 +2,41 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { communityApi } from "@/api/api";
 import { S3Image } from "@/types/community";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const NEXT_PUBLIC_COMMUNITY_URL="https://ffbv7v2te1.execute-api.us-east-1.amazonaws.com/prod";
+interface NewsletterQuery {
+  communityName: string;
+  page: number;
+}
 
+// Define the expected response type (adjust as necessary based on your API response)
+interface NewsletterResponse {
+  // Define the structure of the response here
+  // For example:
+  data: any; // Replace 'any' with the actual type
+}
 export default function useNewsLetter(communityName: string) {
   // Internal function to fetch newsletter messages
   async function INNER_fetchNewsLetter(
     pageParam: string,
   ): Promise<[S3Image[]| null, boolean]> {
-    const res = await communityApi.newsLetter.$get({
-      query: { communityName, page: pageParam },
-    });
+    const query = { communityName, page: pageParam };
+    const baseUrl = NEXT_PUBLIC_COMMUNITY_URL; // Replace with your actual API endpoint
+    
+    // Create a URL object
+    const url = new URL(baseUrl);
+
+    // Append query parameters from the query object
+    Object.keys(query).forEach(key => url.searchParams.append(key, query[key as keyof NewsletterQuery]));
+    const token = await AsyncStorage.getItem('PP_TOKEN')
+    const res = await fetch(url.toString(), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        // Add any other headers if needed, e.g., Authorization
+      },
+    })
 
     if (!res.ok) {
       if (res.status === 401) {
