@@ -2,10 +2,12 @@ import { env } from "@/env";
 import { Player, type PokerActions } from "@/types/poker";
 import { type SendJsonMessage } from "react-use-websocket/dist/lib/types";
 import { type Span } from "@/utils/logging";
-import { GameState } from "@pure-poker/poker-api-rest";
+// import { GameState } from "@pure-poker/poker-api-rest";
+import { type GameState } from "@/types/poker";
 import { refreshToken } from "@/lib/fetch";
-import { pokerApi } from "@/api/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const NEXT_PUBLIC_POKER_URL="https://2buvf2r3gk.execute-api.us-east-1.amazonaws.com/prod/" ;
 export const chipsToBB = (chips: number, initialBigBlind: number): number => {
     if (initialBigBlind <= 0) {
       throw new Error("Initial Big Blind must be greater than 0.");
@@ -44,7 +46,17 @@ export const chipsToBB = (chips: number, initialBigBlind: number): number => {
  */
 export async function fetchGameState(gameId: string): Promise<GameState | null> {
     async function fetchFromApi(gameId: string): Promise<[GameState | null, boolean]> {
-      const res = await pokerApi.poker.$get({ query: { gameId } });
+      const token = await AsyncStorage.getItem('PP_TOKEN');
+      const res = await fetch(`${NEXT_PUBLIC_POKER_URL}/poker`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+          // Add any other headers if needed, e.g., Authorization
+        },
+        body: JSON.stringify({ query: { gameId } })
+      });
+      // const res = await pokerApi.poker.$get({ query: { gameId } });
       if (res.ok) {
         return [await res.json(), false];
       }

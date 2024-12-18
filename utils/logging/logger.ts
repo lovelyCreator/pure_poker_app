@@ -21,7 +21,7 @@ function createLogFunction(consoleMethod: LogFunction, level: LogLevel): LogFunc
   
   return function (this: Span, ...args: any[]): void {
     if (this.level >= num_level) {
-      consoleMethod(`[${d_level}]`, ...args, ...this.format());
+      // consoleMethod(`[${d_level}]`, ...args, ...this.format());
     }
   };
 }

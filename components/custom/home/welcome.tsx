@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-// import { useAuth } from "@/hooks/useAuth";
-// import CreateOrJoinGame from "../dialog/CreateOrJoinGame";
+import { useAuth } from "@/hooks/useAuth";
+import CreateOrJoinGame from "../dialog/CreateOrJoinGame";
 import { Button } from "@/components/ui/button";
 import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function Welcome() {
-  // const user = useAuth();
-  const user = {username: 'Pang', clearApproval: 'approved'}
+  const user = useAuth();
+  console.log(user);
+  
+  // const user = {username: 'Pang', clearApproval: 'approved'}
   return (
     <View style={styles.container}>
       <ImageBackground

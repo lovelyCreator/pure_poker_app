@@ -36,7 +36,7 @@ export default function SignInScreen() {
   //     .$get(undefined)
   //     .then((res:any) => {
   //       if (res.ok) {
-  //         navigation.navigate('Home');
+  //         navigation.navigate('/index');
   //       }
   //     })
   //     .catch((e: any) => {
@@ -45,7 +45,6 @@ export default function SignInScreen() {
   // }, []);
 
   logger.info('Init');
-  // const login = useLogin();
 
   // const form = useForm<z.infer<typeof SignInSchema>>({
   //   resolver: zodResolver(SignInSchema),
@@ -64,37 +63,12 @@ export default function SignInScreen() {
   });
 
   async function onSubmit(values: z.infer<typeof SignInSchema>) {
-    console.log('signIn datas==========>',values);
+    // console.log('signIn datas==========>',values);
     logger.info("Submitted", values);
-    
-    try {
-      const response = await Signin(values);
-      console.log('SignIn Successful: ', response);
-    } catch (error) {
-      console.log('SignIn failed: ', error)
+    const result = await useLogin(values.username, values.password);
+    if (result.ok) {
+      navigation.navigate('home');
     }
-    // navigation.navigate('home')
-    // toast.promise(
-    //   login.mutateAsync({
-    //     username: values.username,
-    //     password: values.password,
-    //   }),
-    //   {
-    //     loading: "Logging in...",
-    //     success: () => {
-    //       logger.info("User logged in");
-    //       setTimeout(() => {
-    //         // navigation.navigate('Home');
-    //         console.log('Success')
-    //       }, 0);
-    //       return "Login successful";
-    //     },
-    //     error: (error) => {
-    //       logger.error("Login failed", error);
-    //       return "Login failed";
-    //     },
-    //   },
-    // );
   }
 
   return (

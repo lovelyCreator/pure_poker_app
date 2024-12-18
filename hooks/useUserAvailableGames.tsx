@@ -3,6 +3,9 @@ import { pokerApi } from "@/api/api";
 import { AvailableGame } from "@/types/poker";
 // import axios from "axios";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const NEXT_PUBLIC_POKER_URL="https://2buvf2r3gk.execute-api.us-east-1.amazonaws.com/prod/" ;
 
 // Function to get available games
 export default function useAvailableGames(
@@ -10,8 +13,15 @@ export default function useAvailableGames(
   username: string,
 ) {
   async function getAvailableGames() {
-    const res = await pokerApi.availableGames.$post({
-      json: { groupIds, playerId: username },
+    const token = await AsyncStorage.getItem('PP_TOKEN');
+    const res = await fetch(`${NEXT_PUBLIC_POKER_URL}/poker`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        // Add any other headers if needed, e.g., Authorization
+      },
+      body: JSON.stringify({ groupIds, playerId: username })
     });
     if (res.ok) {
       return (await res.json()) as AvailableGame[];

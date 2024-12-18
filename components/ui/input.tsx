@@ -24,7 +24,6 @@ export interface InputProps extends React.ComponentPropsWithoutRef<typeof TextIn
 const Input = React.forwardRef<TextInput, InputProps>(
   ({ style, variant = "default", placeholder, ...props }, ref) => {
     const variantStyle = inputVariants[variant];
-    console.log(variantStyle);
     return (
       <View style={styles.container}>
         <TextInput

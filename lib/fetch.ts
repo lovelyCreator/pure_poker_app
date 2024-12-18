@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native'; // For navigation
 import axios from '@/api/axios';
 
 const NEXT_PUBLIC_AUTH_API_URL="https://905ok7ze53.execute-api.us-east-1.amazonaws.com/prod"
-
 // Type definition for ClientResponse (adapt as needed)
 interface ClientResponse<T> {
   ok: boolean;
@@ -35,12 +34,20 @@ export async function refreshToken(): Promise<boolean> {
 
   try {
     // const res = await authApi.general.validate_token.$get();
-    const res = await fetch(`${NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, get);
+    const token = await AsyncStorage.getItem('PP_TOKEN');
+    const res = await fetch(`${NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        // Add any other headers if needed, e.g., Authorization
+      },
+    });
     const tokenUpdated = await handleResponse(res);
 
     if (res.status === 401 || res.status === 404) {
       // Navigate to sign-in screen
-      navigation.navigate('/'); // Replace 'SignIn' with your screen name
+      navigation.navigate('index'); // Replace 'SignIn' with your screen name
       Alert.alert('Session Expired', 'Please sign in again.');
       return false;
     }

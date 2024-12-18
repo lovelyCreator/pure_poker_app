@@ -1,13 +1,21 @@
 import { groupApi } from "@/api/api";
 import { refreshToken } from "@/lib/fetch";
 import type { Group } from "@/types/group";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-
+const NEXT_PUBLIC_GROUP_URL="https://mit6px8qoa.execute-api.us-east-1.amazonaws.com/prod";
 export default function useUserGroups() {
     async function INNER_getUserGroups() {
-      const res = await groupApi.getUserGroups.$get();
-      //@ts-expect-error - Middleware aren't accounted for in the types so we know more than the types
+      const token = await AsyncStorage.getItem('PP_TOKEN')
+      const res = await fetch(`${NEXT_PUBLIC_GROUP_URL}/getUserGroups`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+          // Add any other headers if needed, e.g., Authorization
+        },
+      });
       if (res.status === 401) {
         return [null, true];
       }
@@ -30,8 +38,6 @@ export default function useUserGroups() {
       if (res[1]) {
         return [];
       }
-      // @ts-expect-error - We know that res[0] is object with groups the array of groups
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return res[0].groups as Group[];
     }
     return useSuspenseQuery({

@@ -2,12 +2,22 @@
 import { groupApi } from "@/api/api";
 import { refreshToken } from "@/lib/fetch";
 import { AvailableGroup } from "@/types/group";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSuspenseQuery } from "@tanstack/react-query";
+const NEXT_PUBLIC_GROUP_URL="https://mit6px8qoa.execute-api.us-east-1.amazonaws.com/prod";
 
 // Function to get available groups
 export default function useAvailableGroups() {
   async function INNER_getAvailableGroups() {
-    const res = await groupApi.getAvailableGroups.$get();
+    const token = await AsyncStorage.getItem('PP_TOKEN')
+    const res = await fetch(`${NEXT_PUBLIC_GROUP_URL}/getAvailableGroups`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        // Add any other headers if needed, e.g., Authorization
+      },
+    });
     if (res.ok) {
       const data = await res.json();
       return [data, false];
@@ -29,7 +39,7 @@ export default function useAvailableGroups() {
   async function getAvailableGroups() {
     let [res, isUnauthorized] = await INNER_getAvailableGroups();
     if (isUnauthorized) {
-      await refresh_token();
+      await refreshToken();
       [res, isUnauthorized] = await INNER_getAvailableGroups();
     }
     if (isUnauthorized) {

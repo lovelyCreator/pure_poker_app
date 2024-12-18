@@ -8,7 +8,6 @@ const NEXT_PUBLIC_AUTH_API_URL="https://905ok7ze53.execute-api.us-east-1.amazona
 
 export const Signin = async (values: any) => {
     try {
-      console.log(values);
       const response = await axios.post(`${NEXT_PUBLIC_AUTH_API_URL}/general/login`, values, 
         );
       console.log('ewrw', response.data);

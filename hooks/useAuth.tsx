@@ -19,6 +19,8 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
   const query = useUserDetails();
 
+  console.log("query ==> ", query)
+  
   return query.data !== undefined && query.data && !query.isLoading ? (
     <SpanWrapper name="AuthContextProvider" span={span}>
       <AuthContext.Provider value={query.data}>{children}</AuthContext.Provider>
