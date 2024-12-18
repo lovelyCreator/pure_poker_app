@@ -3,11 +3,7 @@ import { Player, type PokerActions } from "@/types/poker";
 import { type SendJsonMessage } from "react-use-websocket/dist/lib/types";
 import { type Span } from "@/utils/logging";
 import { GameState } from "@pure-poker/poker-api-rest";
-import coinRed from "@/assets/game/coin-red.svg";
-import coinYellow from "@/assets/game/coin-yellow.svg";
-import coinBlue from "@/assets/game/coin-blue.svg";
-import coinBlack from "@/assets/game/coin-black.svg";
-import { refresh_token } from "@/lib/fetch";
+import { refreshToken } from "@/lib/fetch";
 import { pokerApi } from "@/api/api";
 
 export const chipsToBB = (chips: number, initialBigBlind: number): number => {
@@ -70,7 +66,7 @@ export async function fetchGameState(gameId: string): Promise<GameState | null> 
     let [gameState, isUnauthorized] = await fetchFromApi(gameId);
   
     if (isUnauthorized) {
-      await refresh_token(); // Refresh the token
+      await refreshToken(); // Refresh the token
       [gameState, isUnauthorized] = await fetchFromApi(gameId);
   
       if (isUnauthorized) {
@@ -748,10 +744,10 @@ const yellowChips = Math.floor((betValue % 50) / 10);
 const redChips = betValue % 10;
 
 return [
-  { count: blackChips, image: coinBlack as string, alt: "coinblack" },
-  { count: blueChips, image: coinBlue as string, alt: "coinblue" },
-  { count: yellowChips, image: coinYellow as string, alt: "coinyellow" },
-  { count: redChips, image: coinRed as string, alt: "coinred" },
+  { count: blackChips, image: require('@/assets/game/coin-black.png') as string, alt: "coinblack" },
+  { count: blueChips, image: require('@/assets/game/coin-blue.png') as string, alt: "coinblue" },
+  { count: yellowChips, image: require('@/assets/game/coin-yellow.png') as string, alt: "coinyellow" },
+  { count: redChips, image: require('@/assets/game/coin-red.png') as string, alt: "coinred" },
 ];
 };
 

@@ -1,0 +1,43 @@
+// hooks/useUnreadCounts.ts
+import { useState, useEffect } from 'react';
+import { groupApi } from "@/api/api";
+import { useAuth } from "@/hooks/useAuth"; 
+
+export default function useUnreadCounts() {
+  const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const user = useAuth();
+
+  useEffect(() => {
+    async function fetchUnreadCounts() {
+      setLoading(true);
+      try {
+        const res = await groupApi.unreadMessagesPerGroup.$get();
+        if (res.ok) {
+          const data = await res.json();
+          setUnreadCounts(data.unreadCounts);
+        } else {
+          setError(res.statusText);
+          console.error('Failed to fetch unread counts:', res.statusText);
+        }
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message || 'Unknown error');
+          console.error('Error fetching unread counts:', err.message);
+        } else {
+          setError('An unexpected error occurred');
+          console.error('Error fetching unread counts:', err);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (user?.id) {
+      void fetchUnreadCounts();
+    }
+  }, [user?.id]);
+
+  return { unreadCounts, loading, error, setUnreadCounts };
+}

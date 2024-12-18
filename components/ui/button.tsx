@@ -9,12 +9,12 @@ interface ButtonProps extends TouchableOpacityProps {
 }
 
 const Button = React.forwardRef<TouchableOpacity, ButtonProps>(
-  ({ variant = 'default', size = 'default', style, children, ...props }, ref) => {
+  ({ variant = 'default', size = 'default', style, textStyle={}, children, ...props }, ref) => {
     const buttonStyle = [styles.button, styles[variant], styles[size], style];
 
     return (
       <TouchableOpacity ref={ref} style={buttonStyle} {...props}>
-        <Text style={styles.text}>{children}</Text>
+        <Text style={[styles.text, textStyle]}>{children}</Text>
       </TouchableOpacity>
     );
   }

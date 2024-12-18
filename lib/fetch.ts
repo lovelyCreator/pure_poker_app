@@ -2,6 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authApi } from '@/api/api'; // Assuming you have your API client set up
 import { Alert } from 'react-native'; // For displaying alerts
 import { useNavigation } from '@react-navigation/native'; // For navigation
+import axios from '@/api/axios';
+
+const NEXT_PUBLIC_AUTH_API_URL="https://905ok7ze53.execute-api.us-east-1.amazonaws.com/prod"
 
 // Type definition for ClientResponse (adapt as needed)
 interface ClientResponse<T> {
@@ -31,12 +34,13 @@ export async function refreshToken(): Promise<boolean> {
   const navigation = useNavigation(); // Get navigation object
 
   try {
-    const res = await authApi.general.validate_token.$get();
+    // const res = await authApi.general.validate_token.$get();
+    const res = await fetch(`${NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, get);
     const tokenUpdated = await handleResponse(res);
 
     if (res.status === 401 || res.status === 404) {
       // Navigate to sign-in screen
-      navigation.navigate('SignIn'); // Replace 'SignIn' with your screen name
+      navigation.navigate('/'); // Replace 'SignIn' with your screen name
       Alert.alert('Session Expired', 'Please sign in again.');
       return false;
     }

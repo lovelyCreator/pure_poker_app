@@ -1,9 +1,26 @@
 import React, { useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, Dimensions, Platform} from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigation } from '@react-navigation/native';
+import { Button } from '@/components/ui/button';
+import useLogin from '@/hooks/useLogin';
+
+import { Input } from '@/components/ui/input';
+import { toast } from "sonner";
+import { Link, Stack } from 'expo-router';
+import { PasswordInput } from '@/components/ui/password-input';
+import { authApi } from '@/api/api';
+import { useLogger } from '@/utils/logging';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Signin } from '@/api/auth';
+
+const { height } = Dimensions.get('window');
+const calculatedHeight = height - 64; // 4rem = 64px
+
+const adjustedHeight = Platform.OS === 'ios' ? calculatedHeight - 20 : calculatedHeight;
 
 const SignInSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
@@ -12,7 +29,32 @@ const SignInSchema = z.object({
 
 export default function SignInScreen() {
   const navigation = useNavigation();
-  
+  const logger = useLogger();
+
+  // useEffect(() => {
+  //   authApi.general.validate_token
+  //     .$get(undefined)
+  //     .then((res:any) => {
+  //       if (res.ok) {
+  //         navigation.navigate('Home');
+  //       }
+  //     })
+  //     .catch((e: any) => {
+  //       console.error(e);
+  //     });
+  // }, []);
+
+  logger.info('Init');
+  // const login = useLogin();
+
+  // const form = useForm<z.infer<typeof SignInSchema>>({
+  //   resolver: zodResolver(SignInSchema),
+  //   defaultValues: {
+  //     username: '',
+  //     password: '',
+  //   },
+  // });
+
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
@@ -21,61 +63,90 @@ export default function SignInScreen() {
     },
   });
 
-  const onSubmit = async (data: any) => {
-    // Simulate a login process
+  async function onSubmit(values: z.infer<typeof SignInSchema>) {
+    console.log('signIn datas==========>',values);
+    logger.info("Submitted", values);
+    
     try {
-      console.log('Submitted:', data);
-      // Here you would typically call your login API
-      Alert.alert('Login successful', `Welcome, ${data.username}!`);
-    //   navigation.navigate('Home'); // Navigate to Home screen on success
+      const response = await Signin(values);
+      console.log('SignIn Successful: ', response);
     } catch (error) {
-      Alert.alert('Login failed', 'Please check your credentials.');
+      console.log('SignIn failed: ', error)
     }
-  };
+    // navigation.navigate('home')
+    // toast.promise(
+    //   login.mutateAsync({
+    //     username: values.username,
+    //     password: values.password,
+    //   }),
+    //   {
+    //     loading: "Logging in...",
+    //     success: () => {
+    //       logger.info("User logged in");
+    //       setTimeout(() => {
+    //         // navigation.navigate('Home');
+    //         console.log('Success')
+    //       }, 0);
+    //       return "Login successful";
+    //     },
+    //     error: (error) => {
+    //       logger.error("Login failed", error);
+    //       return "Login failed";
+    //     },
+    //   },
+    // );
+  }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
-      <Controller
-        control={control}
-        name="username"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            placeholder="YourUsername"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
+    <View style={[styles.container, {height: adjustedHeight}]}>
+      <Card style={styles.card}>
+        <CardTitle style={styles.cardTitle}>
+          <Text style={styles.title}>Sign In</Text>
+        </CardTitle>
+        <CardContent style={styles.cardContent}> 
+          <Text style={styles.subtitle}>Email</Text>         
+          <Controller
+            control={control}
+            name="username"
+            render={({ field }) => (
+              <Input
+                placeholder="jsmith@gmail.com"
+                {...field}
+                style={{borderRadius: 24, width: '100%'}}
+              />
+            )}
           />
-        )}
-      />
-      {errors.username && <Text style={styles.error}>{errors.username.message}</Text>}
-
-      <Controller
-        control={control}
-        name="password"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            placeholder="*******"
-            secureTextEntry
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
+          {errors.username && <Text style={styles.error}>{errors.username.message}</Text>}
+          <Text style={styles.subtitle}>Password</Text>   
+          <Controller
+            control={control}
+            name="password"
+            render={({ field }) => (
+              <PasswordInput
+                placeholder='At least minimum 8 characters'
+                {...field}
+                style={{borderRadius: 24}}
+              />
+            )}
           />
-        )}
-      />
-      {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
-
-      <Button title="Sign in" onPress={handleSubmit(onSubmit)} />
-      <Text style={styles.signupText}>
-        Don't have an account? 
-        <Text style={styles.signupLink} 
-        // onPress={() => navigation.navigate('SignUp')}
-        > 
-            Visit: purepoker.world
-        </Text>
-      </Text>
+          {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
+          <Text style={[styles.subtitle, {textAlign: 'right', marginBottom: 20}]}>Forgot Password?</Text>
+          <Button onPress={handleSubmit(onSubmit)} variant={'full'} 
+            style={{width: '100%'}}
+            textStyle={{color: 'white'}}
+          >
+            Sign In
+          </Button>
+          <Text style={styles.signupText}>
+            Don't have an account? 
+          </Text> 
+          <Text style={styles.signupLink} 
+          // onPress={() => navigation.navigate('SignUp')}
+          > 
+              Visit: purepoker.world
+          </Text>
+        </CardContent>
+      </Card>
     </View>
   );
 }
@@ -84,13 +155,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f8f9fa',
+    width: '100%',
+  },
+  card: {
+    borderRadius: 10, // rounded-lg
+    borderWidth: 1, // border
+    borderColor: '#414a60', // border color
+    backgroundColor: 'rgba(44, 50, 65, 0.6)', // bg with opacity
+    shadowColor: '#000', // shadow color
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2, // shadow opacity
+    shadowRadius: 1.5, // shadow radius
+    width: '95%', // w-256
+    minWidth: 256,
+    alignItems: 'center', // center content
+    justifyContent: 'center', // center content
+    padding: 16, // optional padding
+  },
+  cardTitle: {
+    marginTop: 5,
+    marginBottom: 5,
+    textAlign: 'center'
   },
   title: {
+    fontWeight: 'bold',
+    color: 'white',
     fontSize: 24,
-    textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10
+  },
+  cardContent: {
+    minHeight: 40,
+    width: '100%'
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#9ca3af',
   },
   input: {
     height: 40,
@@ -107,8 +211,10 @@ const styles = StyleSheet.create({
   signupText: {
     textAlign: 'center',
     marginTop: 20,
+    color: 'white'
   },
   signupLink: {
-    color: 'blue',
+    textAlign: 'center',
+    color: '#1E84F0',
   },
 });

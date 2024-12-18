@@ -1,50 +1,38 @@
 import React, { forwardRef, useState } from 'react';
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import {View, TextInput, TouchableOpacity, Image, StyleSheet, Text} from 'react-native';
+import { Input } from '@/components/ui/input';
+import type { InputProps } from '@/components/ui/input';
+import { Button } from './button';
 
-const eyeIcon = require('@/assets/sign-in/eye.png'); // Adjust the path
-const eyeOffIcon = require('@/assets/sign-in/eye-off.png'); // Adjust the path
-
-interface PasswordInputProps {
-  value?: string;
-  disabled?: boolean;
-  onChangeText?: (text: string) => void;
-  style?: object; // Additional styles
-}
-
-const PasswordInput = forwardRef<TextInput, PasswordInputProps>(
-  ({ value, disabled, onChangeText, style }, ref) => {
+const PasswordInput = forwardRef<TextInput, InputProps>(
+  ({ style, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+    const disabled =
+      props.value === "" || props.value === undefined || props.disabled;
 
-    const handleTogglePasswordVisibility = () => {
-      setShowPassword((prev) => !prev);
-    };
+    // const handleTogglePasswordVisibility = () => {
+    //   setShowPassword((prev) => !prev);
+    // };
 
     return (
       <View style={styles.container}>
-        <TextInput
+        <Input
+          secureTextEntry={showPassword ? false : true}
+          style={styles.input}
           ref={ref}
-          value={value}
-          onChangeText={onChangeText}
-          secureTextEntry={!showPassword}
-          style={[styles.input, style]}
-          editable={!disabled}
+          placeholder='**********'
+          {...props}
         />
         <TouchableOpacity
-          style={styles.button}
-          onPress={handleTogglePasswordVisibility}
+          style={[styles.button, isHovered && styles.buttonHovered, styles.ghost, styles.sm]}
+          onPress={() => setShowPassword((prev) => !prev)}
           disabled={disabled}
         >
           <Image
-            source={showPassword ? eyeIcon : eyeOffIcon}
+            source={showPassword ? require('@/assets/sign-in/eye.png') : require('@/assets/sign-in/eye-off.png')}
             style={styles.icon}
-            resizeMode="contain"
+            accessible={true}
           />
           <Text style={styles.srOnly}>
             {showPassword ? 'Hide password' : 'Show password'}
@@ -61,31 +49,41 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   input: {
-    height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingRight: 40, // Space for the button
+    cursor: 'pointer',
+    paddingRight: 10,
+    borderRadius: 24
   },
   button: {
     position: 'absolute',
     right: 10,
-    top: 10,
-    height: 30,
-    width: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    top: 18,
+    height: '100%',
+    paddingRight: 3,
+    paddingLeft: 3,
+    paddingTop: 2,
+    paddingBottom: 2,
+  },
+  buttonHovered: {
+    backgroundColor: 'transparent', // Change to transparent on hover
   },
   icon: {
-    height: 20,
-    width: 20,
+    height: 15,
+    width: 15,
+    opacity: 10,
+    resizeMode: 'contain'
   },
   srOnly: {
     position: 'absolute',
     width: 0,
     height: 0,
     overflow: 'hidden',
+  },
+  ghost: {
+    backgroundColor: 'transparent',
+  },
+  sm: {
+    height: 36, // h-9
+    paddingHorizontal: 12, // px-3
   },
 });
 

@@ -19,11 +19,3 @@ export const LoggerProvider: React.FC<{
   );
 };
 
-// Custom hook to access the logger context
-export const useLogger = (): Span => {
-  const context = useContext(LoggerContext);
-  if (!context) {
-    throw new Error("useLogger must be used within a LoggerProvider");
-  }
-  return context;
-};
