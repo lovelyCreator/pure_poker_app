@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,7 +9,7 @@ import useWebSocket from "react-use-websocket";
 import type { createGame } from "@/types/poker";
 import { useAuth } from "@/hooks/useAuth";
 
-import { toast } from "sonner";
+import Toast from 'react-native-toast-message';
 
 import { getPokerUrl } from "@/lib/poker";
 import useUserGroups from "@/hooks/useUserGroups";
@@ -21,6 +21,8 @@ import assert from "assert";
 import { useNavigation } from "@react-navigation/native";
 import { verifyLocation } from "@/lib/radar";
 import { Picker } from '@react-native-picker/picker';
+import { DialogContext } from "@/components/ui/dialog";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CreateGameSchema = z
   .object({
@@ -46,23 +48,26 @@ const CreateGameSchema = z
       message: "Buy-In must be between 50 and 250 times the Big Blind",
       path: ["buyIn"], // This specifies that the error message should be associated with the buyIn field
     },
-  );
+  );   
 
   export function CreateGameDialog() {
     const span = useSpan("CreateGameDialog");
     const navigation = useNavigation();
-    // const router = useRouter();
   
     span.info("Attempting to useAuth");
     const user = useAuth();
     const userId = user.id;
-  
+    const context = useContext(DialogContext);
+    if (!context) throw new Error('DialogTrigger must be used within a DialogProvider');
+    const { closeDialog } = context;  
+    
+    const userChips = user.chips * 100;
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(CreateGameSchema),
         defaultValues: {
-            bigBlind: 0.5,
-            maxPlayers: 9,
-            buyIn: 50,
+            bigBlind: 0.1,
+            maxPlayers: 2,
+            buyIn: 10,
             groupSelection: "Network (all your groups)", // Default value for group selection
         },
     });
@@ -70,43 +75,85 @@ const CreateGameSchema = z
     const s_span = span.span("webSocket");
     //eslint-disable-next-line
     const wsRef = useRef<any>(null);
-  
+    const token = AsyncStorage.getItem("PP_TOKEN");
     const { sendJsonMessage, getWebSocket } = useWebSocket(
       getPokerUrl(span, "", user.username),
       {
         share: true,
-        onOpen: () => {
+        onOpen: async () => {
           wsRef.current = getWebSocket();
-          sendJsonMessage({
-            action: "authenticate",
-            token: localStorage.getItem("PP_TOKEN"),
-          });
+          const token = await AsyncStorage.getItem("PP_TOKEN");
+          
+          if (token) {
+            sendJsonMessage({
+              action: "authenticate",
+              token: token,
+            });
+          } else {
+            console.error('Token not found');
+            // Handle missing token case (e.g., show an error message)
+          }
         },
         onMessage: (eventString) => {
           try {
-            assert(typeof eventString.data === "string", "Event is not a string");
             const res = JSON.parse(eventString.data) as PokerActionsFrontend;
-            if (res.action === "createGame" && res.statusCode === 200) {
-              toast.dismiss();
-              toast.success("Game created successfully!");
-  
-              const g_span = s_span.span("success", res);
-              g_span.info("Adjusting path to corresponding gameId.");
-              navigation.navigate(`/play-poker/?gameId=${res.gameId}`);
-              return;
-            } else if (res.action === "createGame" && res.statusCode === 401) {
-              // it means authenticate hasn't run
-              toast.dismiss();
-              toast.error("Please Try Again now.");
-              // TODO: Make it try again automatically!!!
+
+            
+            if (res.action === "createGame") {
+              if (res.statusCode === 200) {
+                Toast.hide();
+                Toast.show({
+                  text1: 'Success',
+                  text2: 'Game created successfully!',
+                  position: 'top',
+                  type: 'success',
+                  visibilityTime: 4000,
+                  onHide: () => console.log('Success toast hidden'),
+                });
+    
+                const g_span = s_span.span("success", res);
+                g_span.info("Adjusting path to corresponding gameId.");
+                navigation.navigate('playPoker', { gameId: res.gameId });
+                closeDialog();
+              } else if (res.statusCode === 401) {
+                // Handle authentication failure
+                Toast.hide();
+                Toast.show({
+                  text1: 'Error',
+                  text2: 'Authentication failed. Please try again.',
+                  position: 'top',
+                  type: 'error',
+                  visibilityTime: 4000,
+                  onHide: () => console.log('Error toast hidden'),
+                });
+    
+                // Optional: Retry authentication
+                setTimeout(() => {
+                  authenticate(); // Call authenticate function to retry
+                }, 5000); // Retry after 5 seconds
+              }
             }
           } catch (e) {
-            console.log(e);
+            console.error('Error parsing message:', e);
           }
         },
       },
     );
-  
+    const authenticate = async () => {
+      const token = await AsyncStorage.getItem("PP_TOKEN");
+      console.log('Retrying authentication with token:', token);
+      
+      if (token) {
+        sendJsonMessage({
+          action: "authenticate",
+          token: token,
+        });
+      } else {
+        console.error('Token not found on retry');
+        // Handle missing token case
+      }
+    };
+
     useEffect(() => {
       return () => {
         s_span.info("Forcefully closing...");
@@ -138,9 +185,15 @@ const CreateGameSchema = z
       values.bigBlind = values.bigBlind * 100;
   
       if (values.buyIn > userChips) {
-        toast.error(
-          `You do not have enough chips. You currently have ${centsToDollars(userChips)} chips on your account.`,
-        );
+        
+        Toast.show({
+          text1: 'Error',
+          text2: `You do not have enough chips. You currently have ${centsToDollars(userChips)} chips on your account.`,
+          position: 'top',
+          type: 'error', // Type can be 'success'
+          visibilityTime: 4000,
+          onHide: () => console.log('Success toast hidden'),
+        });
         return;
       }
   
@@ -152,22 +205,31 @@ const CreateGameSchema = z
               .map((group) => group.groupId);
   
       try {
-        toast.loading("Confirming your location...");
-        // Perform Radar location verification
+        
+        Toast.show({
+          text1: 'Error',
+          text2: "Confirming your location...",
+          position: 'top',
+          type: 'loading', // Type can be 'success'
+          visibilityTime: 4000,
+          onHide: () => console.log('Success toast hidden'),
+        });
+        //Perform Radar location verification
         const result = await verifyLocation(userId);
         const { success, token, expiresIn } = result;
   
         // Ignored temporarily for the development
-        if (!success) {
-          toast.dismiss();
-          toast.error(
-              `Location check failed. Try again or visit the list of allowed states.`
-          );
-          return;
-        }
+        // if (!success) {
+        //   Toast.hide();
+        //   Toast.error(
+        //       `Location check failed. Try again or visit the list of allowed states.`
+        //   );
+        //   return;
+        // }
   
         // Convert token to a string if needed
         const radarTokenString = token ? token.toString() : "";
+        // const radarTokenString = '';
   
         const createGame: createGame = {
           action: "createGame",
@@ -177,16 +239,30 @@ const CreateGameSchema = z
           minNumberOfPlayers: values.minNumberOfPlayers,
           groups: selectedGroups,
           radarToken: radarTokenString
-        };
-        
+        };         
         // Delay the JSON message by 1.5 seconds
         setTimeout(() => {
           sendJsonMessage(createGame);
-          toast.loading("Creating game...");
+          Toast.show({
+            text1: 'Error',
+            text2: "Creating game...",
+            position: 'top',
+            type: 'loading', // Type can be 'success'
+            visibilityTime: 4000,
+            onHide: () => console.log('Success toast hidden'),
+          });
         }, 1500);
       } catch (error) {
         console.error("Radar location verification failed:", error);
-        toast.error("An error occurred while verifying your location. Please try again.");
+        
+        Toast.show({
+          text1: 'Error',
+          text2: "An error occurred while verifying your location. Please try again.",
+          position: 'top',
+          type: 'error', // Type can be 'success'
+          visibilityTime: 4000,
+          onHide: () => console.log('Success toast hidden'),
+        });
       }
     }
     return (
@@ -243,16 +319,14 @@ const CreateGameSchema = z
                         <Picker
                         {...field}
                         style={styles.picker}
-                        dropdownIconColor="white" // Customize dropdown icon color
+                        dropdownIconColor="white" 
                         >
-                        {/* Uncomment the next line if you want a placeholder */}
-                        {/* <Picker.Item label="Select a group" value="" /> */}
                         {groupOptions.map((group) => (
                             <Picker.Item key={group.groupId} label={group.groupName} value={group.groupName} />
                         ))}
                         </Picker>
                         <Image
-                        source={require("@/assets/menu-bar/expand.png")} // Replace with your icon path
+                        source={require("@/assets/menu-bar/expand.png")} 
                         style={styles.icon}
                         />
 
@@ -261,6 +335,17 @@ const CreateGameSchema = z
             />
             {errors.groupSelection && <Text style={styles.error}>{errors.groupSelection.message}</Text>}
             
+          <View style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 30, }}>
+              <Button
+                  variant="empty"
+                  style={{width: 128, height: 32}}
+                  textStyle={{color: 'white'}}
+                  onPress={handleSubmit(onSubmit)} 
+              >
+                  
+                  Create Game
+              </Button>
+          </View>
         </View>
     )
 }

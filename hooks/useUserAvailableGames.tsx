@@ -4,17 +4,17 @@ import { AvailableGame } from "@/types/poker";
 // import axios from "axios";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const NEXT_PUBLIC_POKER_URL="https://2buvf2r3gk.execute-api.us-east-1.amazonaws.com/prod/" ;
+import { env } from "@/env";
 
 // Function to get available games
 export default function useAvailableGames(
   groupIds: string[],
   username: string,
 ) {
+  let arr: AvailableGame[] = [];
   async function getAvailableGames() {
     const token = await AsyncStorage.getItem('PP_TOKEN');
-    const res = await fetch(`${NEXT_PUBLIC_POKER_URL}/poker`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_POKER_URL}poker`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -23,18 +23,21 @@ export default function useAvailableGames(
       },
       body: JSON.stringify({ groupIds, playerId: username })
     });
-    if (res.ok) {
-      return (await res.json()) as AvailableGame[];
+    if (res.ok) {      
+      arr = await res.json() as AvailableGame[];
+      console.log(`res`, arr)
     }
     if (!res.ok) {
-      const error = await res.json();
-      if (Array.isArray(error)) {
-        throw new Error("An unknown error occurred");
-      } else {
-        throw new Error(error.message);
-      }
+      console.log(`err`, res.json())
+      arr = []
+      // const error = await res.json();
+      // if (Array.isArray(error)) {
+      //   throw new Error("An unknown error occurred");
+      // } else {
+      //   throw new Error(error.message);
+      // }
+      return arr;
     }
-    return [];
   }
 
   return useSuspenseQuery({

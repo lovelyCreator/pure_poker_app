@@ -1,12 +1,12 @@
 import { communityApi } from "@/api/api";
 import { useMutation } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const NEXT_PUBLIC_COMMUNITY_URL="https://ffbv7v2te1.execute-api.us-east-1.amazonaws.com/prod";
+import { env } from "@/env";
 
 export default function useLikePost() {
   async function INNER_likePost(postId: string) {
     const token = await AsyncStorage.getItem('PP_TOKEN')
-    const res = await fetch(`${NEXT_PUBLIC_COMMUNITY_URL}/like`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_COMMUNITY_URL}/like`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

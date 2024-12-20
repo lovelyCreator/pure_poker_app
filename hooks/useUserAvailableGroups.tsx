@@ -4,13 +4,13 @@ import { refreshToken } from "@/lib/fetch";
 import { AvailableGroup } from "@/types/group";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSuspenseQuery } from "@tanstack/react-query";
-const NEXT_PUBLIC_GROUP_URL="https://mit6px8qoa.execute-api.us-east-1.amazonaws.com/prod";
+import { env } from "@/env";
 
 // Function to get available groups
 export default function useAvailableGroups() {
   async function INNER_getAvailableGroups() {
     const token = await AsyncStorage.getItem('PP_TOKEN')
-    const res = await fetch(`${NEXT_PUBLIC_GROUP_URL}/getAvailableGroups`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_GROUP_URL}/getAvailableGroups`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

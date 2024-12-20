@@ -2,12 +2,12 @@ import { useMutation } from "@tanstack/react-query";
 
 import { authApi } from "@/api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const NEXT_PUBLIC_AUTH_API_URL="https://905ok7ze53.execute-api.us-east-1.amazonaws.com/prod";
+import { env } from "@/env";
 export default function useLogout() {
   async function logout() {
     // const res = await authApi.general.logout.$post();
     const token = await AsyncStorage.getItem('PP_TOKEN');
-    const res = await fetch(`${NEXT_PUBLIC_AUTH_API_URL}/general/logout`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_AUTH_API_URL}/general/logout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

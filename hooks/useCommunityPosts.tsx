@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { groupApi } from "@/api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { refreshToken } from "@/lib/fetch";
-const NEXT_PUBLIC_COMMUNITY_URL="https://ffbv7v2te1.execute-api.us-east-1.amazonaws.com/prod";
+import { env } from "@/env";
 
 export default function useCommunityPosts() {
   const queryClient = useQueryClient();
@@ -15,7 +15,7 @@ export default function useCommunityPosts() {
     privacy: "public" | "private"
   ): Promise<[string, boolean]> {
     const token = await AsyncStorage.getItem('PP_TOKEN')
-    const res = await fetch(`${NEXT_PUBLIC_COMMUNITY_URL}/createGroup`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_COMMUNITY_URL}/createGroup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

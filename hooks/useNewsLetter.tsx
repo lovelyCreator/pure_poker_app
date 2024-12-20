@@ -3,7 +3,7 @@ import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { communityApi } from "@/api/api";
 import { S3Image } from "@/types/community";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const NEXT_PUBLIC_COMMUNITY_URL="https://ffbv7v2te1.execute-api.us-east-1.amazonaws.com/prod";
+import { env } from "@/env";
 interface NewsletterQuery {
   communityName: string;
   page: number;
@@ -21,7 +21,7 @@ export default function useNewsLetter(communityName: string) {
     pageParam: string,
   ): Promise<[S3Image[]| null, boolean]> {
     const query = { communityName, page: pageParam };
-    const baseUrl = NEXT_PUBLIC_COMMUNITY_URL; // Replace with your actual API endpoint
+    const baseUrl = env.NEXT_PUBLIC_COMMUNITY_URL; // Replace with your actual API endpoint
     
     // Create a URL object
     const url = new URL(baseUrl);

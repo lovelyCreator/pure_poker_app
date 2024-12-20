@@ -4,13 +4,13 @@ import { refreshToken } from "@/lib/fetch";
 import type { GroupDetails } from "@/types/group";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const NEXT_PUBLIC_GROUP_URL="https://mit6px8qoa.execute-api.us-east-1.amazonaws.com/prod";
+import { env } from "@/env";
 
 export default function useGroupDetails(groupId: string) {
   // Inner function to handle the actual API call
   async function INNER_getGroupDetails() {
     const token = await AsyncStorage.getItem('PP_TOKEN')
-    const res = await fetch(`${NEXT_PUBLIC_GROUP_URL}/getGroupDetails/${groupId}`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_GROUP_URL}/getGroupDetails/${groupId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

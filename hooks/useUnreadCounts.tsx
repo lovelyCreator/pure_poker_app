@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { groupApi } from "@/api/api";
 import { useAuth } from "@/hooks/useAuth"; 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const NEXT_PUBLIC_GROUP_URL="https://mit6px8qoa.execute-api.us-east-1.amazonaws.com/prod";
+import { env } from "@/env";
 
 export default function useUnreadCounts() {
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
@@ -16,7 +16,7 @@ export default function useUnreadCounts() {
       setLoading(true);
       try {
         const token = await AsyncStorage.getItem('PP_TOKEN')
-        const res = await fetch(`${NEXT_PUBLIC_GROUP_URL}/unreadMessagesPerGroup`, {
+        const res = await fetch(`${env.NEXT_PUBLIC_GROUP_URL}/unreadMessagesPerGroup`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

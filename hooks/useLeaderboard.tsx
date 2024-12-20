@@ -3,13 +3,13 @@ import { pokerApi } from "@/api/api";
 import { LeaderboardData } from "@/types/community";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSuspenseQuery } from "@tanstack/react-query";
-const NEXT_PUBLIC_POKER_URL="https://2buvf2r3gk.execute-api.us-east-1.amazonaws.com/prod/" ;
+import { env } from "@/env";
 
 // Function to fetch the leaderboard data
 export default function useLeaderboard() {
   async function getLeaderboard() {
     const token = AsyncStorage.getItem('PP_TOKEN');
-    const res = await fetch(`${NEXT_PUBLIC_POKER_URL}/leaderboard`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_POKER_URL}leaderboard`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

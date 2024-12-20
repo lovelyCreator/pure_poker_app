@@ -197,12 +197,12 @@ const JoinGameSchema = z.object({
           )}
         />
         {errors.buyIn && <Text style={styles.error}>{errors.buyIn.message}</Text>}
-        <Button onPress={handleSubmit(onSubmit)} variant={'full'} 
+        {/* <Button onPress={handleSubmit(onSubmit)} variant={'full'} 
           style={{width: 64}}
           textStyle={{color: 'white'}}
         >
           Join game
-        </Button>
+        </Button> */}
       </View>
     );
   }

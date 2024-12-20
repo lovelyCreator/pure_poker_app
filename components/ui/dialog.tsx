@@ -1,5 +1,5 @@
 import React, { useContext, useState, ReactNode } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Image, ViewStyle, TextStyle } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Image, ViewStyle, TextStyle, TouchableWithoutFeedback } from 'react-native';
 
 // Define the context types
 interface DialogContextType {
@@ -14,7 +14,7 @@ interface DialogContextType {
 const DialogContext = React.createContext<DialogContextType | undefined>(undefined);
 
 // Provider component
-const DialogProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+const Dialog: React.FC<{ children: ReactNode, content: React.ReactNode }> = ({ children, content }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [backgroundBlur, setBackgroundBlur] = useState(true);
   const [showX, setShowX] = useState(true);
@@ -24,49 +24,42 @@ const DialogProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <DialogContext.Provider value={{ isVisible, openDialog, closeDialog, backgroundBlur, showX }}>
+      
       {children}
-      <Dialog />
+       <Modal
+        transparent={true}
+        animationType="fade"
+        visible={isVisible}
+        onRequestClose={closeDialog}
+      >
+        <TouchableWithoutFeedback onPress={closeDialog}>
+          <View style={[styles.modalContainer, isVisible ? styles.fadeIn : styles.fadeOut]}>           
+              {content}
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </DialogContext.Provider>
   );
 };
 
-// Dialog component
-const Dialog: React.FC = () => {
-  const context = useContext(DialogContext);
-  if (!context) throw new Error('Dialog must be used within a DialogProvider');
-
-  const { isVisible, closeDialog, backgroundBlur, showX } = context;
-
-  return (
-    <Modal
-      transparent={true}
-      animationType="slide"
-      visible={isVisible}
-      onRequestClose={closeDialog}
-    >
-      <View style={[styles.overlay, backgroundBlur && styles.blur]}>
-        <DialogContent closeDialog={closeDialog} showX={showX} />
-      </View>
-    </Modal>
-  );
-};
 
 // DialogContent component
-const DialogContent: React.FC<{ closeDialog: () => void; showX: boolean }> = ({ closeDialog, showX }) => (
-  <View style={styles.content}>
-    {showX && (
-      <DialogClose closeDialog={closeDialog} />
-    )}
-    <DialogTitle>Dialog Title</DialogTitle>
-    <DialogDescription>This is a dialog description.</DialogDescription>
-    {/* Add your dialog content here */}
-  </View>
+const DialogContent: React.FC<{ closeDialog: () => void; showX: boolean; children: React.ReactNode, style: ViewStyle }> = ({ closeDialog, showX, children, style }) => (
+  <TouchableWithoutFeedback>
+    <View style={[styles.content, style]}>
+      {/* {showX && (
+        <DialogClose closeDialog={closeDialog} />
+      )} */}
+      {children}
+      {/* Add your dialog content here */}
+    </View>
+  </TouchableWithoutFeedback>
 );
 
 // DialogClose component
 const DialogClose: React.FC<{ closeDialog: () => void }> = ({ closeDialog }) => (
   <TouchableOpacity style={styles.closeButton} onPress={closeDialog}>
-    <Image source={require('@/assets/global/cross.png')} style={styles.icon} />
+    <Image source={require('@/assets/global/back.png')} style={styles.icon} />
   </TouchableOpacity>
 );
 
@@ -106,11 +99,21 @@ const DialogFooter: React.FC<{ children: ReactNode; style?: ViewStyle }> = ({ ch
 );
 
 // DialogTitle component
-const DialogTitle: React.FC<{ children: ReactNode; style?: TextStyle }> = ({ children, style }) => (
-  <Text style={[styles.title, style]}>{children}</Text>
-);
+const DialogTitle: React.FC<{ children: ReactNode; style?: TextStyle }> = ({ children, style }) => 
+  {
+    const context = useContext(DialogContext);
+    if (!context) throw new Error('DialogTrigger must be used within a DialogProvider');
+  
+    const { closeDialog } = context;
+  
+    return (
+  <View style={{display:'flex', flexDirection: 'row', alignItems: 'center', gap: 10}}>
+    <DialogClose closeDialog={closeDialog}/>   
+    <Text style={[styles.title, style]}>{children}</Text>
+  </View>
+)};
 
-// DialogDescription component
+// DialogDescription compoent
 const DialogDescription: React.FC<{ children: ReactNode; style?: TextStyle }> = ({ children, style }) => (
   <Text style={[styles.description, style]}>{children}</Text>
 );
@@ -132,16 +135,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-    alignItems: 'center',
+    // alignItems: 'center',
     shadowColor: '#000',
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    position: 'relative'
   },
   closeButton: {
-    position: 'absolute',
-    right: 10,
-    top: 10,
+    zIndex: 100
   },
   icon: {
     height: 20,
@@ -150,7 +152,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
+    color: 'white'
   },
   description: {
     fontSize: 14,
@@ -162,13 +165,34 @@ const styles = StyleSheet.create({
   },
   footer: {
     // Add styles for footer if needed
+  },  
+  modalContainer: {
+    position: 'absolute', // Equivalent to 'fixed'
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    zIndex: 50, // Equivalent to 'z-50'
+    opacity: 1, // Start fully visible
+    // Add animation properties here if needed
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#11111190'
+  },
+  fadeIn: {
+    opacity: 1, // Fully visible
+    // transition: 'opacity 0.3s ease-in', // Example for animation
+  },
+  fadeOut: {
+    opacity: 0, // Fully transparent
+    // transition: 'opacity 0.3s ease-out', // Example for animation
   },
 });
 
 // Exports
 export {
   Dialog,
-  DialogProvider,
   DialogClose,
   DialogContent,
   DialogHeader,

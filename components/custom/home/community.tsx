@@ -73,7 +73,7 @@ const Community: React.FC = () => {
                 }}
             >
             <Image
-                src={require('@/assets/community/refresh.png')}
+                src={require('@/assets/community/refresh.jpg')}
                 alt="refresh"
                 className="h-5 w-5 cursor-pointer"
             />

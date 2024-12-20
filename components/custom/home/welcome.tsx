@@ -6,7 +6,7 @@ import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from 'react
 
 export default function Welcome() {
   const user = useAuth();
-  console.log(user);
+  const userIsVerified = user.clearApproval === 'approved';
   
   // const user = {username: 'Pang', clearApproval: 'approved'}
   return (
@@ -24,10 +24,16 @@ export default function Welcome() {
             Please visit purepoker.world for a of a complete experience
           </Text>
           <View style={styles.buttonContainer}>
-            {user.clearApproval === 'approved' ?
-            <Button variant="home" style={styles.button} textStyle={styles.buttonText}>
-              Create New Game
-            </Button>
+            {userIsVerified ?
+            <CreateOrJoinGame
+              userIsVerified={userIsVerified}
+              isCreateGame={true}
+            >
+              <View style={styles.button}>
+                  <Text style={styles.buttonText}>Create New Game</Text>
+              </View>
+              {/* <Text>Creat a new game</Text> */}
+            </CreateOrJoinGame>
             : 
             <></>  
           }
@@ -94,7 +100,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     alignItems: 'center',
-    color: '#1E84F0',
+    borderColor: '#1E84F0',
+    borderWidth: 2,
   },
   buttonText: {
     color: '#1E84F0',

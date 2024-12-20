@@ -7,7 +7,6 @@ import { type GameState } from "@/types/poker";
 import { refreshToken } from "@/lib/fetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const NEXT_PUBLIC_POKER_URL="https://2buvf2r3gk.execute-api.us-east-1.amazonaws.com/prod/" ;
 export const chipsToBB = (chips: number, initialBigBlind: number): number => {
     if (initialBigBlind <= 0) {
       throw new Error("Initial Big Blind must be greater than 0.");
@@ -20,18 +19,19 @@ export const chipsToBB = (chips: number, initialBigBlind: number): number => {
     gameId?: string,
     playerId?: string,
   ): string {
-    const span = o_span.span("getPokerUrl", { playerId });
+    const span = o_span.span("getPokerUrl", { playerId})
+    // const span = o_span.span("getPokerUrl", { playerId });
   
     span.info("Constructing query string");
-  
+    
     const queryParams = [];
     if (gameId) {
       queryParams.push(`gameId=${encodeURIComponent(gameId)}`);
     }
-  
+    
     const queryString = queryParams.length ? `?${queryParams.join("&")}` : "";
     const res = `${env.NEXT_PUBLIC_POKER_WEB_SOCKET_URL}${queryString}`;
-  
+    console.log('websocket_URL : ', res)
     span.info("Query string created", { queryString: res });
   
     return res;
@@ -51,12 +51,13 @@ export const chipsToBB = (chips: number, initialBigBlind: number): number => {
   
 export async function fetchGameState(gameId: string): Promise<GameState | null> {
     async function fetchFromApi(gameId: string): Promise<[GameState | null, boolean]> {
-      const query = { gameId };
-      const url = new URL(NEXT_PUBLIC_POKER_URL);
+      // const query = { gameId };
+      // const url = new URL(env.NEXT_PUBLIC_POKER_URL);
 
-      Object.keys(query).forEach(key => url.searchParams.append(key, query[key as keyof GetItemQuery]));
+      // Object.keys(query).forEach(key => url.searchParams.append(key, query[key as keyof GetItemQuery]));
+      // console.log(url, 'URL')
       const token = await AsyncStorage.getItem('PP_TOKEN');
-      const res = await fetch(url, {
+      const res = await fetch(`${env.NEXT_PUBLIC_POKER_URL}poker?gameId=${gameId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -139,10 +140,11 @@ export const usernameLengthToFontSize = (
   export type ScreenSize = "desktop" | "ipad" | "smallIphone" | "largeDesktop";
   
   export const getScreenSize = (): ScreenSize => {
-    if (window.innerWidth < 720) return "smallIphone";
-    if (window.innerWidth < 1310) return "ipad";
-    if (window.innerWidth < 1740) return "desktop";
-    return "largeDesktop";
+    // if (window.innerWidth < 720) return "smallIphone";
+    // if (window.innerWidth < 1310) return "ipad";
+    // if (window.innerWidth < 1740) return "desktop";
+    // return "largeDesktop";
+    return "smallIphone";
   };
   
   export const betAndButtonPositions = {
@@ -484,22 +486,25 @@ return [
 
 // Helper function to access the appropriate screen size
 function getPlayerPositions(screenSize: ScreenSize) {
-switch (screenSize) {
-  case "smallIphone":
+//   console.log("Get Player Positions", screenSize)
+// switch (screenSize) {
+//   case "smallIphone":
+//     return playerPositionsByScreen.smallIphone;
+//   case "ipad":
+//     return playerPositionsByScreen.ipad;
+//   case "desktop":
+//     return playerPositionsByScreen.desktop;
+//   case "largeDesktop":
+//     return playerPositionsByScreen.largeDesktop;
+//   default:
+//     throw new Error("Invalid screen size");
+// }
     return playerPositionsByScreen.smallIphone;
-  case "ipad":
-    return playerPositionsByScreen.ipad;
-  case "desktop":
-    return playerPositionsByScreen.desktop;
-  case "largeDesktop":
-    return playerPositionsByScreen.largeDesktop;
-  default:
-    throw new Error("Invalid screen size");
-}
 }
 
 export const generatePlayerPositions = (screenSize: ScreenSize) => {
 const positions = getPlayerPositions(screenSize);
+console.log(positions, "DesktopPosition")
 
 return [
   [positions.one],

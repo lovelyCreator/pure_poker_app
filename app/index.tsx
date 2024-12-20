@@ -1,7 +1,7 @@
 import { StyleSheet, Image, View } from 'react-native';
 
 import React, { lazy, Suspense, useState,  useRef } from 'react';
-import SignInScreen from '@/components/custom/login/signInCard';
+import SignInCard from '@/components/custom/login/signInCard';
 import { SpanWrapper } from '@/utils/logging';
 
 // const SignInCard = lazy(() => import('"@/components/custom/login/signInCard'));
@@ -12,7 +12,7 @@ export default function SignIn() {
       <View style={{backgroundColor: '#11141D', height: '100%', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Image style={[styles.mark]} source={require('@/assets/global/pure-poker-logo.png')} />
         <View style={styles.main}>
-          <SignInScreen />
+          <SignInCard />
         </View>
         <Image style={[styles.rightmark]} source={require('@/assets/groups/Group.png')} />
         <Image style={[styles.leftmark]} source={require('@/assets/groups/Group 1.png')} />

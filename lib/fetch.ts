@@ -3,8 +3,8 @@ import { authApi } from '@/api/api'; // Assuming you have your API client set up
 import { Alert } from 'react-native'; // For displaying alerts
 import { useNavigation } from '@react-navigation/native'; // For navigation
 import axios from '@/api/axios';
+import { env } from "@/env";
 
-const NEXT_PUBLIC_AUTH_API_URL="https://905ok7ze53.execute-api.us-east-1.amazonaws.com/prod"
 // Type definition for ClientResponse (adapt as needed)
 interface ClientResponse<T> {
   ok: boolean;
@@ -22,6 +22,7 @@ interface ClientResponse<T> {
  */
 export async function handleResponse(response: ClientResponse<unknown>): Promise<boolean> {
   const token = response.headers.get('x-access-token');
+  console.log("Save Token", token);
   if (token) {
     await AsyncStorage.setItem('PP_TOKEN', token);
     return true;
@@ -29,13 +30,13 @@ export async function handleResponse(response: ClientResponse<unknown>): Promise
   return false;
 }
 
-export async function refreshToken(): Promise<boolean> {
+export async function refreshToken() {
   const navigation = useNavigation(); // Get navigation object
 
   try {
     // const res = await authApi.general.validate_token.$get();
     const token = await AsyncStorage.getItem('PP_TOKEN');
-    const res = await fetch(`${NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +45,7 @@ export async function refreshToken(): Promise<boolean> {
       },
     });
     const tokenUpdated = await handleResponse(res);
-
+    console.log("Token Update =========> ", tokenUpdated)
     if (res.status === 401 || res.status === 404) {
       // Navigate to sign-in screen
       navigation.navigate('index'); // Replace 'SignIn' with your screen name

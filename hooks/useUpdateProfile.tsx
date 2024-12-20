@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "@/api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const NEXT_PUBLIC_AUTH_API_URL="https://905ok7ze53.execute-api.us-east-1.amazonaws.com/prod"
+import { env } from "@/env";
 
 export default function useUpdateProfile() {
   const queryClient = useQueryClient();
   async function updateProfile(update: { email?: string; password?: string; profilePicture?: string; }) {
     const token = await AsyncStorage.getItem('PP_TOKEN');
-    const res = await fetch(`${NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

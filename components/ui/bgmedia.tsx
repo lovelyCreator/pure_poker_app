@@ -1,30 +1,31 @@
 import React, { useRef, useState } from "react";
-import { View, Image, Video, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { Video } from 'expo-av';
 
 interface BackgroundMediaProps {
   variant?: "none" | "light" | "dark";
-  type?: "image" | "video";
-  source: any;
+  type: "image" | "video";
+  source: any; // Can be a URI or require statement
   alt?: string;
 }
 
 const BackgroundMedia: React.FC<BackgroundMediaProps> = ({
   variant = "light",
-  type = "image",
+  type,
   source,
   alt = "",
 }) => {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const mediaRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const mediaRef = useRef<Video>(null);
 
-  const toggleMediaPlay = () => {
+  const toggleMediaPlay = async () => {
     if (type === "video" && mediaRef.current) {
       if (isPlaying) {
         // Pause the video
-        mediaRef.current.pause();
+        await mediaRef.current.pauseAsync();
       } else {
         // Play the video
-        mediaRef.current.play();
+        await mediaRef.current.playAsync();
       }
       setIsPlaying(!isPlaying);
     }
@@ -37,7 +38,7 @@ const BackgroundMedia: React.FC<BackgroundMediaProps> = ({
           ref={mediaRef}
           source={source}
           style={styles.media}
-          resizeMode="cover"
+          resizeMode={'cover'}
           isLooping
           shouldPlay={isPlaying}
           isMuted

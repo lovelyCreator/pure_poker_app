@@ -3,8 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { groupApi } from "@/api/api";
 import { refreshToken } from "@/lib/fetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const NEXT_PUBLIC_GROUP_URL="https://mit6px8qoa.execute-api.us-east-1.amazonaws.com/prod";
-
+import { env } from "@/env";
 export default function useCreateGroup() {
   const queryClient = useQueryClient();
 
@@ -15,7 +14,7 @@ export default function useCreateGroup() {
     privacy: "public" | "private"
   ): Promise<[string, boolean]> {
     const token = await AsyncStorage.getItem('PP_TOKEN')
-    const res = await fetch(`${NEXT_PUBLIC_GROUP_URL}/createGroup`, {
+    const res = await fetch(`${env.NEXT_PUBLIC_GROUP_URL}/createGroup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

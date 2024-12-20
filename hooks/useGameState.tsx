@@ -2,9 +2,9 @@ import { pokerApi } from "@/api/api";
 import { refreshToken } from "@/lib/fetch";
 import type { GameState } from "@/types/poker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { env } from "@/env";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
-const NEXT_PUBLIC_POKER_URL="https://2buvf2r3gk.execute-api.us-east-1.amazonaws.com/prod/" ;
 
 export default function useGameState(gameId: string) {
   async function INNER_getGameState(
@@ -12,7 +12,8 @@ export default function useGameState(gameId: string) {
   ): Promise<[GameState | null, boolean]> {
     const token = await AsyncStorage.getItem('PP_TOKEN')
     // const res = await pokerApi.poker.$get({ query: { gameId } });
-    const res = await fetch(`${NEXT_PUBLIC_POKER_URL}/poker/${gameId}`, {
+    const url = `${env.NEXT_PUBLIC_POKER_URL}${"poker"}?gameId=${gameId}`;
+    const res = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

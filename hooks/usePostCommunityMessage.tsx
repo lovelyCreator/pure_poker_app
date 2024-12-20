@@ -2,14 +2,14 @@ import { communityApi } from "@/api/api";
 import { refreshToken } from "@/lib/fetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation } from "@tanstack/react-query";
-const NEXT_PUBLIC_COMMUNITY_URL="https://ffbv7v2te1.execute-api.us-east-1.amazonaws.com/prod";
+import { env } from "@/env";
 export default function usePostCommunityMessage() {
   async function INNER_postCommunityMessage(
     message: string,
   ): Promise<[string, boolean]> {
     try {
       const token = await AsyncStorage.getItem('PP_TOKEN')
-      const res = await fetch(`${NEXT_PUBLIC_COMMUNITY_URL}/post`, {
+      const res = await fetch(`${env.NEXT_PUBLIC_COMMUNITY_URL}/post`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

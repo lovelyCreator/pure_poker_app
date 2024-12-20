@@ -16,7 +16,7 @@ import { authApi } from '@/api/api';
 import { useLogger } from '@/utils/logging';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Signin } from '@/api/auth';
-
+import * as WebBrowser from 'expo-web-browser';
 const { height } = Dimensions.get('window');
 const calculatedHeight = height - 64; // 4rem = 64px
 
@@ -27,7 +27,7 @@ const SignInSchema = z.object({
   password: z.string().min(4, "Password must be at least 4 characters"),
 });
 
-export default function SignInScreen() {
+export default function SignInCard() {
   const navigation = useNavigation();
   const logger = useLogger();
 
@@ -65,6 +65,7 @@ export default function SignInScreen() {
   async function onSubmit(values: z.infer<typeof SignInSchema>) {
     // console.log('signIn datas==========>',values);
     logger.info("Submitted", values);
+    // console.log('logger-->', logger)
     const result = await useLogin(values.username, values.password);
     if (result.ok) {
       navigation.navigate('home');
@@ -115,7 +116,7 @@ export default function SignInScreen() {
             Don't have an account? 
           </Text> 
           <Text style={styles.signupLink} 
-          // onPress={() => navigation.navigate('SignUp')}
+          onPress={async() => await WebBrowser.openBrowserAsync('https://www.purepokerworld.com')}
           > 
               Visit: purepoker.world
           </Text>

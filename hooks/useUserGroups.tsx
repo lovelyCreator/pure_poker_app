@@ -3,12 +3,12 @@ import { refreshToken } from "@/lib/fetch";
 import type { Group } from "@/types/group";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { env } from "@/env";
 
-const NEXT_PUBLIC_GROUP_URL="https://mit6px8qoa.execute-api.us-east-1.amazonaws.com/prod";
 export default function useUserGroups() {
     async function INNER_getUserGroups() {
       const token = await AsyncStorage.getItem('PP_TOKEN')
-      const res = await fetch(`${NEXT_PUBLIC_GROUP_URL}/getUserGroups`, {
+      const res = await fetch(`${env.NEXT_PUBLIC_GROUP_URL}/getUserGroups`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

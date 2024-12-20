@@ -59,6 +59,25 @@ const Carousel = React.forwardRef<View, CarouselProps>(({ children, style, ...pr
 });
 Carousel.displayName = "Carousel";
 
+interface CarouselContentProps {
+  style?: ViewStyle;
+  children: React.ReactNode;
+}
+
+const CarouselContent = React.forwardRef<View, CarouselContentProps>(({ style, children }, ref) => {
+  
+  // const { carouselRef, orientation } = useCarousel();
+  return (
+    <View style={{overflow: 'hidden'}}>
+      <View ref={ref} style={[styles.CarouselContent, style]}>
+        {children}
+      </View>
+    </View>
+  );
+});
+CarouselContent.displayName = "CarouselContent";
+
+
 interface CarouselItemProps {
   style?: ViewStyle;
   children: React.ReactNode;
@@ -121,6 +140,9 @@ const styles = StyleSheet.create({
   carousel: {
     position: 'relative',
   },
+  CarouselContent: {
+    display: 'flex',
+  },
   carouselItem: {
     minWidth: 300, // Adjust as needed
     marginHorizontal: 10,
@@ -151,4 +173,5 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselContent
 };
