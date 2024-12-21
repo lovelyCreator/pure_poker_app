@@ -7,6 +7,7 @@ import { getPokerUrl } from "@/lib/poker";
 import type { sendPokerAction } from "@/types/poker";
 import type { WebSocketMessage } from "@/types/poker";
 import { useSpan } from "@/utils/logging";
+import { useNavigation } from "@react-navigation/native";
 
 interface SitOutProps {
   children: React.ReactNode;
@@ -25,6 +26,7 @@ const SitOut: React.FC<SitOutProps> = ({
 }) => {
   const span = useSpan("sitOut");
   const user = useAuth();
+  const navigation = useNavigation ();
   const [isOpen, setIsOpen] = useState(false);
 
   const { sendJsonMessage } = useWebSocket(
@@ -39,6 +41,7 @@ const SitOut: React.FC<SitOutProps> = ({
               toast.dismiss();
               setIsOpen(false);
               setIsSittingOutNextHand(!isSittingOutNextHand);
+              console.log(isSittingOutNextHand, "isSittingoutNextHand")
               return;
             }
             if (data.statusCode === 404) {
@@ -85,7 +88,7 @@ const SitOut: React.FC<SitOutProps> = ({
       </TouchableOpacity>
       <Modal
         transparent={true}
-        animationType="slide"
+        animationType="fade"
         visible={isOpen}
         onRequestClose={() => setIsOpen(false)}
       >

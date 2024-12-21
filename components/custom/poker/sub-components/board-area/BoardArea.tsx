@@ -51,6 +51,7 @@ const BoardArea: React.FC<BoardAreaProps> = ({
       from={{ opacity: gameState?.isBeginningOfTheHand ? 0 : 1 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1, delay: 1.8 }}
+      style={{width: '100%', height: '100%', display: 'flex'}}
     >
       {/* Pot Information */}
       {gameState?.netWinners?.length === 0 && (
@@ -149,31 +150,30 @@ const BoardArea: React.FC<BoardAreaProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',  // Equivalent to absolute
-    top: 0,                // Equivalent to inset-0
-    right: 0,              // Equivalent to inset-0
-    bottom: 0,             // Equivalent to inset-0
-    left: 0,               // Equivalent to inset-0
+    inset: 0,               // Equivalent to inset-0
     display: 'flex',               // Enables flexbox layout
     flexDirection: 'column', // Equivalent to flex-col
     alignItems: 'center',  // Equivalent to items-center
     justifyContent: 'center', // Equivalent to justify-center
     transform: [{ translateY: '10%' }], // Translates down by 10%
+    height: '100%',
   },
   potContainer: {
     position: 'relative',
     left: 0,
-    bottom: '50%',
+    bottom: 70,
     borderRadius: 50,
     borderWidth: 2,
     borderColor: '#FFC700',
     paddingHorizontal: 16,
     paddingVertical: 4,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
+    // height: '100%'
   },
   potText: {
     fontSize: 12,
@@ -188,11 +188,11 @@ const styles = StyleSheet.create({
   cardsContainer: {
     position: 'relative',
     left: 0,
-    zIndex: 10,
-    flex: 1,
+    flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
+    gap:10,
     top: -60,
     maxWidth: 180
 

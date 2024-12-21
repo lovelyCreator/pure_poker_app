@@ -60,6 +60,7 @@
     "react-native-slider": "^0.11.0",
     "react-native-svg": "^15.10.1",
     "react-native-toast-message": "^2.2.1",
+    "react-native-tooltip": "^5.2.0",
     "react-native-use-websocket": "^0.2.6",
     "react-native-video": "^6.8.2",
     "react-native-web": "~0.19.13",

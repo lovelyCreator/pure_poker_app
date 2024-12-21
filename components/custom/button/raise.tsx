@@ -10,11 +10,12 @@ interface RaiseProps {
   displayBB: boolean;
   initialBigBlind: number;
   onPress: () => void; // Ensure onPress is included
+  disabled: boolean
 }
 
 const Raise = forwardRef<View, RaiseProps>(
   (
-    { isBet, raiseAmount, isGoingAllIn, displayBB, initialBigBlind, onPress, ...props },
+    { isBet, raiseAmount, isGoingAllIn, displayBB, initialBigBlind, onPress, disabled, ...props },
     ref,
   ) => {
     const displayValue = formatChipsOrBB(

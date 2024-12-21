@@ -9,11 +9,11 @@ const Fold = forwardRef<HTMLButtonElement, ButtonProps>((props , ref) => {
       variant="fold"
       {...props}
       ref={ref}
-      className="rounded-[15px] md:h-[60px] lg:h-[70px] w-[100px] h-[50px] md:w-[115px] lg:w-[155px]"
+      style={styles.button}
     >
       {/* <Image src={fold as StaticImport} alt="fold" className="mr-2 w-[24px] h-[24px]" /> */}
       <Text 
-        className="font-bold md:text-[17px] lg:text-[22px]"
+        style={styles.title}
       >
         Fold
       </Text>

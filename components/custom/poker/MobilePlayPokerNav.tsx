@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     marginBottom: 16,
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     backgroundColor: '#212530B2',
     borderRadius: 8,
@@ -231,10 +231,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     width: 180,
+    gap: 5
   },
   infoText: {
     fontSize: 14,
     fontWeight: '600',
+    color: '#ffffff',
   },
   labelText: {
     color: '#ffffffb3',

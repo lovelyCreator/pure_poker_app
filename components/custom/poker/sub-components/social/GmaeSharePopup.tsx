@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "space-evenly",
     },
     button: {
         flexDirection: "row",
@@ -112,10 +112,11 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: "#1f1f1f",
         borderRadius: 5,
+        fontSize: 12
     },
     buttonText: {
         color: "white",
-        fontSize: 16,
+        fontSize: 12,
         marginRight: 5,
     },
     shareButton: {
@@ -176,8 +177,8 @@ const styles = StyleSheet.create({
     },
     icon: {
         color: "white",
-        width: 24,
-        height: 24,
+        width: 16,
+        height: 16,
     },
 });
 

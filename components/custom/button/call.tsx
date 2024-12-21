@@ -32,7 +32,7 @@ const Call = forwardRef<HTMLButtonElement, CallProps>(
           ref={ref}
           style={styles.button}
       >
-        <Text style={styles.title}>Call</Text>
+        <Text style={styles.title}>Call{'\n'}</Text>
         {goingAllIn ? (
           <Text style={styles.subtitle}>To All In</Text>
         ) : (
@@ -63,11 +63,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16, // Adjust size as needed
     color: '#998220', // Text color
+    textAlign: 'center'
   },
   subtitle: {
     fontWeight: 'bold',
     fontSize: 16, // Adjust size as needed
-    color: '#FFFFFF', // Text color
+    color: '#998220', // Text color
+    textAlign: 'center'
   },
 });
 

@@ -19,6 +19,7 @@ import WinAnimation from "./sub-components/player-area/WinAnimation";
 import CreateBombPot from "./sub-components/player-area/CreateBombPot";
 import PlayerBombPotDecisionStatus from "./sub-components/player-area/PlayerBombPotDecisionStatus";
 import { View, StyleSheet } from "react-native";
+import ChipsAnimation from "./sub-components/animations/ChipsAnimation";
 
 interface PlayerProps {
   player: PlayerType;
@@ -248,112 +249,137 @@ const Player: React.FC<PlayerProps> = ({
     gameState.players.length;
 
   return (
-    <View
+    <View 
       style={{
-        position: 'absolute', zIndex: 20,
-        opacity: `${player.inHand || gameIsOver ? 1 : 0.4}`,
-        left: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.leftPosition}`,
-        top: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.topPosition}`,
-        transform: "translate(-50%, -50%)",
-        // left: `${playerPositions[8]?.[0]?.leftPosition}`,
-        // top: `${playerPositions[8]?.[0]?.topPosition}`,
+        width: '100%', 
+        position: 'absolute', 
+        inset: 0,
       }}
-      key={index}
     >
-      {/* Display the Emote */}
-      <Emote emote={activeEmote} isVisible={isEmoteVisible} />
-
-      {/* Toggle button for emote selector */}
-      {showEmoteButtonSelector && isCurrentPlayer && (
-        <EmoteToggleButton
-          toggleEmoteSelector={toggleEmoteSelector}
-          isEmoteSelectorVisible={isEmoteSelectorVisible}
-        />
-      )}
-
-      {/* Emote Selector */}
-      {isEmoteSelectorVisible && isCurrentPlayer && (
-        <EmoteSelector gameId={gameState.gameId} />
-      )}
-
-      {/* {isCurrentTurn &&
-        isCurrentPlayer &&
-        currentPlayerTurn.extraTime === 0 &&
-        screenSize !== "smallIphone" && (
-          <TimeBank player={currentPlayerTurn} gameId={gameState.gameId} />
-        )} */}
-      
-      {/* {isCurrentPlayer && gameState.gameStarted && screenSize !== "smallIphone" &&
-        <CreateBombPot 
-          thisPlayer={thisPlayer} 
-          gameId={gameState.gameId} 
-          gameState={gameState}
-        />
-      } */}
-
-      {showBombPotDecisionModal && 
-        <PlayerBombPotDecisionStatus currentDecision={player.bombPotDecision} />
-      }
-
-      <PlayerBet
-        player={player}
-        gameState={gameState}
-        rotatedPosition={rotatedPosition}
+      {/* Chips Animation */}
+      <ChipsAnimation
+        gameState={gameState ?? ({} as GameState)}
+        playerCount={gameState?.playerCount ?? 0}
         screenSize={screenSize}
-        initialBigBlind={initialBigBlind}
-        displayBB={displayBB}
-      />
-
-      <WinAnimation
-        isVisible={shouldShowWin && isWinner && !player.handDescription} 
-        playSoundEnabled={playSoundEnabled}
-        amountWon={player.amountWon}
-      />
-
-      {!gameState.isBeginningOfTheHand && (
-        <LastMoveIndicator
-          key={`${gameState.startTurnTimeStamp} - ${gameState.isBeginningOfTheHand}`}
-          isLastMover={isLastMover}
-          lastMove={lastMove}
-        />
-      )}
-
-      <PlayerDetails
-        playerId={player.id}
-        playerChips={player.chips}
-        playerName={player.id}
-        profilePicture={player.profilePicture}
-        isCurrentPlayer={isCurrentPlayer}
-        isCurrentTurn={isCurrentTurn}
-        hasFolded={!player.inHand}
-        gameIsOver={gameState.gameStage === "gameOver"}
-        shouldShowWin={shouldShowWin}
-        sittingOut={player.sittingOut}
-        timeBarWidth={timeBarWidth}
-        hasExtraTime={(currentPlayerTurn?.extraTime ?? 0) > 0}
-        screenSize={screenSize}
-        displayBB={displayBB} // Pass new prop
-        initialBigBlind={initialBigBlind} // Pass new prop
-      />
-
-      <PlayerCards
-        gameState={gameState}
-        playerHand={playerHand}
-        isCurrentPlayer={isCurrentPlayer}
-        gameIsOver={gameIsOver}
-        player={player}
-        shouldShowWin={shouldShowWin}
-        aggregateBestHand={aggregateBestHand}
-        key={`${gameState?.gameStage}-${gameState?.startTurnTimeStamp}-${gameState?.gameOverTimeStamp}`}
-      />
-
-      <DealerButton
-        gameState={gameState}
         index={index}
-        dealerIndex={dealerIndex}
-        rotatedPosition={rotatedPosition}
-        screenSize={screenSize}
+        player={player}
+        currentPlayerPosition={currentPlayerPosition}
+        allBoardCardsRevealed={allBoardCardsRevealed}
       />
+      <View
+        style={{
+          position: 'absolute', zIndex: 20,
+          opacity: `${player.inHand || gameIsOver ? 1 : 0.4}`,
+          left: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.leftPosition}`,
+          top: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.topPosition}`,
+          transform: "translate(-50%, -50%)",
+          // left: `${playerPositions[8]?.[0]?.leftPosition}`,
+          // top: `${playerPositions[8]?.[0]?.topPosition}`,
+        }}
+        key={index}
+      >
+        {/* Display the Emote */}
+        <Emote emote={activeEmote} isVisible={isEmoteVisible} />
+
+        {/* Toggle button for emote selector */}
+        {showEmoteButtonSelector && isCurrentPlayer && (
+          <EmoteToggleButton
+            toggleEmoteSelector={toggleEmoteSelector}
+            isEmoteSelectorVisible={isEmoteSelectorVisible}
+          />
+        )}
+
+        {/* Emote Selector */}
+        {isEmoteSelectorVisible && isCurrentPlayer && (
+          <EmoteSelector gameId={gameState.gameId} />
+        )}
+
+        {isCurrentTurn &&
+          isCurrentPlayer &&
+          currentPlayerTurn.extraTime === 0 &&
+          screenSize !== "smallIphone" && (
+            <TimeBank player={currentPlayerTurn} gameId={gameState.gameId} />
+          )}
+        
+        {isCurrentPlayer && gameState.gameStarted && screenSize !== "smallIphone" &&
+          <CreateBombPot 
+            thisPlayer={thisPlayer} 
+            gameId={gameState.gameId} 
+            gameState={gameState}
+          />
+        }
+
+        {showBombPotDecisionModal && 
+          <PlayerBombPotDecisionStatus currentDecision={player.bombPotDecision} />
+        }
+  <View
+    style={{
+      position: 'absolute',
+    }}
+  >
+        <PlayerBet
+          player={player}
+          gameState={gameState}
+          rotatedPosition={rotatedPosition}
+          screenSize={screenSize}
+          initialBigBlind={initialBigBlind}
+          displayBB={displayBB}
+        />
+  </View>
+
+        <WinAnimation
+          isVisible={shouldShowWin && isWinner && !player.handDescription} 
+          playSoundEnabled={playSoundEnabled}
+          amountWon={player.amountWon}
+        />
+
+        {!gameState.isBeginningOfTheHand && (
+          <LastMoveIndicator
+            key={`${gameState.startTurnTimeStamp} - ${gameState.isBeginningOfTheHand}`}
+            isLastMover={isLastMover}
+            lastMove={lastMove}
+          />
+        )}
+
+        <PlayerDetails
+          playerId={player.id}
+          playerChips={player.chips}
+          playerName={player.id}
+          profilePicture={player.profilePicture}
+          isCurrentPlayer={isCurrentPlayer}
+          isCurrentTurn={isCurrentTurn}
+          hasFolded={!player.inHand}
+          gameIsOver={gameState.gameStage === "gameOver"}
+          shouldShowWin={shouldShowWin}
+          sittingOut={player.sittingOut}
+          timeBarWidth={timeBarWidth}
+          hasExtraTime={(currentPlayerTurn?.extraTime ?? 0) > 0}
+          screenSize={screenSize}
+          displayBB={displayBB} // Pass new prop
+          initialBigBlind={initialBigBlind} // Pass new prop
+          handsPlayed={player.handsPlayed}
+          vpip={(player.handsPlayed / (player.totalHands + 0.000000001))}
+        />
+
+        <PlayerCards
+          gameState={gameState}
+          playerHand={playerHand}
+          isCurrentPlayer={isCurrentPlayer}
+          gameIsOver={gameIsOver}
+          player={player}
+          shouldShowWin={shouldShowWin}
+          aggregateBestHand={aggregateBestHand}
+          key={`${gameState?.gameStage}-${gameState?.startTurnTimeStamp}-${gameState?.gameOverTimeStamp}`}
+        />
+
+        <DealerButton
+          gameState={gameState}
+          index={index}
+          dealerIndex={dealerIndex}
+          rotatedPosition={rotatedPosition}
+          screenSize={screenSize}
+        />
+      </View>
     </View>
   );
 };

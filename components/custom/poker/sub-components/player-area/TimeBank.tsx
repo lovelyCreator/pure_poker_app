@@ -70,10 +70,10 @@ const styles = StyleSheet.create({
   button: {
     position: "absolute",
     left: 5,
-    bottom: 10,
     width: "16%",
     height: "32%",
     borderRadius: 10,
+    display: 'flex',
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "black",
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 5,
+    zIndex: 50
   },
   enabledButton: {
     backgroundColor: "rgba(220, 38, 38, 0.8)", // Equivalent to bg-red-700/80

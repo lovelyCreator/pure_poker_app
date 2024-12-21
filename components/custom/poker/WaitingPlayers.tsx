@@ -44,6 +44,7 @@ const WaitingPlayers: React.FC<WaitingPlayerProps> = ({
                         <View
                             style={styles.usernameContainer}
                         >
+                            <View style={styles.innerUsernameContainer}>
                             <Text
                                 style={[
                                     styles.usernameText,
@@ -58,6 +59,7 @@ const WaitingPlayers: React.FC<WaitingPlayerProps> = ({
                             >
                                 {waitingPlayerBuyIn / 100}
                             </Text>
+                            </View>
                         </View>
                     </View>
                 )}
@@ -78,12 +80,18 @@ const styles = StyleSheet.create({
     usernameContainer: {
         zIndex: 10,
         marginTop: -14,
-        overflow: 'hidden',
         paddingTop: 3,
-        borderColor: "#ffffff1a",
-        borderTopWidth: 1,
-        borderRadius: 10,
-        backgroundColor: '#1c202b',
+        borderColor: '#ffffff1a',
+        borderWidth: 1, // Specify border width
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        overflow: 'hidden', // Ensures child elements don't overflow
+    },
+    innerUsernameContainer: {
+        backgroundColor: '#ffffff1a', // Background color for the inner container
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        height: 100, // Adjust height as needed        
     },
     usernameText: {
         marginTop: -10,

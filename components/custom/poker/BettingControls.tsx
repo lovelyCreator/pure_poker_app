@@ -154,6 +154,7 @@ const BettingControls: React.FC<BettingControlsProps> = ({
               styles.button,
               foldToAny ? styles.activeButton : styles.inactiveButton,
             ]}
+            textStyle={{textAlign: 'center'}}
             onPress={() => setFoldToAny(!foldToAny)}
           >
             <Text style={foldToAny ? styles.activeText : styles.inactiveText}>
@@ -282,7 +283,7 @@ const BettingControls: React.FC<BettingControlsProps> = ({
             <View style={styles.actionButtons}>
               <Fold
                 disabled={actionButtonsDisabled}
-                onClick={() => {
+                onPress={() => {
                   setInactivityCount(0);
                   setFoldToAny(false);
                   sendPokerMessage(sendJsonMessage, {
@@ -300,7 +301,7 @@ const BettingControls: React.FC<BettingControlsProps> = ({
               gameState?.players.find((player) => player.id === playerId)?.bet === gameState?.highestBet ? (
                 <Check
                   disabled={actionButtonsDisabled}
-                  onClick={() => {
+                  onPress={() => {
                     setInactivityCount(0);
                     setFoldToAny(false);
                     sendPokerMessage(sendJsonMessage, {
@@ -321,7 +322,7 @@ const BettingControls: React.FC<BettingControlsProps> = ({
                     gameState.highestBet - currentPlayer.bet >
                     currentPlayer.chips
                   }
-                  onClick={() => {
+                  onPress={() => {
                     setInactivityCount(0);
                     setFoldToAny(false);
                     sendPokerMessage(sendJsonMessage, {
@@ -346,27 +347,19 @@ const BettingControls: React.FC<BettingControlsProps> = ({
               {!gameIsOver &&
                 gameState.highestBet < currentPlayer.chips + currentPlayer.bet &&
                 currentPlayer.canRaise && (
-                  <Raise
-                    disabled={
-                      actionButtonsDisabled ||
-                      !currentPlayer.canRaise ||
-                      raiseAmount <
-                        Math.min(
-                          gameState?.minRaiseAmount,
-                          currentPlayer?.chips + currentPlayer?.bet,
-                        )
-                    }
-                    isBet={gameState?.highestBet === 0}
+                  <Raise 
                     raiseAmount={
                       (raiseAmount ?? gameState.minRaiseAmount) / 100
-                    } // this should be in dollars because it's shown to the player
+                    } 
                     isGoingAllIn={
                       currentPlayer.chips <=
                         gameState.highestBet - currentPlayer.bet ||
                       currentPlayer.chips + currentPlayer.bet <=
                         gameState?.minRaiseAmount
-                    }
-                    onClick={() => {
+                    } 
+                    displayBB={displayBB} 
+                    initialBigBlind={initialBigBlind} 
+                    onPress={() => {
                       setInactivityCount(0);
                       setFoldToAny(false);
                       sendPokerMessage(sendJsonMessage, {
@@ -377,9 +370,17 @@ const BettingControls: React.FC<BettingControlsProps> = ({
                         buyIn: null,
                         groups: null,
                       });
-                    }}
-                    displayBB={displayBB}
-                    initialBigBlind={initialBigBlind}
+                    }}   
+                    isBet={gameState?.highestBet === 0}   
+                    disabled={
+                      actionButtonsDisabled ||
+                      !currentPlayer.canRaise ||
+                      raiseAmount <
+                        Math.min(
+                          gameState?.minRaiseAmount,
+                          currentPlayer?.chips + currentPlayer?.bet,
+                        )
+                    }            
                   >
                     {formatDisplayValue(
                       raiseAmount,
@@ -400,9 +401,8 @@ const styles = StyleSheet.create({
   absoluteBottom: {
     position: 'absolute',
     bottom: -20,
-    right: -20,
+    right: -20,    
     transform: [{ translateX: -50 }, { translateY: 100 }],
-    // Add responsive styles for md and lg screen sizes as needed
   },
   button: {
     height: 50,
@@ -411,9 +411,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#464A52',
     paddingHorizontal: 10,
-    paddingBottom: 4,
-    paddingTop: 4,
-    transitionDuration: 200,
+    paddingVertical: 16
   },
   activeButton: {
     borderColor: '#1E90FF',
@@ -425,40 +423,48 @@ const styles = StyleSheet.create({
   },
   activeText: {
     color: '#fff700',
-    fontSize: 16,
+    fontSize: 13
   },
   inactiveText: {
     color: 'white',
-    fontSize: 13,
+    fontSize: 13
   },
   showCardControls: {
     position: 'absolute',
-    // Add other styles as needed
+    bottom: -40,
+    left: '10%',
+    width: '80%',
+    right: 70, // Default right position for medium screens
+    transform: [
+        { translateX: -50 }, // Move left by 50% of width
+        { translateY: 100 }, // Move down by 100% of height
+    ],
   },
   playerTurnContainer: {
     position: 'absolute',
     bottom: -160,
-    right: 25,
+    // right: 25,
     height: 124,
-    transform: [{ translateY: 50 }],
-    // Add responsive styles for md and lg screen sizes as needed
+    // left: '50%',
+    width: '80%',
+    maxWidth: 600,
+    transform: [{translateX: 50}],
+    display: 'flex'
   },
   bettingOptionsContainer: {
-    marginVertical: 10,
+    // marginVertical: 10,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     maxWidth: 882,
   },
   bettingOptions: {
-    flexDirection: 'row',
-    // Add other styles as needed
+    flexDirection: 'row'
   },
   betButton: {
     width: 20,
     borderColor: '#464A52',
     fontSize: 12,
-    // Add other styles as needed
   },
   inputContainer: {
     position: 'absolute',
@@ -466,7 +472,6 @@ const styles = StyleSheet.create({
     top: 0,
     width: '22%',
     fontSize: 16,
-    // Add responsive styles for md and lg screen sizes as needed
   },
   input: {
     width: '100%',
@@ -478,24 +483,25 @@ const styles = StyleSheet.create({
     paddingVertical: 1,
     textAlign: 'center',
     color: 'white',
+    height: 40
   },
   sliderContainer: {
     position: 'absolute',
     width: '40%',
     flexDirection: 'column',
     justifyContent: 'center',
-    // Add responsive styles as needed
+    left: '55%',
+    top: -10
   },
   actionButtonsContainer: {
     marginTop: 45,
-    flexDirection: 'column',
-    // Add responsive styles as needed
+    flexDirection: 'column'
   },
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // Add other styles as needed
-  },
+    width: '100%'
+  }
 });
 
 

@@ -31,8 +31,9 @@ const DealerButton: React.FC<DealerButtonProps> = ({
       style={[
         styles.button,
         {
-          left: left, // Directly use left as a number
-          top: top,   // Directly use top as a number
+          left: left + 120, // Adjusting for the 100% offset
+          top: top + 80,    // Adjusting for the 50% offset
+          transform: [{ translateX: -50 }, { translateY: -50 }],
         },
       ]}
     >
@@ -48,6 +49,7 @@ const styles = StyleSheet.create({
     height: 26, // Adjust height as necessary
     borderRadius: 13, // Half of width/height for a circular shape
     backgroundColor: '#1e84f0',
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,

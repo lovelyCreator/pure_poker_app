@@ -1,6 +1,8 @@
 import React from "react";
+import { View, Text, Modal, StyleSheet } from "react-native";
 import { Button } from "@/components/ui/button";
 import CreateOrJoinGame from "../dialog/CreateOrJoinGame";
+import { enableFreeze } from "react-native-screens";
 
 interface JoinPopupProps {
   userIsVerified: boolean;
@@ -16,39 +18,107 @@ const JoinPopup: React.FC<JoinPopupProps> = ({
   setIsSpectator,
 }) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="relative z-60 mx-auto max-w-[300px] md:max-w-md rounded-md bg-[#212530] p-6 md:p-10 text-center shadow-lg">
-        <span className="mb-6 block text-m md:text-lg text-white">
-          You haven&apos;t joined this game yet. Would you like to play or spectate?
-        </span>
-        <div className="flex justify-center">
-          <CreateOrJoinGame
-            userIsVerified={userIsVerified}
-            isCreateGame={false}
-            defaultGameId={gameId}
-          >
-            <Button
-              className={`bg-blue-500 text-white hover:bg-blue-600 ${
-                !userIsVerified ? "cursor-not-allowed" : "cursor-pointer"
-              }`}
-              disabled={!userIsVerified}
+    <Modal
+      transparent
+      animationType="fade"
+      visible={true} // You might want to control this with a state in your parent component
+      onRequestClose={() => setShowJoinPopup(false)}
+    >
+      <View style={styles.overlay}>
+        <View style={styles.container}>
+          <Text style={styles.text}>
+            You haven't joined this game yet. Would you like to play or spectate?
+          </Text>
+          <View style={styles.buttonContainer}>
+            <CreateOrJoinGame
+              userIsVerified={userIsVerified}
+              isCreateGame={false}
+              defaultGameId={gameId}
             >
-              Join Game
+              <View
+                style={[{
+                  backgroundColor: '#3B82F6',
+                  padding: 11,
+                  borderRadius: 8
+                }, 
+                  userIsVerified ? styles.enabledView : styles.disabledButton,
+                ]}
+              >
+                <Text style={{color:'white'}}>
+                Join Game
+                </Text>
+              </View>
+            </CreateOrJoinGame>
+            <Button
+              textStyle={{color: 'white'}}
+              style={{
+                marginLeft: 16,
+                backgroundColor: '#6B7280'
+              }}
+              onPress={() => {
+                console.log('joinPopup')
+                setShowJoinPopup(false);
+                setIsSpectator(true);
+              }}
+            >
+              Spectate
             </Button>
-          </CreateOrJoinGame>
-          <Button
-            className="ml-4 bg-gray-500 text-white hover:bg-gray-600"
-            onPress={() => {
-              setShowJoinPopup(false);
-              setIsSpectator(true);
-            }}
-          >
-            Spectate
-          </Button>
-        </div>
-      </div>
-    </div>
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+    zIndex: 50,
+    display: 'flex',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Black with opacity
+  },
+  container: {
+    position: 'relative',
+    zIndex: 60,
+    marginHorizontal: 'auto',
+    maxWidth: 300,
+    backgroundColor: "#212530", // Background color
+    borderRadius: 16,
+    padding: 24,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  text: {
+    marginBottom: 24,
+    fontSize: 16,
+    color: "#fff",
+    textAlign: "center",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  enabledButton: {
+      backgroundColor: "#3B82F6", // Blue color for verified
+      cursor: 'pointer',
+  },
+  disabledButton: {
+      backgroundColor: "#6c757d", // Gray color for not verified
+      opacity: 0.5, // Dim the button to indicate it's not clickable
+  },
+});
 
 export default JoinPopup;

@@ -1,74 +1,85 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import Slider from '@react-native-community/slider'; // Use the appropriate slider library for React Native
-
-interface HandleTooltipProps {
-  value: number;
-  visible: boolean;
-  tipFormatter?: (value: number) => React.ReactNode;
-}
-
-const HandleTooltip: React.FC<HandleTooltipProps> = ({ value, visible, tipFormatter = (val) => `${val}` }) => {
-  return (
-    <View style={styles.tooltipContainer}>
-      {visible && (
-        <Text style={styles.tooltipText}>{tipFormatter(value)}</Text>
-      )}
-    </View>
-  );
-};
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 interface TooltipSliderProps {
   max?: number;
   min?: number;
-  tipFormatter?: (value: number) => React.ReactNode;
-  onValueChange: (value: number) => void;
-  value: number;
+  value?: number;
+  onChange?: (value: number) => void;
+  tipFormatter?: (value: number) => string; // Add tipFormatter prop
 }
 
 const TooltipSlider: React.FC<TooltipSliderProps> = ({
   max = 100,
   min = 1,
-  tipFormatter,
-  onValueChange,
-  value,
+  value = min,
+  onChange,
+  tipFormatter = (val) => `${val}`, // Default formatter
 }) => {
-  const range = max - min;
+  const [sliderValue, setSliderValue] = useState(value);
+
+  useEffect(() => {
+    setSliderValue(value);
+  }, [value]);
+
+  const incrementValue = () => {
+    const newValue = Math.min(sliderValue + 1, max);
+    setSliderValue(newValue);
+    onChange && onChange(newValue);
+  };
+
+  const decrementValue = () => {
+    const newValue = Math.max(sliderValue - 1, min);
+    setSliderValue(newValue);
+    onChange && onChange(newValue);
+  };
 
   return (
-    <View style={styles.sliderContainer}>
-      <Slider
-        minimumValue={min}
-        maximumValue={max}
-        step={1}
-        value={value}
-        onValueChange={onValueChange}
-        minimumTrackTintColor="#12571b"
-        maximumTrackTintColor="#464A52"
-        thumbTintColor="#38D24A"
-      />
-      <HandleTooltip value={value} visible={true} tipFormatter={tipFormatter} />
+    <View style={styles.container}>
+      <TouchableOpacity onPress={decrementValue} style={styles.button}>
+        <Text style={styles.buttonText}>-</Text>
+      </TouchableOpacity>
+      <View style={styles.valueContainer}>
+        <Text style={styles.valueText}>{tipFormatter(sliderValue)}</Text> {/* Use tipFormatter */}
+      </View>
+      <TouchableOpacity onPress={incrementValue} style={styles.button}>
+        <Text style={styles.buttonText}>+</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  sliderContainer: {
-    width: '100%',
+  container: {
+    flexDirection: 'row',
     alignItems: 'center',
+    padding: 10,
   },
-  tooltipContainer: {
-    position: 'absolute',
-    top: -30,
+  valueContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 25,
+    backgroundColor: '#38D24A',
     alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 10,
   },
-  tooltipText: {
-    backgroundColor: '#fff',
-    padding: 5,
-    borderRadius: 5,
-    borderColor: '#ccc',
-    borderWidth: 1,
+  valueText: {
+    color: '#fff',
+    fontSize: 18,
+  },
+  button: {
+    width: 24,
+    height: 24,
+    backgroundColor: '#12571b',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
   },
 });
 
-export { TooltipSlider };
+export default TooltipSlider;

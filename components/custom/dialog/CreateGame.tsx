@@ -75,7 +75,6 @@ const CreateGameSchema = z
     const s_span = span.span("webSocket");
     //eslint-disable-next-line
     const wsRef = useRef<any>(null);
-    const token = AsyncStorage.getItem("PP_TOKEN");
     const { sendJsonMessage, getWebSocket } = useWebSocket(
       getPokerUrl(span, "", user.username),
       {

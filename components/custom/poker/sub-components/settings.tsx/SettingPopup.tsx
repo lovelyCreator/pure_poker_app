@@ -39,7 +39,7 @@ const SettingsPopup: React.FC<SettingsProps> = ({
         onPress={openSettingsModal}
         style={styles.settingsButton}
       >
-        <Settings size={24} />
+        <Settings size={16} />
       </TouchableOpacity>
 
       {/* Modal */}

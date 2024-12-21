@@ -6,6 +6,8 @@ import { type Span } from "@/utils/logging";
 import { type GameState } from "@/types/poker";
 import { refreshToken } from "@/lib/fetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { Navigation } from "lucide-react-native";
 
 export const chipsToBB = (chips: number, initialBigBlind: number): number => {
     if (initialBigBlind <= 0) {
@@ -50,14 +52,15 @@ export const chipsToBB = (chips: number, initialBigBlind: number): number => {
   }
   
 export async function fetchGameState(gameId: string): Promise<GameState | null> {
-    async function fetchFromApi(gameId: string): Promise<[GameState | null, boolean]> {
+  const navigation = useNavigation();
+    async function fetchFromApi(gameId: string) {
       // const query = { gameId };
       // const url = new URL(env.NEXT_PUBLIC_POKER_URL);
 
       // Object.keys(query).forEach(key => url.searchParams.append(key, query[key as keyof GetItemQuery]));
       // console.log(url, 'URL')
       const token = await AsyncStorage.getItem('PP_TOKEN');
-      const res = await fetch(`${env.NEXT_PUBLIC_POKER_URL}poker?gameId=${gameId}`, {
+      const res = await fetch(`${env.NEXT_PUBLIC_POKER_URL}poker?gameId=${encodeURIComponent(gameId)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -92,7 +95,8 @@ export async function fetchGameState(gameId: string): Promise<GameState | null> 
   
       if (isUnauthorized) {
         // Token refresh failed, force reload
-        window.location.reload();
+        // window.location.reload();
+        navigation.navigate('playPoker', gameId={gameId})
       }
     }
   

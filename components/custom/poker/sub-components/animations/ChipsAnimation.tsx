@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Image, Text, StyleSheet } from "react-native";
 import { AnimatePresence, MotiView } from "moti";
 import type { GameState, Player as PlayerType } from "@/types/poker"; // Adjust import paths as needed
-import { generatePlayerPositions, getBettingAndDealerPositions } from "@/lib/poker";
+import { generatePlayerPositions, getBettingAndDealerPositions, ScreenSize } from "@/lib/poker";
 
 const ChipsAnimation = ({ 
    gameState,
@@ -12,18 +12,23 @@ const ChipsAnimation = ({
    index,
    currentPlayerPosition,
 }: {
-  gameState: any,
+  gameState: GameState,
   playerCount: number,
-  screenSize: any,
-  player: any,
+  screenSize: ScreenSize,
+  player: PlayerType,
   index: number,
-  currentPlayerPosition: any
+  currentPlayerPosition: number
 }) => {
    const [animationPlayed, setAnimationPlayed] = useState(false);
    const playerPositions = generatePlayerPositions(screenSize);
    const bettingAndDealerPositions = getBettingAndDealerPositions(screenSize);
    // console.log("ChipsAnimation", screenSize, player)
-
+   const onAnimationEnd = () => {
+      setAnimationPlayed(true);
+   }
+   const handleAnimationEnd = () => {
+      return null;
+   }
    const showAnimation = gameState.gameIsAllIn !== "river" || 
       (gameState.communityCards.length === 5 && gameState?.netWinners.length) || 
       (player.previousBet > 0 && player.bet === 0 && !player.hasActed && !gameState?.netWinners.length);
@@ -35,6 +40,12 @@ const ChipsAnimation = ({
       const blueChipsCount = Math.floor((betValue % 15) / 5);
       const yellowChipsCount = Math.floor((betValue % 5) / 2);
       const redChipsCount = Math.floor((betValue % 2) / 0.5);
+
+      const potChipsDistribution = [
+         {chipsCount: 1, chipsType: require('@/assets/game/coin-red.png'), chipName: "coinred", zIndex: 10, chipIndex: 1 },
+         {chipsCount: 1, chipsType: require('@/assets/game/coin-red.png'), chipName: "coinred", zIndex: 10, chipIndex: 2 },
+         {chipsCount: 1, chipsType: require('@/assets/game/coin-red.png'), chipName: "coinred", zIndex: 10, chipIndex: 3 }
+      ]
 
       const chipsDistribution = [
          { chipsCount: redChipsCount, chipsType: require('@/assets/game/coin-red.png'), chipName: "coinred", zIndex: 10 },

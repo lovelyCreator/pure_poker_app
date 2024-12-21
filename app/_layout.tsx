@@ -41,7 +41,7 @@ export default function RootLayout() {
             <Stack>
               <Stack.Screen name="index" options={{ title: 'SignIn', headerShown: false }} />
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
+              <Stack.Screen name="+not-found" options={{ headerShown: false}}/>
               <Stack.Screen name="ad-redirect" options={{ title: 'Ad Redirect'}} />
               <Stack.Screen name="home" options={{ title: 'Home', headerShown: false}} />
               <Stack.Screen name="account" options={{ title: 'Account', headerShown: false}} />

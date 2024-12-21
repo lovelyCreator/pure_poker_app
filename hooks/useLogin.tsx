@@ -3,6 +3,7 @@ import { authApi } from '@/api/api'; // Adjust the import based on your file str
 import { handleResponse } from '@/lib/fetch'; // Adjust the import based on your file structure
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import { env } from "@/env";
+import { Alert } from 'react-native';
 
 export default async function useLogin(username: string, password: string) {
     try {
@@ -26,11 +27,17 @@ export default async function useLogin(username: string, password: string) {
         }),
       });
 
+      Alert.alert(
+        "Error",
+        "You are not signed. Please try again."
+      )
       handleResponse(response);
+      console.log(response.body)
 
       if (!response.ok) {
         const res = (await response.json()) as { message: string };
         throw new Error(res.message);
+        
       }
       return response; // Return the response or any data you want to handle
     } catch (error) {

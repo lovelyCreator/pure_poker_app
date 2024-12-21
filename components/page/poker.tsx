@@ -212,7 +212,8 @@ export default function Poker() {
 
   return (
     <SpanInheritor span={span}>
-      <View style={{width: '100%', height: '100%', backgroundColor: '#11141D', position: 'relative', zIndex: 0}}>
+      <View     style={{width: '100%', height: '100%', backgroundColor: '#11141D', position: 'relative', zIndex: 0}}
+      >
         <SpanWrapper name="PlayPokerGame">
           <GamePlayPoker
             gameId={gameId ?? ""}

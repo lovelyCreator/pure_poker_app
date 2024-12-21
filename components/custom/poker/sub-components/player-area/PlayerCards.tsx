@@ -26,7 +26,7 @@ const PlayerCards: React.FC<PlayerCardsProps> = ({
   const shouldMakeCardsShowUp = isNoBetBombPot || gameState?.isBeginningOfTheHand;
 
   return (
-    <View style={[styles.container, { left: player.position * 400 }]}>
+    <View style={styles.container}>
       {gameState.playerCount > 1 &&
         playerHand.map((cardObj: string | null, index: number) => {
           const animatedValue = new Animated.Value(shouldMakeCardsShowUp ? 0 : 1);
@@ -76,11 +76,14 @@ const PlayerCards: React.FC<PlayerCardsProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 26, // Adjust as needed for your layout
+    top: -10, // Adjust as needed for your layout
+    left: -20,
     height: "100%",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginLeft: 16,
+    zIndex: 20
   },
 });
 

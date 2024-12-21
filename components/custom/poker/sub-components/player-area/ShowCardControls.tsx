@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useSpan } from "@/utils/logging";
 import { toast } from "sonner";
 import { PokerWebSocketMessage } from "@/types/pokerFrontend.";
+import { Button } from "@/components/ui/button";
 
 interface ShowCardControlsProps {
   gameId: string;
@@ -77,39 +78,48 @@ const ShowCardControls: React.FC<ShowCardControlsProps> = ({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={[
-          styles.button,
-          showFirstCard ? styles.activeButton : styles.inactiveButton,
-        ]}
+      <Button
+        variant="secondary"
         onPress={handleToggleFirstCard}
+        style= {[{
+          width: 110, paddingVertical: 4, borderColor: '#6B7280', borderRadius: 8, borderWidth: 1
+        }, showFirstCard ? 
+        {backgroundColor: '#2085F0'} : {backgroundColor: 'transparent'}]}
+        textStyle={[{
+          fontSize: 12, textAlign: 'center',
+        }, showFirstCard ? 
+        {color: 'white'} : {color: '#D1D5DB'}]}
       >
-        <Text style={styles.buttonText}>
-          {showFirstCard ? `Showing ${firstCardName}` : `Show ${firstCardName}`}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.button,
-          showSecondCard ? styles.activeButton : styles.inactiveButton,
-        ]}
-        onPress={handleToggleSecondCard}
+        {showFirstCard ? `Showing ${firstCardName}` : `Show ${firstCardName}`}
+      </Button>
+      <Button
+        variant="secondary"
+        onPress={handleToggleFirstCard}
+        style= {[{
+          width: 110, paddingVertical: 4, borderColor: '#6B7280',borderRadius: 8, borderWidth: 1
+        }, showSecondCard ? 
+        {backgroundColor: '#2085F0'} : {backgroundColor: 'transparent'}]}
+        textStyle={[{
+          fontSize: 12, textAlign: 'center',
+        }, showSecondCard ? 
+        {color: 'white'} : {color: '#D1D5DB'}]}
       >
-        <Text style={styles.buttonText}>
-          {showSecondCard ? `Showing ${secondCardName}` : `Show ${secondCardName}`}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.button,
-          (showFirstCard && showSecondCard) ? styles.activeButton : styles.inactiveButton,
-        ]}
-        onPress={handleToggleBoth}
+        {showSecondCard ? `Showing ${secondCardName}` : `Show ${secondCardName}`}
+      </Button>
+      <Button
+        variant="secondary"
+        onPress={handleToggleFirstCard}
+        style= {[{
+          width: 110, paddingVertical: 4, borderColor: '#6B7280', borderRadius: 8, borderWidth: 1 
+        }, (showFirstCard && showSecondCard) ? 
+        {backgroundColor: '#2085F0'} : {backgroundColor: 'transparent'}]}
+        textStyle={[{
+          fontSize: 12, textAlign: 'center'
+        }, (showFirstCard && showSecondCard) ? 
+        {color: 'white'} : {color: '#D1D5DB'}]}
       >
-        <Text style={styles.buttonText}>
-          {showFirstCard && showSecondCard ? "Showing Both Cards" : "Show Both Cards"}
-        </Text>
-      </TouchableOpacity>
+        {(showFirstCard && showSecondCard) ? "Showing Both Cards" : "Show Both Cards"}
+      </Button>
     </View>
   );
 };
@@ -117,31 +127,35 @@ const ShowCardControls: React.FC<ShowCardControlsProps> = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    gap: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.75)",
-    borderRadius: 10,
+    gap: 20,
     padding: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 5,
+    opacity: 0.75,
+    borderRadius: 10,
+    width: '100%',
+    justifyContent: 'space-between'
+    // shadowColor: "#000",
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 4,
+    // elevation: 5,
+    
   },
   button: {
-    flex: 1,
+    display: 'flex',
     paddingVertical: 10,
     borderRadius: 8,
     alignItems: "center",
   },
   activeButton: {
     backgroundColor: "#2085F0",
+    borderColor: '#FFFFFF'
   },
   inactiveButton: {
-    backgroundColor: "transparent",
+    // backgroundColor: "transparent",
+    borderColor: '#FFFFFF'
   },
   buttonText: {
     color: "#fff",
-    fontWeight: "bold",
   },
 });
 

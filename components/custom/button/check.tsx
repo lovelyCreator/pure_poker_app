@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 100,
     borderRadius: 15,
-    backgroundColor: '#1E84F0', // Change to your preferred color
+    backgroundColor: '#FFD000', // Change to your preferred color
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 3, // For Android shadow
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 16, // Adjust size as needed
-    color: '#FFFFFF', // Text color
+    color: '#998220', // Text color
   },
 });
 export default Check;

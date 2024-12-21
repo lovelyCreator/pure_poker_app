@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    zIndex: 1000, // Ensure it stays on top
+    zIndex: 100, // Ensure it stays on top
   },
   button: {
     borderRadius: 50,

@@ -316,7 +316,9 @@ const GameplayPokerMain = ({
   }, []);
 
   return (
-    <View style={{marginHorizontal: 'auto', width: 'auto', maxWidth: 3000}}>
+    <View 
+    style={{marginHorizontal: 'auto', width: 'auto', maxWidth: 3000}}
+    >
       <View style={{display: 'flex', width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
         {/* {gameState && screenSize !== "smallIphone" && (
           <PokerChat gameState={gameState} screenSize={screenSize} />
@@ -347,7 +349,7 @@ const GameplayPokerMain = ({
             setShowBombPotDecisionModal={setShowBombPotDecisionModal}
           />
         )}
-        <View style={{ height: smallIphonedimensions.height, width: smallIphonedimensions.width, position: 'relative',  top: 0}}>
+        <View style={{ height: smallIphonedimensions.height, width: smallIphonedimensions.width, position: 'relative',  top: 0, maxHeight: 750, maxWidth: 1700}}>
           <View style={{
             position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, 
             marginBottom: dimensions.marginBottom, marginLeft: dimensions.marginLeft,
@@ -426,7 +428,7 @@ const GameplayPokerMain = ({
           )}
           {/* Betting Controls */}
           {gameState && currentPlayer && currentPlayerId && (
-            <View>
+            <View >
               <BettingControls
                 gameId={gameId}
                 gameState={gameState}
@@ -447,13 +449,13 @@ const GameplayPokerMain = ({
               />
             </View>
           )}
-          {screenSize !== "smallIphone" && (
+          {/* {screenSize !== "smallIphone" && (
             <CurrentBestHand
               currentBestHand={currentBestHand ?? ""}
               gameStage={gameState?.gameStage ?? ""}
               shouldShowWin={shouldShowWin}
             />
-          )}
+          )} */}
           {/* Buy Back In Popup */}
           {/* <BuyBackInPopup
             isOpen={shouldShowPopup}
@@ -486,7 +488,6 @@ const styles = StyleSheet.create({
     width: '100%',
     resizeMode:'contain',
     height: smallIphonedimensions.height *0.9,
-    zIndex: -1000
   },
 });
 

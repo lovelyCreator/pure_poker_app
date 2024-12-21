@@ -131,7 +131,7 @@ const BuyChips: React.FC<BuyChipsProps> = ({
       </TouchableOpacity>
       <Modal
         transparent={true}
-        animationType="slide"
+        animationType="fade"
         visible={isOpen}
         onRequestClose={() => setIsOpen(false)}
       >

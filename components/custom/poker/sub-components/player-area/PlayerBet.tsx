@@ -1,9 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { motion } from "framer-motion"; // Note: Framer Motion is not available in React Native, so we'll simulate the animation differently.
+import { View, Text, StyleSheet, Image, Animated } from "react-native";
 import { getBettingAndDealerPositions, ScreenSize } from "@/lib/poker";
 import type { GameState, Player as PlayerType } from "@/types/poker";
-import Pot from "../board-area/Pot"; // Ensure Pot component is implemented
+import Pot from "../board-area/Pot";
+import coinRed from "@/assets/game/coin-red.svg";
+import type { StaticImport } from "next/dist/shared/lib/get-img-props";
+
+const typedCoinRed: StaticImport = coinRed as StaticImport;
 
 interface PlayerBetProps {
   player: PlayerType;
@@ -12,6 +15,10 @@ interface PlayerBetProps {
   screenSize: ScreenSize;
   displayBB: boolean;
   initialBigBlind: number;
+  currentPlayerPosition: number;
+  index: number;
+  shouldShowWin?: boolean;
+  style?: React.CSSProperties;
 }
 
 const PlayerBet: React.FC<PlayerBetProps> = ({
@@ -21,14 +28,17 @@ const PlayerBet: React.FC<PlayerBetProps> = ({
   screenSize,
   initialBigBlind,
   displayBB,
+  currentPlayerPosition,
+  index,
+  style,
+  shouldShowWin = false,
 }) => {
   if (!(player.bet > 0 && gameState.gameInProgress)) return null;
 
   const bettingAndDealerPositions = getBettingAndDealerPositions(screenSize);
-
   const { left, top } =
     bettingAndDealerPositions[gameState.players.length - 1]?.[rotatedPosition]
-      ?.betPosition || { left: 0, top: 0 }; // Default values for position
+      ?.betPosition || {};
 
   const formatValue = (): string => {
     if (displayBB) {
@@ -41,52 +51,123 @@ const PlayerBet: React.FC<PlayerBetProps> = ({
     }
   };
 
+  const raiseBetChips = [
+    { chipsCount: 1, chipsType: typedCoinRed, chipName: "coinred", zIndex: 10, chipIndex: 1 },
+    { chipsCount: 1, chipsType: typedCoinRed, chipName: "coinred", zIndex: 10, chipIndex: 2 },
+    { chipsCount: 1, chipsType: typedCoinRed, chipName: "coinred", zIndex: 10, chipIndex: 3 },
+  ];
+
+  const renderChips = (
+    count: number,
+    image: StaticImport,
+    alt: string,
+    zIndexBase: number,
+  ) => {
+    const chipsPerStack = 4;
+    const stacks = Math.ceil(count / chipsPerStack);
+
+    return (
+      <View style={styles.chipContainer}>
+        {Array.from({ length: stacks }).map((_, stackIndex) => (
+          <View key={`${alt}-stack-${stackIndex}`} style={styles.chipStack}>
+            {Array.from({
+              length: Math.min(chipsPerStack, count - stackIndex * chipsPerStack),
+            }).map((_, chipIndex) => (
+              <Image
+                key={`${alt}-${stackIndex}-${chipIndex}`}
+                source={image}
+                style={{
+                  width: 20,
+                  height: 20,
+                  marginTop: -15,
+                  zIndex: zIndexBase - stackIndex * chipsPerStack - chipIndex,
+                }}
+              />
+            ))}
+          </View>
+        ))}
+      </View>
+    );
+  };
+
   return (
-    <View
+    <Animated.View
       style={[
         styles.container,
-        { left: left, top: top },
+        style,
+        { left, top, opacity: gameState?.isBeginningOfTheHand ? 0 : 1 },
       ]}
     >
-      <View style={styles.betDisplay}>
-        <Text style={styles.betText}>
-          {formatValue()}
-        </Text>
-        <View style={styles.potContainer}>
-          <Pot
-            amountShown={player.bet}
-            amountInBigBlinds={(player.bet * 100) / initialBigBlind}
-            isMovingToPot={1}
-            screenSize={screenSize}
-            initialBigBlinds={initialBigBlind}
-            displayBB={displayBB}
-          />
-        </View>
+      {player.bet &&
+        gameState?.lastMove?.playerWhoMadeTheLastMove === player.uuid &&
+        (gameState?.lastMove?.lastMovePerformed === "RAISE" ||
+          gameState?.lastMove?.lastMovePerformed === "BET") && (
+          <View style={styles.chipAnimationContainer}>
+            {raiseBetChips.map((chip) => (
+              <Animated.View
+                key={`playerbetchips${chip.chipIndex}fromplayer`}
+                style={{
+                  position: "absolute",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  left: `${left}px`,
+                  top: `${top}px`,
+                  opacity: 1,
+                }}
+              >
+                {renderChips(chip.chipsCount, chip.chipsType, chip.chipName, chip.zIndex)}
+              </Animated.View>
+            ))}
+          </View>
+        )}
+      <View style={[styles.betInfoContainer, { left, top: 30 }]}>
+        <Pot
+          amountShown={player.bet}
+          amountInBigBlinds={(player.bet * 100) / gameState.initialBigBlind}
+          isMovingToPot={1}
+          screenSize={screenSize}
+          initialBigBlinds={initialBigBlind}
+          displayBB={displayBB}
+          gameState={gameState}
+          currentPlayerPosition={currentPlayerPosition}
+          index={index}
+          shouldShowWin={shouldShowWin}
+        />
+        <Text style={styles.betAmount}>{formatValue()}</Text>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    zIndex: 20,
-    width: 80, // Adjust width as necessary
-    alignItems: "center",
   },
-  betDisplay: {
+  chipContainer: {
     flexDirection: "row",
+  },
+  chipStack: {
+    marginRight: 8,
+    flexDirection: "column",
+    justifyContent: "flex-end",
+  },
+  chipAnimationContainer: {
+    flex: 1,
+  },
+  betInfoContainer: {
+    position: "absolute",
+    zIndex: 20,
+    width: 80,
     alignItems: "center",
     justifyContent: "center",
   },
-  betText: {
+  betAmount: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16, // Adjust font size as necessary
-    textAlign: "center",
-  },
-  potContainer: {
-    flexShrink: 0,
+    fontSize: 16,
+    marginTop: -5,
   },
 });
 

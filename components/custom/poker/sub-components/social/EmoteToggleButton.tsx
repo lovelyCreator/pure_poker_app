@@ -13,7 +13,7 @@ const EmoteToggleButton: React.FC<EmoteToggleButtonProps> = ({
 }) => {
   return (
     <TouchableOpacity
-      onPress={toggleEmoteSelector}
+      onPress={()=>{toggleEmoteSelector(), console.log('emotion selected', isEmoteSelectorVisible)}}
       style={[
         styles.button,
         isEmoteSelectorVisible ? styles.buttonActive : styles.buttonInactive,
@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
   },
   button: {
     position: "absolute",
-    right: 0,
-    top: 0,
-    zIndex: 20,
+    right: -25,
+    top: -10,
+    // zIndex: 150,
     padding: 4,
     borderRadius: 50,
     borderWidth: 2,
