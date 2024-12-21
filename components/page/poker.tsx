@@ -14,6 +14,7 @@ import JoinPopup from "@/components/custom/poker/JoinPopup";
 import { useNavigation } from 'expo-router';
 import { SpanInheritor, SpanWrapper, useSpan } from '@/utils/logging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MobilePlayerPokerNav from '../custom/poker/MobilePlayPokerNav';
 
 export default function Poker() {
   const searchParams = useSearchParams();
@@ -211,31 +212,7 @@ export default function Poker() {
 
   return (
     <SpanInheritor span={span}>
-      <View className="gameplay-poker">
-        <SpanWrapper name="PlayPokerNav">
-          <PlayPokerNav
-            playerId={user.username}
-            gameId={gameId ?? ""}
-            gameState={gameState ?? undefined}
-            vpip={vpip}
-            buyIn={
-              gameState?.players.find((p) => p.id === user.username)?.buyIn ?? 0
-            }
-            gameChips={
-              gameState?.players.find((p) => p.id === user.username)?.chips ?? 0
-            }
-            playerBalance={user.chips}
-            isSpectator={isSpectator}
-            allBoardCardsRevealed={allBoardCardsRevealed}
-            setAllBoardCardsRevealed={setAllBoardCardsRevealed}
-            isSittingOutNextHand={isSittingOutNextHand}
-            setIsSittingOutNextHand={setIsSittingOutNextHand}
-            displayBB={displayBB}
-            setDisplayBB={setDisplayBB}
-            playSoundEnabled={playSoundEnabled}
-            setPlaySoundEnabled={setPlaySoundEnabled}
-          />
-        </SpanWrapper>
+      <View style={{width: '100%', height: '100%', backgroundColor: '#11141D', position: 'relative', zIndex: 0}}>
         <SpanWrapper name="PlayPokerGame">
           <GamePlayPoker
             gameId={gameId ?? ""}
@@ -271,6 +248,55 @@ export default function Poker() {
             setShowBombPotDecisionModal={setShowBombPotDecisionModal}
           />
         </SpanWrapper>
+        <View style={{position: 'absolute', top: 0, right: 0}}>
+          <SpanWrapper name="PlayPokerNav">
+            {/* <PlayPokerNav
+              playerId={user.username}
+              gameId={gameId ?? ""}
+              gameState={gameState ?? undefined}
+              vpip={vpip}
+              buyIn={
+                gameState?.players.find((p) => p.id === user.username)?.buyIn ?? 0
+              }
+              gameChips={
+                gameState?.players.find((p) => p.id === user.username)?.chips ?? 0
+              }
+              playerBalance={user.chips}
+              isSpectator={isSpectator}
+              allBoardCardsRevealed={allBoardCardsRevealed}
+              setAllBoardCardsRevealed={setAllBoardCardsRevealed}
+              isSittingOutNextHand={isSittingOutNextHand}
+              setIsSittingOutNextHand={setIsSittingOutNextHand}
+              displayBB={displayBB}
+              setDisplayBB={setDisplayBB}
+              playSoundEnabled={playSoundEnabled}
+              setPlaySoundEnabled={setPlaySoundEnabled}
+            /> */}
+            
+            <MobilePlayerPokerNav
+              gameId={gameId ?? ""}
+              playerId={user.username}
+              gameState={gameState ?? undefined}
+              vpip={vpip}
+              playerBalance={user.chips}
+              buyIn={
+                gameState?.players.find((p) => p.id === user.username)?.buyIn ?? 0
+              }
+              gameChips={
+                gameState?.players.find((p) => p.id === user.username)?.chips ?? 0
+              }
+              allBoardCardsRevealed={allBoardCardsRevealed}
+              setAllBoardCardsRevealed={setAllBoardCardsRevealed}
+              isSpectator={isSpectator}
+              isSittingOutNextHand={isSittingOutNextHand}
+              setIsSittingOutNextHand={setIsSittingOutNextHand}
+              displayBB={displayBB}
+              setDisplayBB={setDisplayBB}
+              playSoundEnabled={playSoundEnabled}
+              setPlaySoundEnabled={setPlaySoundEnabled}
+            />
+          </SpanWrapper>
+        </View>
 
         {showJoinPopup && (
           <JoinPopup

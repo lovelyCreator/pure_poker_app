@@ -249,8 +249,9 @@ const Player: React.FC<PlayerProps> = ({
 
   return (
     <View
-      className={`color-[#ffffff] absolute z-20 ${player.inHand || gameIsOver ? "" : "opacity-40"}`}
       style={{
+        position: 'absolute', zIndex: 20,
+        opacity: `${player.inHand || gameIsOver ? 1 : 0.4}`,
         left: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.leftPosition}`,
         top: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.topPosition}`,
         transform: "translate(-50%, -50%)",
@@ -275,20 +276,20 @@ const Player: React.FC<PlayerProps> = ({
         <EmoteSelector gameId={gameState.gameId} />
       )}
 
-      {isCurrentTurn &&
+      {/* {isCurrentTurn &&
         isCurrentPlayer &&
         currentPlayerTurn.extraTime === 0 &&
         screenSize !== "smallIphone" && (
           <TimeBank player={currentPlayerTurn} gameId={gameState.gameId} />
-        )}
+        )} */}
       
-      {isCurrentPlayer && gameState.gameStarted && screenSize !== "smallIphone" &&
+      {/* {isCurrentPlayer && gameState.gameStarted && screenSize !== "smallIphone" &&
         <CreateBombPot 
           thisPlayer={thisPlayer} 
           gameId={gameState.gameId} 
           gameState={gameState}
         />
-      }
+      } */}
 
       {showBombPotDecisionModal && 
         <PlayerBombPotDecisionStatus currentDecision={player.bombPotDecision} />

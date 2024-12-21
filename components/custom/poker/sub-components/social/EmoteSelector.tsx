@@ -6,6 +6,7 @@ import { getPokerUrl } from "@/lib/poker"; // Adjust the import according to you
 import { useSpan } from "@/utils/logging"; // Adjust the import according to your project structure
 import { useAuth } from "@/hooks/useAuth"; // Adjust the import according to your project structure
 import { toast } from "sonner"; // Ensure you have a toast library installed
+import { MotiView } from "moti";
 
 interface EmoteSelectorProps {
   gameId: string;
@@ -17,7 +18,7 @@ const texts: string[] = []; // Placeholder for additional texts
 const EmoteSelector: React.FC<EmoteSelectorProps> = ({ gameId }) => {
   const user = useAuth();
   const span = useSpan("sendEmote");
-  const { sendJsonMessage, lastMessage } = useWebSocket(getPokerUrl(span, gameId, user.username), {
+  const { sendJsonMessage } = useWebSocket(getPokerUrl(span, gameId, user.username), {
     share: true,
     onMessage: (event: any) => {
       try {
@@ -49,24 +50,33 @@ const EmoteSelector: React.FC<EmoteSelectorProps> = ({ gameId }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <MotiView
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        transition={{ duration: 0.3 }}
+        style={[ styles.container, {
+            fontFamily: "'Comic Sans MS', 'Chalkboard SE', sans-serif",
+        }]}
+      >
       <ScrollView contentContainerStyle={styles.scrollView}>
-        {(emotes.concat(texts)).map((item) => (
-          <TouchableOpacity
-            key={item}
-            onPress={() => handleSendEmote(item)}
-            style={[
-              styles.button,
-              item.length === 2 ? styles.emoteButton : styles.textButton,
-            ]}
-          >
-            <Text style={item.length === 2 ? styles.emoteText : styles.text}>
-              {item}
-            </Text>
-          </TouchableOpacity>
-        ))}
+      {[...emotes, ...texts].map((item) => (
+        <TouchableOpacity
+          key={item}
+          onPress={() => handleSendEmote(item)}
+          style={[
+            styles.button,
+            item.length === 2 ? styles.largeButton : styles.smallButton,
+            item.length > 2 && styles.dynamicWidth,
+          ]}
+        >
+          <Text style={item.length === 2 ? styles.largeText : styles.smallText}>
+            {item}
+          </Text>
+        </TouchableOpacity>
+      ))}
       </ScrollView>
-    </View>
+    </MotiView>
   );
 };
 
@@ -99,29 +109,30 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 5,
-    margin: 5,
-    padding: 5,
+    margin: 1,
     borderWidth: 2,
     borderColor: "transparent",
     transitionDuration: "300ms",
   },
-  emoteButton: {
-    width: "45%",
-    backgroundColor: "#2c2f36",
-    alignItems: "center",
+  largeButton: {
+    padding: 2
   },
-  textButton: {
-    width: "45%",
-    backgroundColor: "#2c2f36",
-    alignItems: "center",
+  smallButton: {
+    backgroundColor: '#2c2f36',
+    paddingVertical: 8, // Equivalent to py-1
+    paddingHorizontal: 12, // Equivalent to px-3
   },
-  emoteText: {
-    fontSize: 24,
-    color: "white",
+  dynamicWidth: {
+    minWidth: '45%',
+    maxWidth: '45%',
   },
-  text: {
-    fontSize: 14,
-    color: "white",
+  largeText: {
+    fontSize: 24, // Equivalent to text-2xl
+    // Responsive styles can be added based on screen size
+  },
+  smallText: {
+    fontSize: 14, // Equivalent to text-sm
+    color: '#ffffff', // Equivalent to text-white
   },
 });
 

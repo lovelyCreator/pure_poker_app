@@ -19,6 +19,7 @@ import SeeAllGames from '@/components/custom/home/see-all-games';
 import MassPayStatus from '@/components/custom/home/masspay-status';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Button } from '@/components/ui/button';
+import LoadingPage from '@/components/page/loading';
 
 // const SignInCard = lazy(() => import('"@/components/custom/login/signInCard'));
 
@@ -165,6 +166,7 @@ export default function Home() {
   const [chipState, setChipState] = useState(false);
 
   return (
+    <Suspense fallback={<LoadingPage />}> 
     <SpanWrapper name="HomePage" span={span}>
       <View style={styles.topBar}>
         <Image style={[styles.mark]} source={require('@/assets/global/pure-poker-logo.png')} />
@@ -274,6 +276,7 @@ export default function Home() {
         </View>
       </ScrollView>
     </SpanWrapper>
+    </Suspense>
   );
 }
 

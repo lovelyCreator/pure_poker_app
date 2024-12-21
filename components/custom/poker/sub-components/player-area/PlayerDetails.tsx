@@ -53,7 +53,7 @@ const PlayerDetails: React.FC<PlayerDetailsProps> = ({
           style={[
             styles.playerName,
             { color: isCurrentPlayer ? "#FFF700" : "#FFFFFF" },
-            {fontSize: 14}
+            {fontSize: 12}
             // { fontSize: usernameLengthToFontSize(playerName.length, screenSize) },
           ]}
         >
@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     fontWeight: "bold",
     fontSize: 16,
+    color: '#ffffff99'
   },
   sittingOutText: {
     borderTopWidth: 1,

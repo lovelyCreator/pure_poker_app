@@ -45,7 +45,7 @@ const SettingsPopup: React.FC<SettingsProps> = ({
       {/* Modal */}
       <Modal
         transparent={true}
-        animationType="slide"
+        animationType="fade"
         visible={isModalOpen}
         onRequestClose={closeSettingsModal}
       >

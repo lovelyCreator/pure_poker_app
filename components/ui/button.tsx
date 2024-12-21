@@ -122,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { Button };
+export { Button, ButtonProps };

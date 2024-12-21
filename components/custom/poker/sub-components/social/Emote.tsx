@@ -18,13 +18,11 @@ const Emote: React.FC<EmoteProps> = ({ emote, isVisible }) => {
     <AnimatePresence>
       {isVisible && (
         <MotiView
-          style={[
-            styles.container,
-            {
-              right: isText ? -95 : -30,
-              top: topPosition,
-            },
-          ]}
+        style={[
+          styles.container,
+          isText ? styles.textContainer : styles.largeTextContainer,
+          isText && { borderColor: '#5f5f5f', borderWidth: 2, width: 60, }
+        ]}
           from={{
             opacity: 0,
             scale: 0.5,
@@ -56,25 +54,28 @@ const Emote: React.FC<EmoteProps> = ({ emote, isVisible }) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
+    position: 'absolute',
+    transform: [{ translateX: '50%' }],
     zIndex: 20,
-    alignItems: "center",
-    justifyContent: "center",
+  },
+  textContainer: {
+    right: -55, // Equivalent to -right-[95px]
+    backgroundColor: '#2c2f36',
+    paddingHorizontal: 12, // Equivalent to px-3
+    paddingVertical: 4, // Equivalent to py-1
+    borderRadius: 4, // Equivalent to rounded-md
+  },
+  largeTextContainer: {
+    right: -30, // Equivalent to -right-[30px]
+    top: 10, // Equivalent to top-[10px]
   },
   text: {
-    backgroundColor: "#2c2f36",
-    color: "white",
-    fontSize: 14,
-    padding: 8,
-    borderRadius: 5,
-    borderWidth: 2,
-    borderColor: "#5f5f5f",
-    textAlign: "center",
-    width: 100,
+    color: '#ffffff', // Equivalent to text-white
+    fontSize: 12, // Equivalent to text-sm
   },
   emote: {
-    fontSize: 40,
-    color: "white",
+    color: '#ffffff', // Equivalent to text-white
+    fontSize: 40, // Equivalent to text-5xl
   },
 });
 

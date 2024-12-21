@@ -139,14 +139,14 @@ const PlayPokerNav = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <BuyBackInPopup
+        {/* <BuyBackInPopup
           isOpen={shouldShowPopup}
           gameId={gameId}
           playerId={playerId}
           playerBalance={playerBalance}
           boughtChips={player?.boughtChips ?? 0}
           bigBlind={gameState?.initialBigBlind ?? 0}
-        />
+        /> */}
         <SpanWrapper name="QuitGamePopup">
           <View style={styles.iconContainer}>
             {isSpectator ? (

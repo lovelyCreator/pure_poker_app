@@ -9,7 +9,8 @@ interface PlayerAvatarProps {
 const PlayerAvatar: React.FC<PlayerAvatarProps> = ({ playerId, profilePicture }) => (
   <View style={styles.container}>
     <Image
-      source={{ uri: `https://yourdomain.com/assets/profile/${profilePicture}.svg` }} // Adjust the URI as necessary
+      // source={require(`@/assets/profile/${profilePicture}.png`) || require('@/assets/profile/testProfilePic.png')} // Adjust the URI as necessary
+      source={require('@/assets/profile/testProfilePic.png')}
       style={styles.avatar}
       accessibilityLabel="Profile Picture"
     />

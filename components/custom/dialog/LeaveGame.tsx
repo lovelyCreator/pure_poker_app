@@ -29,7 +29,7 @@ const LeaveGame: React.FC<LeaveGameProps> = ({ children, gameId, playerId }) => 
       share: true,
       onMessage: (eventString) => {
         try {
-          assert(typeof eventString.data === "string", "Event is not a string");
+          // assert(typeof eventString.data === "string", "Event is not a string");
           const res = JSON.parse(eventString.data) as PokerActionsFrontend;
           if (res.action === "leaveGamePlayer") {
             toast.dismiss();
@@ -44,6 +44,9 @@ const LeaveGame: React.FC<LeaveGameProps> = ({ children, gameId, playerId }) => 
   );
 
   const confirmLeaveGame = () => {
+    span.info(
+      "User confirmed they want to leave the game. Attempting to exit.",
+    );
     const leaveGameMessage: sendPokerAction = {
       action: "sendPokerAction",
       gameId: gameId,
@@ -59,12 +62,13 @@ const LeaveGame: React.FC<LeaveGameProps> = ({ children, gameId, playerId }) => 
 
   return (
     <>
-      <TouchableOpacity onPress={() => setIsOpen(true)}>
+      <TouchableOpacity onPress={() => {setIsOpen(true), console.log('isOpen', isOpen);
+      }}>
         {children}
       </TouchableOpacity>
       <Modal
         transparent={true}
-        animationType="slide"
+        animationType="fade"
         visible={isOpen}
         onRequestClose={() => setIsOpen(false)}
       >

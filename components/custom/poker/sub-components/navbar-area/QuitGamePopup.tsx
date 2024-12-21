@@ -8,16 +8,16 @@ import { Image } from 'react-native'; // Use Image from React Native
 const QuitGamePopup: React.FC = () => {
   const auth = useAuth();
   const route = useRoute(); // Get the route object
-  const gameId = route.params?.gameId ?? ""; // Access gameId from route parameters
+  const gameId = route.params?.gameId; // Access gameId from route parameters
 
   return (
-    <View style={styles.container}>
-      <LeaveGame gameId={gameId} playerId={auth.username}>
-        <TouchableOpacity style={styles.button}>
+    // <View style={styles.container}>
+      <LeaveGame gameId={gameId ?? ""} playerId={auth.username}>
+        <View style={styles.button}>
           <Image source={require('@/assets/game/quit.png')} style={styles.icon} resizeMode="contain" />
-        </TouchableOpacity>
+        </View>
       </LeaveGame>
-    </View>
+    // </View>
   );
 };
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert } from "react-native";
 import { Copy, ExternalLink, X } from "lucide-react"; // Ensure you have lucide-react or similar icon library installed
 import { toast } from "sonner"; // Make sure to have a toast library installed
+import { Clipboard } from 'react-native-clipboard/clipboard'; // Import Clipboard 
 
 const GameSharePopup: React.FC<{ gameId: string }> = ({ gameId }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,6 +15,7 @@ const GameSharePopup: React.FC<{ gameId: string }> = ({ gameId }) => {
     const copyToClipboard = async (text: string) => {
         try {
             await navigator.clipboard.writeText(text);
+            // await Clipboard.setString(text);
             toast.success("Copied to clipboard!");
         } catch (e) {
             toast.error("Failed to copy");
@@ -61,7 +63,7 @@ const GameSharePopup: React.FC<{ gameId: string }> = ({ gameId }) => {
             <Modal
                 transparent={true}
                 visible={isModalOpen}
-                animationType="slide"
+                animationType="fade"
                 onRequestClose={closeShareModal}
             >
                 <View style={styles.modalOverlay}>
@@ -121,6 +123,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#007bff",
         borderRadius: 5,
         marginLeft: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 10,
+        justifyContent: 'space-around',
+        alignItems: 'center'
     },
     modalOverlay: {
         flex: 1,

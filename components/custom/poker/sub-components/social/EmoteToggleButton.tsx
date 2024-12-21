@@ -12,34 +12,32 @@ const EmoteToggleButton: React.FC<EmoteToggleButtonProps> = ({
   isEmoteSelectorVisible,
 }) => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={toggleEmoteSelector}
+    <TouchableOpacity
+      onPress={toggleEmoteSelector}
+      style={[
+        styles.button,
+        isEmoteSelectorVisible ? styles.buttonActive : styles.buttonInactive,
+      ]}
+    >
+      <MessageCircleMore
         style={[
-          styles.button,
-          isEmoteSelectorVisible ? styles.buttonActive : styles.buttonInactive,
+          styles.icon,
+          isEmoteSelectorVisible ? styles.iconActive : styles.iconInactive,
         ]}
-      >
-        <MessageCircleMore
-          style={[
-            styles.icon,
-            isEmoteSelectorVisible ? styles.iconActive : styles.iconInactive,
-          ]}
-        />
-      </TouchableOpacity>
-    </View>
+      />
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    right: 20,
-    top: 10,
-    zIndex: 20,
   },
   button: {
-    padding: 8,
+    position: "absolute",
+    right: 0,
+    top: 0,
+    zIndex: 20,
+    padding: 4,
     borderRadius: 50,
     borderWidth: 2,
     transitionDuration: "300ms",

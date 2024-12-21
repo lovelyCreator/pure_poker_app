@@ -91,7 +91,9 @@ const CardDealer: React.FC<CardDealerProps> = ({
 
         return (
           (gameState?.isBeginningOfTheHand || isNoBetBombPot) && (
-            <View key={player.id} style={styles.playerContainer}>
+            <View key={player.id} 
+            // style={styles.playerContainer}
+            >
               {/* Map over both cards: left and right */}
               {[0, 1].map((cardIndex) => (
                 <MotiView
@@ -118,6 +120,7 @@ const CardDealer: React.FC<CardDealerProps> = ({
                             top: `${playerPosition?.topPosition}`,
                             opacity: 0,
                             scale: 1.0,
+                            transform: 'translate(-125%, -50%)'
                           }
                       : shouldAnimateSecondCard[index]
                       ? {
@@ -135,6 +138,7 @@ const CardDealer: React.FC<CardDealerProps> = ({
                   }
                   transition={{
                     duration: 0.8,
+                    stiffness: 30,
                     delay: cardIndex * 0.2,
                   }}
                   exit={{
@@ -162,11 +166,11 @@ const CardDealer: React.FC<CardDealerProps> = ({
 };
 
 const styles = StyleSheet.create({
-  playerContainer: {
-    position: "relative",
-    width: "100%",
-    height: "100%",
-  },
+  // playerContainer: {
+  //   position: "relative",
+  //   width: "100%",
+  //   height: "100%",
+  // },
 });
 
 export default CardDealer;

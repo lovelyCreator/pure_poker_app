@@ -83,9 +83,10 @@ const MobilePlayerPokerNav: React.FC<MobilePlayerPokerNavProps> = ({
   return (
     <View style={styles.container}>
       {/* Mobile menu toggle button */}
-      <Button style={styles.toggleButton} onPress={toggleMobileMenu}>
-        {!isMobileMenuOpen && <Menu size={24} />}
-      </Button>
+      
+        {!isMobileMenuOpen && <Button style={styles.toggleButton} onPress={toggleMobileMenu}>
+          <Menu size={24} />
+      </Button>}
 
       {/* Mobile dropdown menu */}
       {isMobileMenuOpen && (
@@ -160,11 +161,11 @@ const MobilePlayerPokerNav: React.FC<MobilePlayerPokerNavProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    display: 'flex',
   },
   toggleButton: {
     position: 'absolute',
-    zIndex: 50,
+    zIndex: 100,
     top: 10,
     right: 10,
     color: 'white',
@@ -193,10 +194,17 @@ const styles = StyleSheet.create({
   balanceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent:'center',
     color: '#FFC105',
+    top: 0
   },
   balanceText: {
+    display: 'flex',
+    flexDirection: 'row',
     color: '#FFC105',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 14
   },
   coinImage: {
     marginRight: 8,

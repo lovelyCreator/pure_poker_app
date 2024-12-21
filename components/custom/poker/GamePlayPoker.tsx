@@ -22,32 +22,32 @@ import CurrentBestHand from "./sub-components/player-area/CurrentBestHand";
 import BoardArea from "./sub-components/board-area/BoardArea";
 import BuyBackInPopup from "../dialog/BuyBackInPopup";
 import BombPotDecision from "./sub-components/BombPotDecision";
-import Dimensions from 'react-native';
-// 
+import { Dimensions } from 'react-native';
+import { Linking } from "react-native";
 const { width, height } = Dimensions.get('window');
-interface Dimensions {
+interface dimensions {
   height: number;
   width: number;
   marginBottom: number;
   marginLeft: number;
 }
 
-const desktopDimensions: Dimensions = {
-  width: width * 0.65 * 2.225,
-  height: height  * 0.65,
-  marginBottom: 100,
-  marginLeft: 0,
-};
+// const desktopdimensions: dimensions = {
+//   width: width * 0.65 * 2.225,
+//   height: height  * 0.65,
+//   marginBottom: 100,
+//   marginLeft: 0,
+// };
 
-const ipadDimensions: Dimensions = {
-  width: width,
-  height: width*0.48,
-  marginBottom: 100,
-  marginLeft: 0,
-};
+// const ipaddimensions: dimensions = {
+//   width: width,
+//   height: width*0.48,
+//   marginBottom: 100,
+//   marginLeft: 0,
+// };
 
-const smallIphoneDimensions: Dimensions = {
-  width: width * 0.67,
+const smallIphonedimensions: dimensions = {
+  width: height * 0.67 * 0.654,
   height: height  * 0.67,
   marginBottom: 0,
   marginLeft: 0,
@@ -117,42 +117,35 @@ const GameplayPokerMain = ({
 }: GameplayPokerMainProps) => {
   const span = useSpan("GameplayPokerMain");
   const user = useAuth();
-  // console.log("GamePlayStateData--->",gameId,
-  //   "playerId",playerId,
-  //   "gameState",gameState,
-  //   "currentPlayerId",currentPlayerId,
-  //   "isSpectator",isSpectator,
-  //   "isSittingOut",isSittingOut,
-  //   "isSittingOutNextHand",isSittingOutNextHand,
-  //   "allBoardCardsRevealed",allBoardCardsRevealed,
-  //   "showDealingAnimation",showDealingAnimation,
-  //   "activeEmotes",activeEmotes,
-  //   "isEmoteVisible",isEmoteVisible,
-  //   "showEmoteButtonSelector",showEmoteButtonSelector,
-  //   "isEmoteSelectorVisible",isEmoteSelectorVisible,
-  //   "showTimeBankAnimation",showTimeBankAnimation,
-  //   "displayBB",displayBB, 
-  //   "playSoundEnabled",playSoundEnabled,
-  //   "previousCommunityCards",previousCommunityCards,
-  //   "shouldShowWin",shouldShowWin,
-  //   "showBombPotDecisionModal",showBombPotDecisionModal,)
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const queryParams = new URLSearchParams(window.location.search);
+    const handleUrl = (url:string) => {
+      const queryParams = new URLSearchParams(url.split("?")[1]);
       const displayBBParam = queryParams.get("displayBB");
 
       if (displayBBParam === "true") {
         setDisplayBB(true);
       } else {
-        // Explicitly set displayBB to false and update the URL
         setDisplayBB(false);
-        queryParams.set("displayBB", "false");
-        const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
-        window.history.replaceState(null, "", newUrl);
       }
-    } else {
-      setDisplayBB(false); // Fallback
-    }
+    };
+
+    const getInitialUrl = async () => {
+      const initialUrl = await Linking.getInitialURL();
+      if (initialUrl) {
+        handleUrl(initialUrl);
+      }
+    };
+
+    getInitialUrl();
+
+    const subscription = Linking.addEventListener("url", ({ url }) => {
+      handleUrl(url);
+    });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   const currentPlayer = gameState?.players.find(
@@ -187,7 +180,7 @@ const GameplayPokerMain = ({
     require('@/assets/game/table-small-iphone.png')
   );
   const [screenSize, setScreenSize] = useState<ScreenSize>("smallIphone");
-  const [dimensions, setDimensions] = useState<Dimensions>(smallIphoneDimensions);
+  const [dimensions, setdimensions] = useState<dimensions>(smallIphonedimensions);
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
 
   const gameIsOver = gameState?.gameStage === "gameOver";
@@ -296,19 +289,19 @@ const GameplayPokerMain = ({
       setScreenSize(screenSize);
       console.log('GetSreenSize', screenSize)
           setTableImage(require('@/assets/game/table-small-iphone.png'));
-          setDimensions(smallIphoneDimensions);
+          setdimensions(smallIphonedimensions);
       // switch (screenSize) {
       //   case "smallIphone":
       //     setTableImage(require('@/assets/game/table-small-iphone.png'));
-      //     setDimensions(smallIphoneDimensions);
+      //     setdimensions(smallIphonedimensions);
       //     break;
       //   case "ipad":
       //     setTableImage(require('@/assets/game/table-ipad.png'));
-      //     setDimensions(ipadDimensions);
+      //     setdimensions(ipaddimensions);
       //     break;
       //   case "desktop":
       //     setTableImage(require('@/assets/game/table-desktop.png'));
-      //     setDimensions(desktopDimensions);
+      //     setdimensions(desktopdimensions);
       //     break;
       //   case "largeDesktop":
       //     setTableImage(require('@/assets/game/board-bg.png'));
@@ -317,16 +310,14 @@ const GameplayPokerMain = ({
     };
 
     updateTableImage(); // Set the initial table image
-    window.addEventListener("resize", updateTableImage); // Update on window resize
+    const subscription = Dimensions.addEventListener("change", updateTableImage);
 
-    return () => window.removeEventListener("resize", updateTableImage);
+    return () => {subscription?.remove();}
   }, []);
-  const height = dimensions.height; // Convert to number
-  const width = dimensions.width;   // Convert to number
-  console.log(height, width, "Dimention Height, width", dimensions)
+
   return (
-    <View style={styles.container}>
-      <View style={styles.backgroundContainer}>
+    <View style={{marginHorizontal: 'auto', width: 'auto', maxWidth: 3000}}>
+      <View style={{display: 'flex', width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
         {/* {gameState && screenSize !== "smallIphone" && (
           <PokerChat gameState={gameState} screenSize={screenSize} />
         )} */}
@@ -338,9 +329,9 @@ const GameplayPokerMain = ({
           isSpectator={isSpectator}
           screenSize={screenSize}
         />
-        {showTimeBankAnimation && (
+        {/* {showTimeBankAnimation && (
           <TimeBankAnimation setShowTimeBankAnimation={setShowTimeBankAnimation} />
-        )}
+        )} */}
         {gameState?.isBombPotProposed && gameState?.gameStage === "gameOver" && (
           <BombPotDecision
             isBombPotProposed={gameState.isBombPotProposed}
@@ -356,8 +347,15 @@ const GameplayPokerMain = ({
             setShowBombPotDecisionModal={setShowBombPotDecisionModal}
           />
         )}
-        <View style={[styles.tableContainer, { height, width }]}>
-          <Image source={tableImage} style={styles.tableImage} />
+        <View style={{ height: smallIphonedimensions.height, width: smallIphonedimensions.width, position: 'relative',  top: 0}}>
+          <View style={{
+            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, 
+            marginBottom: dimensions.marginBottom, marginLeft: dimensions.marginLeft,
+            display: 'flex',
+            }}
+          >
+            <Image source={tableImage} style={styles.tableImage} />
+          </View>
           {/* Player */}
           {gameState?.players.map((player, index) => (
             <Player
@@ -428,24 +426,26 @@ const GameplayPokerMain = ({
           )}
           {/* Betting Controls */}
           {gameState && currentPlayer && currentPlayerId && (
-            <BettingControls
-              gameId={gameId}
-              gameState={gameState}
-              currentPlayer={currentPlayer}
-              currentPlayerId={currentPlayerId}
-              playerId={playerId}
-              user={user}
-              setInactivityCount={setInactivityCount}
-              actionButtonsDisabled={actionButtonsDisabled}
-              setActionButtonsDisabled={setActionButtonsDisabled}
-              raiseAmount={raiseAmount}
-              setRaiseAmount={setRaiseAmount}
-              foldToAny={foldToAny}
-              setFoldToAny={setFoldToAny}
-              screenSize={screenSize}
-              displayBB={displayBB}
-              initialBigBlind={gameState.initialBigBlind}
-            />
+            <View>
+              <BettingControls
+                gameId={gameId}
+                gameState={gameState}
+                currentPlayer={currentPlayer}
+                currentPlayerId={currentPlayerId}
+                playerId={playerId}
+                user={user}
+                setInactivityCount={setInactivityCount}
+                actionButtonsDisabled={actionButtonsDisabled}
+                setActionButtonsDisabled={setActionButtonsDisabled}
+                raiseAmount={raiseAmount}
+                setRaiseAmount={setRaiseAmount}
+                foldToAny={foldToAny}
+                setFoldToAny={setFoldToAny}
+                screenSize={screenSize}
+                displayBB={displayBB}
+                initialBigBlind={gameState.initialBigBlind}
+              />
+            </View>
           )}
           {screenSize !== "smallIphone" && (
             <CurrentBestHand
@@ -468,30 +468,25 @@ const GameplayPokerMain = ({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  tableSubContainer: {
+    display: 'flex',
+    position: 'absoulte',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'column',
+    justityContent: 'center',
     alignItems: 'center',
-  },
-  backgroundContainer: {
-    flex: 1,
-    minHeight: '100%', // Adjust as needed
     width: '100%',
-    justifyContent: 'flex-start',
-    backgroundColor: '#fff', // Fallback color
-    backgroundImage: require('@/assets/game/board-bg.png'), // Not applicable in React Native
-    backgroundSize: 'cover', // Not applicable in React Native
-  },
-  tableContainer: {
-    position: 'absolute',
-    maxHeight: 750,
-    maxWidth: 1700,
-    width: '100%',
+    height: '100%',
   },
   tableImage: {
     marginTop: 20,
-    width: '100%', // Adjust according to your design
-    height: '100%', // Maintain aspect ratio
-    resizeMode: 'stretch'
+    width: '100%',
+    resizeMode:'contain',
+    height: smallIphonedimensions.height *0.9,
+    zIndex: -1000
   },
 });
 

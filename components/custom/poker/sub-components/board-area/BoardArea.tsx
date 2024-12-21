@@ -64,14 +64,26 @@ const BoardArea: React.FC<BoardAreaProps> = ({
         />
       )}
 
-      {screenSize !== "smallIphone" && (
+      {gameState?.netWinners?.length > 0 && 
+        <Pot
+          // eslint-disable-next-line
+          amountShown={(gameState?.pot! - allPlayersBet) / 100}
+          // eslint-disable-next-line
+          amountInBigBlinds={(gameState?.pot! - allPlayersBet) / initialBigBlind}
+          // eslint-disable-next-line
+          isMovingToPot={3}
+          screenSize={screenSize}
+          initialBigBlinds={initialBigBlind}
+          displayBB={displayBB}
+      />}
+      {/* {screenSize !== "smallIphone" && (
         <ChipsAnimation
           players={Object.values(gameState?.players ?? {})}
           playerCount={gameState?.playerCount ?? 0}
           gameState={gameState ?? ({} as GameState)}
           key={`${gameState?.gameStage}`}
         />
-      )}
+      )} */}
 
       <View style={styles.container}>
         {/* Total Pot Display */}
@@ -136,21 +148,32 @@ const BoardArea: React.FC<BoardAreaProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    position: "relative",
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    position: 'absolute',  // Equivalent to absolute
+    top: 0,                // Equivalent to inset-0
+    right: 0,              // Equivalent to inset-0
+    bottom: 0,             // Equivalent to inset-0
+    left: 0,               // Equivalent to inset-0
+    display: 'flex',               // Enables flexbox layout
+    flexDirection: 'column', // Equivalent to flex-col
+    alignItems: 'center',  // Equivalent to items-center
+    justifyContent: 'center', // Equivalent to justify-center
+    transform: [{ translateY: '10%' }], // Translates down by 10%
   },
   potContainer: {
-    position: "absolute",
-    bottom: '10%', // Adjust based on your layout
+    position: 'relative',
     left: 0,
+    bottom: '50%',
     borderRadius: 50,
     borderWidth: 2,
-    borderColor: "#FFC700",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Optional for better visibility
+    borderColor: '#FFC700',
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
   potText: {
     fontSize: 12,
@@ -160,15 +183,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   potValue: {
-    marginLeft: 5,
+    marginHorizontal: 4,
   },
   cardsContainer: {
-    position: "absolute",
-    top: '-15%', // Adjust based on your layout
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    alignItems: "center",
+    position: 'relative',
+    left: 0,
+    zIndex: 10,
+    flex: 1,
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: -60,
+    maxWidth: 180
+
   },
 });
 

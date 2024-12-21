@@ -6,10 +6,10 @@ import Poker from "@/components/page/poker";
 
 export default function PlayPoker() {
   return (
-    <View style={{ flex: 1 }}>
-      {/* <Suspense fallback={<LoadingPage />}> */}
+    // <View style={{ flex: 1 }}>
+      <Suspense fallback={<LoadingPage />}> 
         <Poker />
-      {/* </Suspense> */}
-    </View>
+      </Suspense> 
+    // </View>
   );
 }
