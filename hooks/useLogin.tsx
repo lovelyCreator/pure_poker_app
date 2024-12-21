@@ -1,5 +1,3 @@
-import { useMutation } from '@tanstack/react-query';
-import { authApi } from '@/api/api'; // Adjust the import based on your file structure
 import { handleResponse } from '@/lib/fetch'; // Adjust the import based on your file structure
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import { env } from "@/env";
@@ -7,12 +5,6 @@ import { Alert } from 'react-native';
 
 export default async function useLogin(username: string, password: string) {
     try {
-      // const response = await authApi.general.login.$post({
-      //   json: {
-      //     username,
-      //     password,
-      //   },
-      // });
       // const token = await AsyncStorage.getItem('PP_TOKEN');
       const response = await fetch(`${env.NEXT_PUBLIC_AUTH_API_URL}/general/login`, {
         method: 'POST',
@@ -34,11 +26,11 @@ export default async function useLogin(username: string, password: string) {
       handleResponse(response);
       console.log(response.body)
 
-      if (!response.ok) {
-        const res = (await response.json()) as { message: string };
-        throw new Error(res.message);
+      // if (!response.ok) {
+      //   const res = (await response.json()) as { message: string };
+      //   throw new Error(res.message);
         
-      }
+      // }
       return response; // Return the response or any data you want to handle
     } catch (error) {
     throw new Error(error instanceof Error ? error.message : 'An error occurred');

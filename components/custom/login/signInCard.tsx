@@ -36,7 +36,7 @@ export default function SignInCard() {
   //     .$get(undefined)
   //     .then((res:any) => {
   //       if (res.ok) {
-  //         navigation.navigate('/index');
+  //         navigation.navigate('/');
   //       }
   //     })
   //     .catch((e: any) => {
@@ -69,6 +69,14 @@ export default function SignInCard() {
     const result = await useLogin(values.username, values.password);
     if (result.ok) {
       navigation.navigate('home');
+    }else {
+      // Show an alert if login fails
+      console.log("Aleart")
+      Alert.alert(
+        "Login Failed",
+        "Incorrect username or password. Please try again.",
+        [{ text: "OK" }]
+      );
     }
   }
 
