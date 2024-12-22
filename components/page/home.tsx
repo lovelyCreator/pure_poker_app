@@ -47,7 +47,7 @@ export default function HomePage() {
   const handleSeeLessClick = () => {
     setShowAllGames(false);
   }
-
+  console.log("Available Games", availableGames)
   // const renderContent = () => (
   //   <>
   //     {!userIsVerified && (

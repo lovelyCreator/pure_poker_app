@@ -338,14 +338,14 @@ const GameplayPokerMain = ({
         {/* {gameState && screenSize !== "smallIphone" && (
           <PokerChat gameState={gameState} screenSize={screenSize} />
         )} */}
-        <InformationBanner
+        {/* <InformationBanner
           isSittingOut={isSittingOut}
           isSittingOutNextHand={isSittingOutNextHand}
           inactivityCount={inactivityCount}
           currentPlayer={currentPlayer!}
           isSpectator={isSpectator}
           screenSize={screenSize}
-        />
+        /> */}
         {/* {showTimeBankAnimation && (
           <TimeBankAnimation setShowTimeBankAnimation={setShowTimeBankAnimation} />
         )} */}
@@ -369,6 +369,7 @@ const GameplayPokerMain = ({
             position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, 
             marginBottom: dimensions.marginBottom, marginLeft: dimensions.marginLeft,
             display: 'flex',
+            zIndex: -1
             }}
           >
             <Image source={tableImage} style={styles.tableImage} />

@@ -137,14 +137,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#1c202b",
     position: "relative",
-    zIndex: 80,
+    zIndex: 100,
   },
   playerName: {
     marginTop: -10,
     textAlign: "center",
     paddingVertical: 5,
     paddingHorizontal: 10,
-    zIndex: 10,
+    zIndex: 100,
   },
   chipsDisplay: {
     borderTopWidth: 1,

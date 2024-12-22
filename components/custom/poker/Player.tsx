@@ -293,6 +293,61 @@ const Player: React.FC<PlayerProps> = ({
       zIndex: 30,
       alignItems: 'center',
       justifyContent: 'center', }}>
+      {
+        isDisabled ? 
+        
+        <View
+          style={[
+            {
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.3,
+              shadowRadius: 4,
+              
+              left: -20,
+              top: 20,         
+              backgroundColor: '#A0AEC0', // bg-gray-400
+              color: '#A0AEC0', // text-gray-600
+              opacity: 0.5,
+            } 
+          ]}
+          // disabled={isDisabled}
+        >
+          <View style={{
+            width: 28,
+            height: 28,
+            position: 'relative',
+            borderRadius: 14,
+          }} >
+            <View style={{
+              position: 'absolute',
+              width: '100%',
+              height: 6,
+              left: 0,
+              backgroundColor: 'rgb(75,85,99 )',
+              top: 8,
+              borderRadius: 6,
+              transform: [{translateY: '50%'}]
+            }}/>
+            <View style={{
+              position: 'absolute',
+              width: 6,
+              height: '100%',
+              left: 8,
+              backgroundColor: 'rgb(75,85,99 )',
+              top: 0,
+              borderRadius: 6,
+              transform: [{translateX: '50%'}]
+            }}/>
+          </View>
+        </View>
+        :
       <CreateOrJoinGame
         userIsVerified={userIsVerified}
         isCreateGame={false}
@@ -314,21 +369,13 @@ const Player: React.FC<PlayerProps> = ({
               shadowRadius: 4,
               
               left: -20,
-              top: 20
-            },
-            isDisabled ? 
-            {          
-              backgroundColor: '#A0AEC0', // bg-gray-400
-              color: '#A0AEC0', // text-gray-600
-              opacity: 0.5,
-            } : 
-            {
+              top: 20,
               backgroundColor: '#A0AEC0', // bg-gray-500
               color: '#4A5568', // text-gray-800
             }
           ]}
           // disabled={isDisabled}
-        >
+          >
           <View style={{
             width: 28,
             height: 28,
@@ -358,6 +405,7 @@ const Player: React.FC<PlayerProps> = ({
           </View>
         </View>
       </CreateOrJoinGame>
+    }
     </View>
     );
   }
@@ -381,7 +429,7 @@ const Player: React.FC<PlayerProps> = ({
       /> */}
       <View
         style={{
-          position: 'absolute', zIndex: 20,
+          position: 'absolute', zIndex: -1,
           opacity: `${player?.inHand || gameIsOver ? 1 : 0.4}`,
           left: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.leftPosition}`,
           top: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.topPosition}`,
@@ -392,7 +440,7 @@ const Player: React.FC<PlayerProps> = ({
         key={index}
       >
         {/* Display the Emote */}
-        <Emote emote={activeEmote} isVisible={isEmoteVisible} />
+        {/* <Emote emote={activeEmote} isVisible={isEmoteVisible} /> */}
 
         {/* Toggle button for emote selector */}
         {/* {showEmoteButtonSelector && isCurrentPlayer && (

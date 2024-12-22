@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 16,
-    zIndex: 20
+    // zIndex: -1
   },
 });
 

@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 16, // Equivalent to mt-6
     alignItems: "center",
+    zIndex: 10
   },
   avatar: {
     height: 50, // Equivalent to h-[50px]

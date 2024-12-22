@@ -145,7 +145,7 @@ const BettingControls: React.FC<BettingControlsProps> = ({
   }, [gameState.currentTurn]);
 
   return (
-    <View style={{marginTop: 60}}>
+    <View style={{marginTop: 60, zIndex: -1}}>
       {!isPlayerTurn && !hasFolded && !gameIsOver && (
         <View style={styles.absoluteBottom}>
           <Button

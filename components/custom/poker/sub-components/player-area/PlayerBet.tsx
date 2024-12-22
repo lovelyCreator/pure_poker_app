@@ -236,7 +236,7 @@ const PlayerBet: React.FC<PlayerBetProps> = ({
     // >
     <View>
       <View
-        style={{ left: left+10, top: top+60, position: 'absolute', zIndex: 20, width: 20, }}
+        style={{ left: left+10, top: top+75, position: 'absolute', zIndex: 20, width: 20, }}
       >
         <View 
           style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginRight: 8, }}
