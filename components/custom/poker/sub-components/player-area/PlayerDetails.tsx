@@ -58,16 +58,22 @@ const PlayerDetails: React.FC<PlayerDetailsProps> = ({
       ? "#F97316"
       : "#EF4444"
   const vpipFont = Math.round(vpip) === 100 ? 8 : 10;
-
+  const calculateFontSize = (word:string, maxWidth:number) => {
+    const baseFontSize = 20; // Base font size
+    const wordLength = word.length;
+  
+    // Calculate font size based on word length
+    const newFontSize = Math.max(baseFontSize * (maxWidth / (wordLength * 10)), 10); // Minimum font size of 10
+    return newFontSize;
+  };
   return (
     <View style={styles.container}>
 
     {/* VPIP Indicator */}
     {handsPlayed > 0 && !isCurrentPlayer && !gameIsOver && !sittingOut && (
       <View
-        className={`absolute left-4 md:left-4 mt-4 md:mt-6 lg:mt-5 z-20 flex h-6 w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 items-center justify-center rounded-lg text-white ${vpipFont} font-bold ${vpipColor}`}
         style={{ 
-          transform: "translate(-50%, -50%)", position: 'absolute', left: 16, marginTop: 16, zIndex: 20, 
+          transform: "translate(-50%, -50%)", position: 'absolute', left: 16, marginTop: 0, zIndex: 20, 
           display: 'flex', height: 24, width: 24, alignItems: 'center', justifyContent: 'center', borderRadius: 18, backgroundColor: vpipColor
         }}
       >
@@ -84,6 +90,7 @@ const PlayerDetails: React.FC<PlayerDetailsProps> = ({
             styles.playerName,
             { color: isCurrentPlayer ? "#FFF700" : "#FFFFFF" },
             {fontSize: 10}
+            // {fontSize: calculateFontSize(playerName, 50)}
             // { fontSize: usernameLengthToFontSize(playerName.length, screenSize) },
           ]}
         >
@@ -118,7 +125,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: 'column'
+    flexDirection: 'column',
+    marginTop: 80,
   },
   detailsContainer: {
     marginTop: -14,

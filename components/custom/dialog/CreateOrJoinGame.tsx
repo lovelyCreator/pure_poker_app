@@ -2,7 +2,6 @@ import React, { useState} from "react";
 import {
   Dialog,
   DialogContent,
-  DialogProvider,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -19,11 +18,13 @@ export default function CreateOrJoinGame({
     isCreateGame,
     defaultGameId,
     userIsVerified,
+    seatPosition
 } : {
     children: React.ReactNode;
     isCreateGame?: boolean;
     defaultGameId?: string;
     userIsVerified: boolean;
+    seatPosition?: number;
 }){
     const [isCreateGameDialogOpen, setIsCreateGameDialogOpen] = useState(
       isCreateGame ?? true,
@@ -45,7 +46,7 @@ export default function CreateOrJoinGame({
         {isCreateGameDialogOpen ? (
              <CreateGameDialog />
         ) : (
-            <JoinGameDialog defaultGameId={defaultGameId} />
+            <JoinGameDialog defaultGameId={defaultGameId} seatPosition={seatPosition ?? 10}/>
         )}
     </DialogContent>)
     return (

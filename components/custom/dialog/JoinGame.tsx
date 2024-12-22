@@ -18,7 +18,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { centsToDollars } from  '@/utils/magnitudeConversion'
 import type { PokerActionsFrontend } from '@/types/pokerFrontend.';
 import assert from "assert";
-import { verifyLocation } from "@/lib/radar";
+// import { verifyLocation } from "@/lib/radar";
 import { View, Text, StyleSheet } from 'react-native';
 import {useAuth} from '@/hooks/useAuth';
 import useUserGroups from '@/hooks/useUserGroups';
@@ -34,7 +34,7 @@ const JoinGameSchema = z.object({
       .max(5000, { message: "Buy-in myst be less than 5000." }),
   });
 
-  export function JoinGameDialog({ defaultGameId }: { defaultGameId?: string }) {
+  export function JoinGameDialog({ defaultGameId, seatPosition }: { defaultGameId?: string;  seatPosition: number }) {
     const span = useSpan("JoinGameDialog");
     const user = useAuth();
     const userId = user.id;
@@ -98,7 +98,6 @@ const JoinGameSchema = z.object({
               } else {
                 toast.success("Successfully joined the game!");
               }
-              closeDialog();
             } else {
               if (res.action === "joinGame" && res.statusCode !== 200) {
                 toast.dismiss();
@@ -138,6 +137,13 @@ const JoinGameSchema = z.object({
     
   
     const onSubmit = async (values: z.infer<typeof JoinGameSchema>) => {
+      console.log("Close Dialogsssss")
+      if (seatPosition === 10) {
+        closeDialog();
+        navigation.navigate(`playPoker`, { gameId: values.gameId})
+        // router.push(`/play-poker/?gameId=${values.gameId}`);
+        return;
+      }
       values.buyIn = values.buyIn * 100;
       const userChipsCents = user.chips * 100;
   
@@ -148,10 +154,10 @@ const JoinGameSchema = z.object({
         return;
       }
   
-      toast.loading("Confirming your location...");
-      // Perform Radar location verification
-      const result = await verifyLocation(user.id);
-      const { success, token } = result;
+      // toast.loading("Confirming your location...");
+      // // Perform Radar location verification
+      // const result = await verifyLocation(user.id);
+      // const { success, token } = result;
   
       // Ignored temporaily for the developement, Aziz
       // if (!success) {
@@ -166,7 +172,7 @@ const JoinGameSchema = z.object({
       toast.success("Location confirmed!");
   
       // Convert token to a string if needed
-      const radarTokenString = token ? token.toString() : "";
+      // const radarTokenString = token ? token.toString() : "";
   
       const joinGameMessage: sendPokerAction = {
         action: "sendPokerAction",
@@ -175,7 +181,9 @@ const JoinGameSchema = z.object({
         buyIn: values.buyIn,
         raiseAmount: null,
         groups: userGroups,
-        radarToken: radarTokenString
+        seatPosition: seatPosition,
+        // radarToken: radarTokenString
+        radarToken: ''
       };
       
       // Delay the JSON message by 1 second
@@ -200,20 +208,25 @@ const JoinGameSchema = z.object({
           )}
         />
         {errors.gameId && <Text style={styles.error}>{errors.gameId.message}</Text>}
-        <Text style={styles.subtitle}>Buy In</Text>         
-        <Controller
-          control={control}
-          name="buyIn"
-          render={({ field }) => (
-            <Input
-              placeholder="#********"
-              {...field}
-              keyboardType="numeric" // Set keyboard type to numeric
-              style={{borderRadius: 24, width: '100%'}}
+        {
+          seatPosition !== 10 &&
+          <View>
+            <Text style={styles.subtitle}>Buy In</Text>         
+            <Controller
+              control={control}
+              name="buyIn"
+              render={({ field }) => (
+                <Input
+                  placeholder="#********"
+                  {...field}
+                  keyboardType="numeric" // Set keyboard type to numeric
+                  style={{borderRadius: 24, width: '100%'}}
+                />
+              )}
             />
-          )}
-        />
-        {errors.buyIn && <Text style={styles.error}>{errors.buyIn.message}</Text>}
+            {errors.buyIn && <Text style={styles.error}>{errors.buyIn.message}</Text>}
+          </View>
+        }
         {/* <Button onPress={handleSubmit(onSubmit)} variant={'full'} 
           style={{width: 64}}
           textStyle={{color: 'white'}}

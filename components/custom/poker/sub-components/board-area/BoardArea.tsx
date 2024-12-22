@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   potContainer: {
     position: 'relative',
     left: 0,
-    bottom: 70,
+    bottom: 20,
     borderRadius: 50,
     borderWidth: 2,
     borderColor: '#FFC700',
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap:10,
-    top: -60,
+    top: -10,
     maxWidth: 180
 
   },

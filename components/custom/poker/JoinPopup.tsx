@@ -7,6 +7,7 @@ import { enableFreeze } from "react-native-screens";
 interface JoinPopupProps {
   userIsVerified: boolean;
   gameId?: string;
+  seatPosition: Number;
   setShowJoinPopup: (value: boolean) => void;
   setIsSpectator: (value: boolean) => void;
 }
@@ -14,6 +15,7 @@ interface JoinPopupProps {
 const JoinPopup: React.FC<JoinPopupProps> = ({
   userIsVerified,
   gameId = "",
+  seatPosition,
   setShowJoinPopup,
   setIsSpectator,
 }) => {
@@ -34,6 +36,7 @@ const JoinPopup: React.FC<JoinPopupProps> = ({
               userIsVerified={userIsVerified}
               isCreateGame={false}
               defaultGameId={gameId}
+              seatPosition={seatPosition}
             >
               <View
                 style={[{

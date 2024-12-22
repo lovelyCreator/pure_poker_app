@@ -214,8 +214,8 @@ const CreateGameSchema = z
           onHide: () => console.log('Success toast hidden'),
         });
         //Perform Radar location verification
-        const result = await verifyLocation(userId);
-        const { success, token, expiresIn } = result;
+        // const result = await verifyLocation(userId);
+        // const { success, token, expiresIn } = result;
   
         // Ignored temporarily for the development
         // if (!success) {
@@ -227,7 +227,7 @@ const CreateGameSchema = z
         // }
   
         // Convert token to a string if needed
-        const radarTokenString = token ? token.toString() : "";
+        // const radarTokenString = token ? token.toString() : "";
         // const radarTokenString = '';
   
         const createGame: createGame = {
@@ -237,7 +237,8 @@ const CreateGameSchema = z
           buyIn: values.buyIn,
           minNumberOfPlayers: values.minNumberOfPlayers,
           groups: selectedGroups,
-          radarToken: radarTokenString
+          // radarToken: radarTokenString
+          radarToken: ''
         };         
         // Delay the JSON message by 1.5 seconds
         setTimeout(() => {
@@ -324,10 +325,10 @@ const CreateGameSchema = z
                             <Picker.Item key={group.groupId} label={group.groupName} value={group.groupName} />
                         ))}
                         </Picker>
-                        <Image
-                        source={require("@/assets/menu-bar/expand.png")} 
-                        style={styles.icon}
-                        />
+                        {/* <Image
+                          source={require("@/assets/menu-bar/expand.png")} 
+                          style={styles.icon}
+                        /> */}
 
                     </View>
                 )}

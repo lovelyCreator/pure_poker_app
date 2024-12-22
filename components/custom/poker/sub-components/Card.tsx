@@ -72,18 +72,24 @@ const Card: React.FC<CardProps> = ({
       const value = card.slice(0, -1).replace("T", "10");
       const suite = card.slice(-1);
       return (
-        <MotiView
-          from={flipAnimation.hidden}
-          animate={flipAnimation.visible}
+        // <MotiView
+        //   from={flipAnimation.hidden}
+        //   animate={flipAnimation.visible}
+        <View
           style={styles.cardContainer}
         >
           {/* Back side (CardFaceDown) */}
-          <MotiView style={styles.cardSide}>
+          {/* <MotiView  */}
+          <View
+          style={styles.cardSide}>
             <CardFaceDown side={side} />
-          </MotiView>
+          {/* </MotiView> */}
+          </View>
 
           {/* Front side (CardFaceUp) */}
-          <MotiView style={[styles.cardSide, styles.frontSide]}>
+          {/* <MotiView  */}
+          <View
+          style={[styles.cardSide, styles.frontSide]}>
             <CardFaceUp
               side={side}
               suite={suite}
@@ -93,8 +99,10 @@ const Card: React.FC<CardProps> = ({
               card={card}
               shouldShowWin={shouldShowWin}
             />
-          </MotiView>
-        </MotiView>
+            </View>
+          {/* </MotiView> */}
+        {/* </MotiView> */}
+        </View>
       );
     } else if (!isCurrentPlayer && gameIsOver && showCards) {
       if (card) {
@@ -125,7 +133,9 @@ const Card: React.FC<CardProps> = ({
         } as React.CSSProperties;
 
         return (
-          <MotiView {...revealCardAnimation} style={cardStyle}>
+          // <MotiView {...revealCardAnimation} 
+          <View
+          style={cardStyle}>
             <CardFaceUp
               side={side}
               suite={suite}
@@ -135,7 +145,8 @@ const Card: React.FC<CardProps> = ({
               card={card}
               shouldShowWin={shouldShowWin}
             />
-          </MotiView>
+          {/* </MotiView> */}
+          </View>
         );
       }
       return null;
@@ -161,13 +172,15 @@ const Card: React.FC<CardProps> = ({
   };
 
   return (
-    <MotiView
-      from={isAnimating ? startPos : undefined}
-      animate={isAnimating ? endPos : undefined}
+    // <MotiView
+    //   from={isAnimating ? startPos : undefined}
+    //   animate={isAnimating ? endPos : undefined}
+    <View
       style={styles.cardContainer}
     >
       {renderCard()}
-    </MotiView>
+    {/* </MotiView> */}
+    </View>
   );
 };
 

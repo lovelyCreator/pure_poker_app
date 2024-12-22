@@ -6,16 +6,27 @@ interface PlayerAvatarProps {
   profilePicture: string;
 }
 
-const PlayerAvatar: React.FC<PlayerAvatarProps> = ({ playerId, profilePicture }) => (
+// const loadImage = (imageName: string) => {
+//   try {
+//     return require(`@/assets/profile/${imageName}.png`);
+//   } catch (error) {
+//     // Fallback to a default image if the specified one is not found
+//     return require('@/assets/profile/testProfilePic.png');
+//   }
+// };
+
+const PlayerAvatar: React.FC<PlayerAvatarProps> = ({ playerId, profilePicture }) => {
+  // const avatarSource = loadImage(profilePicture);
+  return (
   <View style={styles.container}>
     <Image
-      // source={require(`@/assets/profile/${profilePicture}.png`) || require('@/assets/profile/testProfilePic.png')} // Adjust the URI as necessary
+      // source={avatarSource} // Adjust the URI as necessary
       source={require('@/assets/profile/testProfilePic.png')}
       style={styles.avatar}
       accessibilityLabel="Profile Picture"
     />
   </View>
-);
+)};
 
 const styles = StyleSheet.create({
   container: {

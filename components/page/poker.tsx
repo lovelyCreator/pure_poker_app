@@ -137,7 +137,6 @@ export default function Poker() {
       }
     }
   );
-
   useEffect(() => {
     if (!gameState) {
       // router.push("/404");
@@ -145,7 +144,7 @@ export default function Poker() {
     } else {
       const playerId = user.username;
       const isPlayerInGame = gameState.players.some(
-        (player) => player.id === playerId,
+        (player) => player && player.id === playerId,
       );
       const isPlayerWaitingInGame = gameState.waitingPlayers.some(
         (player) => player[2] === playerId,
@@ -156,7 +155,7 @@ export default function Poker() {
       }
 
       gameState.players.forEach((player) => {
-        if (player.id === playerId) {
+        if (player && player.id === playerId) {
           setVpip(
             player.totalHands > 0
               ? Number(
@@ -209,6 +208,8 @@ export default function Poker() {
       }
     }, 2000);
   };
+  // const player = gameState?.players.find((player) => player.id === user.username)
+  let player = gameState?.players?.find((p) => p?.id === user.username) || null;
 
   return (
     <SpanInheritor span={span}>
@@ -257,10 +258,10 @@ export default function Poker() {
               gameState={gameState ?? undefined}
               vpip={vpip}
               buyIn={
-                gameState?.players.find((p) => p.id === user.username)?.buyIn ?? 0
+                player?.buyIn ?? 0
               }
               gameChips={
-                gameState?.players.find((p) => p.id === user.username)?.chips ?? 0
+                player?.chips ?? 0
               }
               playerBalance={user.chips}
               isSpectator={isSpectator}
@@ -281,10 +282,10 @@ export default function Poker() {
               vpip={vpip}
               playerBalance={user.chips}
               buyIn={
-                gameState?.players.find((p) => p.id === user.username)?.buyIn ?? 0
+                gameState?.players.find((p) => p && p.id === user.username)?.buyIn ?? 0
               }
               gameChips={
-                gameState?.players.find((p) => p.id === user.username)?.chips ?? 0
+                gameState?.players.find((p) => p && p.id === user.username)?.chips ?? 0
               }
               allBoardCardsRevealed={allBoardCardsRevealed}
               setAllBoardCardsRevealed={setAllBoardCardsRevealed}
@@ -299,14 +300,14 @@ export default function Poker() {
           </SpanWrapper>
         </View>
 
-        {showJoinPopup && (
+        {/* {showJoinPopup && (
           <JoinPopup
             userIsVerified={user.clearApproval === "approved"}
             gameId={gameId!}
             setShowJoinPopup={setShowJoinPopup}
             setIsSpectator={setIsSpectator}
           />
-        )}
+        )} */}
       </View>
     </SpanInheritor>
   );

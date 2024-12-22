@@ -52,7 +52,7 @@ const MobilePlayerPokerNav: React.FC<MobilePlayerPokerNavProps> = ({
   const winnings = gameChips - buyIn;
   
   // Handle when to show BuyBackInPopup
-  const player = gameState?.players.find((player) => player.id === playerId);
+  const player = gameState?.players.find((player) => player && player.id === playerId);
   const gameIsOver = gameState?.gameStage === "gameOver";
   const isPlayerWaitingInGame = gameState?.waitingPlayers.some(
     (player) => player[2] === playerId

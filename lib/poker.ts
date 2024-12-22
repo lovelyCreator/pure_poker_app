@@ -262,54 +262,94 @@ Record<
   { leftPosition: number | string; topPosition: number | string }
 >
 > = {
-desktop: {
-  one: { leftPosition: "50%", topPosition: "87%" },
-  onevone: { leftPosition: "50%", topPosition: "-10%" },
-  two: { leftPosition: "28%", topPosition: "80%" },
-  three: { leftPosition: "5%", topPosition: "60%" },
-  four: { leftPosition: "4%", topPosition: "15%" },
-  five: { leftPosition: "36%", topPosition: "-10%" },
-  six: { leftPosition: "62%", topPosition: "-10%" },
-  seven: { leftPosition: "95%", topPosition: "6%" },
-  eight: { leftPosition: "97%", topPosition: "60%" },
-  nine: { leftPosition: "73%", topPosition: "80%" },
-},
-ipad: {
-  one: { leftPosition: "50%", topPosition: "87%" },
-  onevone: { leftPosition: "50%", topPosition: "-10%" },
-  two: { leftPosition: "30%", topPosition: "70%" },
-  three: { leftPosition: "14%", topPosition: "60%" },
-  four: { leftPosition: "12%", topPosition: "5%" },
-  five: { leftPosition: "36%", topPosition: "-10%" },
-  six: { leftPosition: "62%", topPosition: "-10%" },
-  seven: { leftPosition: "88%", topPosition: "6%" },
-  eight: { leftPosition: "88%", topPosition: "55%" },
-  nine: { leftPosition: "73%", topPosition: "70%" },
-},
-smallIphone: {
-  one: { leftPosition: "50%", topPosition: "93.5%" },
-  onevone: { leftPosition: "50%", topPosition: "8%" },
-  two: { leftPosition: "15%", topPosition: "86%" },
-  three: { leftPosition: "8%", topPosition: "64%" },
-  four: { leftPosition: "8%", topPosition: "28%" },
-  five: { leftPosition: "28%", topPosition: "10%" },
-  six: { leftPosition: "70%", topPosition: "10%" },
-  seven: { leftPosition: "90%", topPosition: "28%" },
-  eight: { leftPosition: "90%", topPosition: "64%" },
-  nine: { leftPosition: "83%", topPosition: "86%" },
-},
-largeDesktop: {
-  one: { leftPosition: "50%", topPosition: "87%" },
-  onevone: { leftPosition: "50%", topPosition: "-10%" },
-  two: { leftPosition: "28%", topPosition: "83%" },
-  three: { leftPosition: "4%", topPosition: "63%" },
-  four: { leftPosition: "4%", topPosition: "15%" },
-  five: { leftPosition: "36%", topPosition: "-10%" },
-  six: { leftPosition: "62%", topPosition: "-10%" },
-  seven: { leftPosition: "95%", topPosition: "6%" },
-  eight: { leftPosition: "97%", topPosition: "60%" },
-  nine: { leftPosition: "73%", topPosition: "83%" },
-},
+  desktop: {
+    one: { leftPosition: "50%", topPosition: "89%" },
+    onevone: { leftPosition: "50%", topPosition: "-6%" },
+    two: { leftPosition: "10%", topPosition: "81%" },
+    twoBis: { leftPosition: "3%", topPosition: "65%" },
+    twoBisBis: { leftPosition: "6%", topPosition: "73%" },
+    three: { leftPosition: "1%", topPosition: "42%" }, // horiz middle left
+    threeBis: { leftPosition: "3%", topPosition: "18%" },
+    threeBisBis: { leftPosition: "6%", topPosition: "8%" },
+    four: { leftPosition: "10%", topPosition: "1%" },
+    fourBis: { leftPosition: "22%", topPosition: "-6%" },
+    five: { leftPosition: "34%", topPosition: "-6%" },
+    six: { leftPosition: "66%", topPosition: "-6%" },
+    sixBis: { leftPosition: "78%", topPosition: "-6%" },
+    seven: { leftPosition: "89%", topPosition: "0%" },
+    sevenBis: { leftPosition: "97%", topPosition: "18%" },
+    sevenBisBis: { leftPosition: "94%", topPosition: "8%" },
+    eight: { leftPosition: "99%", topPosition: "42%" }, // horiz middle right
+    eightBis: { leftPosition: "97%", topPosition: "65%" },
+    eightBisBis: { leftPosition: "94%", topPosition: "73%" },
+    nine: { leftPosition: "89%", topPosition: "81%" },
+  },
+  ipad: {
+    one: { leftPosition: "50%", topPosition: "88%" },
+    onevone: { leftPosition: "50%", topPosition: "-3%" },
+    two: { leftPosition: "15%", topPosition: "71%" },
+    twoBis: { leftPosition: "11%", topPosition: "63%" },
+    twoBisBis: { leftPosition: "16%", topPosition: "73%" },
+    three: { leftPosition: "7%", topPosition: "41%" }, // horiz middle left
+    threeBis: { leftPosition: "10%", topPosition: "16%" },
+    threeBisBis: { leftPosition: "16%", topPosition: "4%" },
+    four: { leftPosition: "14%", topPosition: "6%" },
+    fourBis: { leftPosition: "26%", topPosition: "-3%" },
+    five: { leftPosition: "34%", topPosition: "-3%" },
+    six: { leftPosition: "66%", topPosition: "-3%" },
+    sixBis: { leftPosition: "73%", topPosition: "-3%" },
+    seven: { leftPosition: "84%", topPosition: "6%" },
+    sevenBis: { leftPosition: "88%", topPosition: "16%" },
+    sevenBisBis: { leftPosition: "83%", topPosition: "4%" },
+    eight: { leftPosition: "91%", topPosition: "41%" }, // horiz middle right
+    eightBis: { leftPosition: "87%", topPosition: "63%" },
+    eightBisBis: { leftPosition: "83%", topPosition: "73%" },
+    nine: { leftPosition: "84%", topPosition: "71%" },
+  },
+  smallIphone: {
+    one: { leftPosition: "50%", topPosition: "96.5%" },
+    onevone: { leftPosition: "50%", topPosition: "8%" },
+    two: { leftPosition: "11%", topPosition: "86%" },
+    twoBis: { leftPosition: "11%", topPosition: "86%" },
+    twoBisBis: { leftPosition: "3%", topPosition: "64%" },
+    three: { leftPosition: "3%", topPosition: "64%" },
+    threeBis: { leftPosition: "3%", topPosition: "64%" },
+    threeBisBis: { leftPosition: "4%", topPosition: "30%" },
+    four: { leftPosition: "4%", topPosition: "30%" },
+    fourBis: { leftPosition: "4%", topPosition: "30%" },
+    five: { leftPosition: "28%", topPosition: "10%" },
+    six: { leftPosition: "70%", topPosition: "10%" },
+    sixBis: { leftPosition: "96%", topPosition: "30%" },
+    seven: { leftPosition: "96%", topPosition: "30%" },
+    sevenBis: { leftPosition: "97%", topPosition: "64%" },
+    sevenBisBis: { leftPosition: "96%", topPosition: "30%" },
+    eight: { leftPosition: "97%", topPosition: "64%" },
+    eightBis: { leftPosition: "88%", topPosition: "86%" },
+    eightBisBis: { leftPosition: "97%", topPosition: "64%" },
+    nine: { leftPosition: "88%", topPosition: "86%" },
+  },
+  largeDesktop: {
+    one: { leftPosition: "50%", topPosition: "89%" },
+    onevone: { leftPosition: "50%", topPosition: "-6%" },
+    two: { leftPosition: "12%", topPosition: "85%" },
+    twoBis: { leftPosition: "3%", topPosition: "65%" },
+    twoBisBis: { leftPosition: "6%", topPosition: "76%" },
+    three: { leftPosition: "1%", topPosition: "43%" }, // horiz middle left
+    threeBis: { leftPosition: "3%", topPosition: "20%" },
+    threeBisBis: { leftPosition: "6%", topPosition: "8%" },
+    four: { leftPosition: "10%", topPosition: "1%" },
+    fourBis: { leftPosition: "22%", topPosition: "-6%" },
+    five: { leftPosition: "34%", topPosition: "-6%" },
+    six: { leftPosition: "66%", topPosition: "-6%" },
+    sixBis: { leftPosition: "78%", topPosition: "-6%" },
+    seven: { leftPosition: "89%", topPosition: "0%" },
+    sevenBis: { leftPosition: "97%", topPosition: "20%" },
+    sevenBisBis: { leftPosition: "94%", topPosition: "8%" },
+    eight: { leftPosition: "99%", topPosition: "43%" }, // horiz middle right
+    eightBis: { leftPosition: "97%", topPosition: "65%" },
+    eightBisBis: { leftPosition: "94%", topPosition: "76%" },
+    nine: { leftPosition: "89%", topPosition: "84%" },
+  },
 };
 
 export const getBettingPositions = (screenSize: string) => {
@@ -489,7 +529,7 @@ return [
 };
 
 // Helper function to access the appropriate screen size
-function getPlayerPositions(screenSize: ScreenSize) {
+function getPlayerPositions(screenSize: ScreenSize, emptySeat=false) {
 //   console.log("Get Player Positions", screenSize)
 // switch (screenSize) {
 //   case "smallIphone":
@@ -506,48 +546,48 @@ function getPlayerPositions(screenSize: ScreenSize) {
     return playerPositionsByScreen.smallIphone;
 }
 
-export const generatePlayerPositions = (screenSize: ScreenSize) => {
-const positions = getPlayerPositions(screenSize);
-console.log(positions, "DesktopPosition")
+export const generatePlayerPositions = (screenSize: ScreenSize, emptySeat = false) => {
+const positions = getPlayerPositions(screenSize, emptySeat);
+// console.log(positions, "DesktopPosition")
 
 return [
   [positions.one],
   [positions.one, positions.onevone],
-  [positions.one, positions.five, positions.six],
-  [positions.one, positions.four, positions.five, positions.six],
-  [
-    positions.one,
-    positions.four,
-    positions.five,
-    positions.six,
-    positions.seven,
-  ],
+  [positions.one, positions.four, positions.seven],
+  [positions.one, positions.three, positions.onevone, positions.eight],
   [
     positions.one,
     positions.three,
-    positions.four,
-    positions.five,
-    positions.six,
-    positions.seven,
-  ],
-  [
-    positions.one,
-    positions.three,
-    positions.four,
-    positions.five,
-    positions.six,
-    positions.seven,
+    positions.fourBis,
+    positions.sixBis,
     positions.eight,
   ],
   [
     positions.one,
-    positions.two,
-    positions.three,
-    positions.four,
+    positions.twoBisBis,
+    positions.threeBisBis,
+    positions.onevone,
+    positions.sevenBisBis,
+    positions.eightBisBis,
+  ],
+  [
+    positions.one,
+    positions.twoBis,
+    positions.threeBis,
     positions.five,
     positions.six,
-    positions.seven,
-    positions.eight,
+    positions.sevenBis,
+    positions.eightBis,
+  ],
+  [
+    positions.one,
+    positions.twoBis,
+    positions.threeBis,
+    positions.fourBis,
+    positions.onevone,
+    positions.sixBis,
+    positions.sevenBis,
+    positions.eightBis,
   ],
   [
     positions.one,
@@ -761,9 +801,12 @@ if (isRevealingSingleCard) {
 return isAllInBeforeRiver ? 1.6 : 0.5;
 }
 
-export const getAllPlayersBet = (players: Player[]) => {
-const total = players.reduce((total, player) => total + player.bet, 0);
-return total ? total : 0;
+export const getAllPlayersBet = (players: (Player | null | undefined)[]) => {
+  const total = players
+    .filter((player): player is Player => player !== null && player !== undefined) // Filter out null or undefined players
+    .reduce((total, player) => total + player.bet, 0);
+
+  return total || 0; // Return 0 if total is falsy
 };
 
 export const calculateChipDistribution = (betValue: number) => {

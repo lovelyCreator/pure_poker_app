@@ -25,14 +25,14 @@ const DealerButton: React.FC<DealerButtonProps> = ({
   
   // Get the button position based on the game state
   const { left = 0, top = 0 } = bettingAndDealerPositions[gameState.players.length - 1]?.[rotatedPosition]?.buttonPosition || {};
-
+  
   return (
     <View
       style={[
         styles.button,
         {
-          left: left + 120, // Adjusting for the 100% offset
-          top: top + 80,    // Adjusting for the 50% offset
+          left: left+120 , // Adjusting for the 100% offset
+          top: top + 150,    // Adjusting for the 50% offset
           transform: [{ translateX: -50 }, { translateY: -50 }],
         },
       ]}

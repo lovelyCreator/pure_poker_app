@@ -38,16 +38,16 @@ export default function RootLayout() {
       <Suspense fallback={<LoadingPage />}>
         <AuthProvider>
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <Stack>
+            <Stack initialRouteName='index'>
               <Stack.Screen name="index" options={{ title: 'SignIn', headerShown: false }} />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              {/* <Stack.Screen name="(auth)" options={{ headerShown: false }} /> */}
               <Stack.Screen name="+not-found" options={{ headerShown: false}}/>
-              <Stack.Screen name="ad-redirect" options={{ title: 'Ad Redirect'}} />
+              {/* <Stack.Screen name="ad-redirect" options={{ title: 'Ad Redirect'}} /> */}
               <Stack.Screen name="home" options={{ title: 'Home', headerShown: false}} />
-              <Stack.Screen name="account" options={{ title: 'Account', headerShown: false}} />
+              {/* <Stack.Screen name="account" options={{ title: 'Account', headerShown: false}} />
               <Stack.Screen name="community" options={{ title: 'Community', headerShown: false}} />
               <Stack.Screen name="groups" options={{ title: 'Groups', headerShown: false}} />
-              <Stack.Screen name="layout" options={{ title: 'Layout', headerShown: false}} />
+              <Stack.Screen name="layout" options={{ title: 'Layout', headerShown: false}} /> */}
               <Stack.Screen 
                 name="playPoker" 
                 options={{ title: 'PlayPoker', headerShown: false }} 

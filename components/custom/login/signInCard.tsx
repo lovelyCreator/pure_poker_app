@@ -17,6 +17,8 @@ import { useLogger } from '@/utils/logging';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Signin } from '@/api/auth';
 import * as WebBrowser from 'expo-web-browser';
+import { env } from '@/env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { height } = Dimensions.get('window');
 const calculatedHeight = height - 64; // 4rem = 64px
 
@@ -31,21 +33,40 @@ export default function SignInCard() {
   const navigation = useNavigation();
   const logger = useLogger();
 
-  // useEffect(() => {
-  //   authApi.general.validate_token
-  //     .$get(undefined)
-  //     .then((res:any) => {
-  //       if (res.ok) {
-  //         navigation.navigate('/');
-  //       }
-  //     })
-  //     .catch((e: any) => {
-  //       console.error(e);
-  //     });
-  // }, []);
+
+  useEffect(() => {
+    const validateToken = async () => {
+        try {
+            const token = await AsyncStorage.getItem('PP_TOKEN');
+
+            if (!token) {
+                console.error('No token found');
+                return; // Handle the case where no token is found
+            }
+
+            const res = await fetch(`${env.NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error('Token validation failed');
+            }
+            navigation.navigate('index');
+            // Handle the response data as needed
+        } catch (error) {
+            console.error('Error validating token:', error);
+        }
+    };
+
+    validateToken();
+}, []);
 
   logger.info('Init');
-
+  const login = useLogin();
   // const form = useForm<z.infer<typeof SignInSchema>>({
   //   resolver: zodResolver(SignInSchema),
   //   defaultValues: {
@@ -65,18 +86,19 @@ export default function SignInCard() {
   async function onSubmit(values: z.infer<typeof SignInSchema>) {
     // console.log('signIn datas==========>',values);
     logger.info("Submitted", values);
-    // console.log('logger-->', logger)
-    const result = await useLogin(values.username, values.password);
-    if (result.ok) {
-      navigation.navigate('home');
-    }else {
-      // Show an alert if login fails
-      console.log("Aleart")
-      Alert.alert(
-        "Login Failed",
-        "Incorrect username or password. Please try again.",
-        [{ text: "OK" }]
-      );
+    
+
+    try {
+      const result = await (await login).mutateAsync({
+          username: values.username,
+          password: values.password,
+      });
+
+      console.log("LogInState", result);
+      console.log("Login successful:", result); // Handle success (e.g., store token, redirect)
+      navigation.navigate('home')
+    } catch (error) {
+        console.error("Login failed:", error.message); // Handle failure (e.g., show error message)
     }
   }
 

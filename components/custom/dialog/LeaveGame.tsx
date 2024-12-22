@@ -31,6 +31,7 @@ const LeaveGame: React.FC<LeaveGameProps> = ({ children, gameId, playerId }) => 
         try {
           // assert(typeof eventString.data === "string", "Event is not a string");
           const res = JSON.parse(eventString.data) as PokerActionsFrontend;
+          console.log("LEAVE GAME", res.action)
           if (res.action === "leaveGamePlayer") {
             toast.dismiss();
             toast.success("Successfully left the game!");

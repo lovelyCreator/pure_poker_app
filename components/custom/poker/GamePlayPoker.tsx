@@ -147,21 +147,36 @@ const GameplayPokerMain = ({
       subscription.remove();
     };
   }, []);
-
+  
   const currentPlayer = gameState?.players.find(
-    (player) => player.id === playerId,
+    (player) => player && player.id === playerId,
   );
   const currentPlayerPosition = currentPlayer?.position ?? 0;
   const thisPlayer = gameState?.players.find(
-    (player) => player.id === playerId,
+    (player) => player && player.id === playerId,
   );
 
-  const isPlayerInGame = gameState?.players.some(
-    (player) => player.id === playerId,
-  );
-  const isPlayerWaitingInGame = gameState?.waitingPlayers.some(
-    (player) => player[2] === playerId,
-  );
+  // const isPlayerInGame = gameState?.players.some(
+  //   (player) => player.id === playerId,
+  // );
+  // const isPlayerWaitingInGame = gameState?.waitingPlayers.some(
+  //   (player) => player[2] === playerId,
+  // );
+
+  // const currentPlayer = gameState?.players.find(
+  //   (player) => player.id === playerId,
+  // );
+  // const currentPlayerPosition = currentPlayer?.position ?? 0;
+  // const thisPlayer = gameState?.players.find(
+  //   (player) => player.id === playerId,
+  // );
+
+  // const isPlayerInGame = gameState?.players.some(
+  //   (player) => player.id === playerId,
+  // );
+  // const isPlayerWaitingInGame = gameState?.waitingPlayers.some(
+  //   (player) => player[2] === playerId,
+  // );
 
   //eslint-disable-next-line
   const [raiseAmount, setRaiseAmount] = useState(
@@ -361,14 +376,18 @@ const GameplayPokerMain = ({
           {/* Player */}
           {gameState?.players.map((player, index) => (
             <Player
-              key={player.id}
-              player={{
-                ...player,
-                bet: player.bet / 100,
-                totalHands: player.totalHands / 100 || 0,
-                chips: player.chips / 100,
-                potContribution: player.potContribution / 100,
-              }}
+              key={player? player.id : `empty-seat-${index}` }
+              player={
+                player
+                  ? {
+                      ...player,
+                      bet: player.bet / 100,
+                      totalHands: player.totalHands / 100 || 0,
+                      chips: player.chips / 100,
+                      potContribution: player.potContribution / 100,
+                    }
+                  : null
+              }
               thisPlayer={thisPlayer!}
               currentPlayerId={currentPlayerId}
               gameState={gameState}
@@ -383,8 +402,8 @@ const GameplayPokerMain = ({
               setShouldShowWin={setShouldShowWin}
               currentPlayerPosition={currentPlayerPosition}
               setCurrentBestHand={setCurrentBestHand}
-              activeEmote={activeEmotes[player.uuid] ?? null}
-              isEmoteVisible={isEmoteVisible[player.uuid] ?? false}
+              activeEmote={player ? activeEmotes[player.uuid] : null}
+              isEmoteVisible={player? isEmoteVisible[player.uuid] : false}
               showEmoteButtonSelector={showEmoteButtonSelector}
               isEmoteSelectorVisible={isEmoteSelectorVisible}
               setIsEmoteSelectorVisible={setIsEmoteSelectorVisible}
@@ -411,6 +430,7 @@ const GameplayPokerMain = ({
             showDealingAnimation={showDealingAnimation}
             setShowDealingAnimation={setShowDealingAnimation}
             screenSize={screenSize}
+            key={`${gameState?.gameStage}-${gameState?.startTurnTimeStamp}-${gameState?.gameOverTimeStamp}`} // This ensures a re-render when gameState changes
           />
           {/* Board Cards */}
           {gameState && (
@@ -484,10 +504,11 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   tableImage: {
-    marginTop: 20,
+    marginTop: 50,
+    // left: 5,
     width: '100%',
-    resizeMode:'contain',
-    height: smallIphonedimensions.height *0.9,
+    resizeMode:'stretch',
+    height: smallIphonedimensions.height,
   },
 });
 

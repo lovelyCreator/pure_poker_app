@@ -32,6 +32,26 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+        
+      ],
+      [
+        
+        "react-native-radar",
+        {
+          "iosFraud": true,
+          "iosNSLocationWhenInUseUsageDescription": "Your foreground location usage description.",
+          "iosNSLocationAlwaysAndWhenInUseUsageDescription": "Your background location usage description.",
+          "iosBackgroundMode": true,
+          "androidFraud": true,
+          "androidBackgroundPermission": true,
+          "androidFineLocationPermission": true,
+          "addRadarSDKMotion": true,
+          "iosNSMotionUsageDescription": "Your motion usage description."
+        }
+      ],
+      
+      [
+        "@maplibre/maplibre-react-native"
       ]
     ],
     "experiments": {

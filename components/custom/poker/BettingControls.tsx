@@ -56,7 +56,7 @@ const BettingControls: React.FC<BettingControlsProps> = ({
   const span = useSpan("GameplayPokerMain");
   const isPlayerTurn = currentPlayerId === playerId;
   const thisPlayer = gameState?.players.find(
-    (player) => player.id === playerId,
+    (player) => player && player.id === playerId,
   );
   const canCheck = thisPlayer && thisPlayer.bet >= gameState.highestBet;
   const showPotPercentage =
@@ -145,7 +145,7 @@ const BettingControls: React.FC<BettingControlsProps> = ({
   }, [gameState.currentTurn]);
 
   return (
-    <View>
+    <View style={{marginTop: 60}}>
       {!isPlayerTurn && !hasFolded && !gameIsOver && (
         <View style={styles.absoluteBottom}>
           <Button
@@ -297,8 +297,8 @@ const BettingControls: React.FC<BettingControlsProps> = ({
                 }}
               />
               {gameState?.currentTurn ===
-                gameState?.players.find((player) => player.id === playerId)?.position &&
-              gameState?.players.find((player) => player.id === playerId)?.bet === gameState?.highestBet ? (
+                gameState?.players.find((player) => player && player.id === playerId)?.position &&
+              gameState?.players.find((player) =>player && player.id === playerId)?.bet === gameState?.highestBet ? (
                 <Check
                   disabled={actionButtonsDisabled}
                   onPress={() => {

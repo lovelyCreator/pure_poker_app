@@ -69,7 +69,7 @@ export const CardFaceUp: React.FC<CardFaceUpProps> = ({
         <Text style={[styles.valueText, {color: suiteToColor[suite]}]}>{value}</Text>
         <Text style={[styles.suiteText, {color: suiteToColor[suite]}]}>{suite}</Text>
       </View>
-      <View style={[styles.suiteContainer, { position: 'absolute', left: 22, top: -2 }]}>
+      <View style={[styles.suiteContainer, { position: 'absolute', left: 28, top: -2 }]}>
         <Text style={[styles.suiteText, {color: suiteToColor[suite]}]}>{suite}</Text>
       </View>
     </View>
@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 5,
     top: -2,
+    gap: 2
   },
   valueText: {
     fontSize: 20,

@@ -85,19 +85,22 @@ const CardDealer: React.FC<CardDealerProps> = ({
           (index + playerCount - currentPlayerPosition) % playerCount;
         const playerPosition = playerPositions[playerCount - 1]?.[rotatedPosition];
 
-        if (player.sittingOut || !(gameState?.isBeginningOfTheHand || isNoBetBombPot) || (gameState?.bombPotActive && player.bombPotDecision !== "optIn")) {
+        if (!player || player.sittingOut || !(gameState?.isBeginningOfTheHand || isNoBetBombPot) || (gameState?.bombPotActive && player.bombPotDecision !== "optIn")) {
           return null;
         }
 
         return (
           (gameState?.isBeginningOfTheHand || isNoBetBombPot) && (
-            <View key={player.id} 
+            <View key={player && player.id} 
+            style={{
+              top: '30%'
+            }}
             // style={styles.playerContainer}
             >
               {/* Map over both cards: left and right */}
               {[0, 1].map((cardIndex) => (
                 <MotiView
-                  key={`${player.id}-${cardIndex}`}
+                  key={`${player && player.id}-${cardIndex}`}
                   from={{
                     left: cardIndex === 0 ? "53%" : "56%", // Offset positions for the first and second cards
                     top: "33%",
@@ -144,6 +147,9 @@ const CardDealer: React.FC<CardDealerProps> = ({
                   exit={{
                     scale: 1,
                     opacity: 0,
+                  }}
+                  style={{
+                    top: '50%',
                   }}
                 >
                   <Card

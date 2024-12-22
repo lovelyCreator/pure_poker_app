@@ -159,6 +159,7 @@ export interface GameState {
       postFlopBetting: boolean,
       initiatorUsername: string
     },
+    seatPosition?: number;
     bombPotDecision?: string;
     radarToken?: string;
   }

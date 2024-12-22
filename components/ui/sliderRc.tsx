@@ -40,7 +40,7 @@ const TooltipSlider: React.FC<TooltipSliderProps> = ({
         <Text style={styles.buttonText}>-</Text>
       </TouchableOpacity>
       <View style={styles.valueContainer}>
-        <Text style={styles.valueText}>{tipFormatter(sliderValue)}</Text> {/* Use tipFormatter */}
+        <Text style={styles.valueText}>{tipFormatter(sliderValue/100)}</Text> {/* Use tipFormatter */}
       </View>
       <TouchableOpacity onPress={incrementValue} style={styles.button}>
         <Text style={styles.buttonText}>+</Text>

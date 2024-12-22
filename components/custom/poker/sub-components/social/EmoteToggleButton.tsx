@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
   },
   button: {
     position: "absolute",
-    right: -25,
-    top: -10,
-    // zIndex: 150,
+    right: -10,
+    top: 70,
+    zIndex: 150,
     padding: 4,
     borderRadius: 50,
     borderWidth: 2,

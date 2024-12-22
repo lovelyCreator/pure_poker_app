@@ -20,10 +20,6 @@ interface PotProps {
   screenSize: ScreenSize;
   displayBB: boolean;
   initialBigBlinds: number;
-  gameState: GameState;
-  currentPlayerPosition: number;
-  index?: number;
-  shouldShowWin?: boolean;
 }
 
 const Pot: React.FC<PotProps> = ({
@@ -35,10 +31,6 @@ const Pot: React.FC<PotProps> = ({
   screenSize,
   initialBigBlinds,
   displayBB,
-  gameState,
-  currentPlayerPosition,
-  index,
-  shouldShowWin,
 }) => {
   const [isVisible, setIsVisible] = React.useState(true);
   const purpleChipsCount = Math.floor(amountInBigBlinds / 50); // 25BB
@@ -62,19 +54,19 @@ const Pot: React.FC<PotProps> = ({
   //   {chipsCount: allInPurpleChipsCount, chipsType: typedCoinPurple, chipName: "coinpurple", zIndex: 50, chipIndex: 5 },
   // ]
 
-  const getDelayedTime = (state: string): number => {
-    switch (state) {
-      case "preFlop":
-        return 6;
-      case "flop":
-        return 3;
-      case "turn":
-        return 2;
-      default:
-        return 0;
-    }
-  }
-  const [playerPositions, setPlayerPositions] = useState(generatePlayerPositions(screenSize));
+  // const getDelayedTime = (state: string): number => {
+  //   switch (state) {
+  //     case "preFlop":
+  //       return 6;
+  //     case "flop":
+  //       return 3;
+  //     case "turn":
+  //       return 2;
+  //     default:
+  //       return 0;
+  //   }
+  // }
+  // const [playerPositions, setPlayerPositions] = useState(generatePlayerPositions(screenSize));
   const renderChips = (count: number, image: any, alt: string,
     zIndexBase: number,) => {
       let chipsPerStack = 4;
@@ -95,7 +87,7 @@ const Pot: React.FC<PotProps> = ({
               <Image
                 key={`${alt}-${stackIndex}-${chipIndex}`}
                 source={image}
-                style={styles.chipImage}
+                style={[styles.chipImage, {zIndex: zIndexBase - stackIndex*chipsPerStack -chipIndex, top: 3*chipIndex}]}
                 alt={alt}
               />
             ))}
@@ -130,7 +122,7 @@ const Pot: React.FC<PotProps> = ({
           alignItems: "center",
           opacity: 1,
           left: "50%",
-          top: "65%",
+          top: "70%",
           transform: "translate(-50%, 100%)",
           ...style,
         }}
@@ -144,7 +136,7 @@ const Pot: React.FC<PotProps> = ({
         {value != "0 BB" && (
           <Text 
             style= {{
-              marginTop: -15, textAlign: 'center', fontSize: 18, color: 'white'
+              textAlign: 'center', fontSize: 18, color: 'white', marginLeft: 25,
             }}>
             {value}
           </Text>
@@ -153,9 +145,6 @@ const Pot: React.FC<PotProps> = ({
     );
     case 1:
       return (
-        gameState?.gameIsAllIn === "river" &&
-        (
-          <AnimatePresence>
             <MotiView
               style={{
                 height: "30px",
@@ -167,6 +156,13 @@ const Pot: React.FC<PotProps> = ({
                 ...style,
                 translateX: "50%" // Apply any additional styles passed via props
               }}
+              animate={{ left: "0%", top: "0%" }} // Adjust based on desired animation
+              transition={{ duration: 0.3, type: "spring", stiffness: 50 }}
+              onAnimationComplete={() => {
+                if (onAnimationDone) {
+                  onAnimationDone();
+                }
+              }}
             >
               {renderChips(purpleChipsCount, typedCoinPurple, "coinpurple", 50)}
               {renderChips(blackChipsCount, typedCoinBlack, "coinblack", 40)}
@@ -174,75 +170,26 @@ const Pot: React.FC<PotProps> = ({
               {renderChips(yellowChipsCount, typedCoinYellow, "coinyellow", 20)}
               {renderChips(redChipsCount, typedCoinRed, "coinred", 10)}
             </MotiView>
-          </AnimatePresence>
-        )
       );
-      case 3: // moving from pot to winner
+      case 2: // moving from pot to winner
           return (
-            gameState?.players.map((player, index) => (
-              (gameState?.netWinners as string[]).includes(player.uuid) ?
-                (
-                  <AnimatePresence key={player.uuid}>
-                    <View style={{
-                        position: "absolute",
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        left: "50%",
-                        top: `${screenSize === "smallIphone" ? "65%" : "54%"}`,
-                        transform: "translate(-50%, 100%)",
-                        ...style,
-                      }}>
-                      {/* {allInChipsDistribution.map((chip, chipIndex) => (
-                        <MotiView
-                          animate={{
-                            opacity: [1 , 0],
-                            scale: [1, 1.5]
-                          }}
-                          transition={{
-                            times: [0, 1],
-                            duration: 0.2,
-                            delay: 2 + chipIndex * 0.1 + getDelayedTime(gameState.gameIsAllIn),
-                          }}
-                          key={`${player.uuid}${chip.chipName}centerchips`}
-                        >
-                          {renderChips(chip.chipsCount, chip.chipsType, chip.chipName, chip.zIndex)}
-                        </MotiView>
-                      ))} */}
-                    </View>
-                    {/* {allInChipsDistribution.map((chip, chipIndex) => (
-                      <MotiView
-                        style={{
-                          position: "absolute",
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          left: "50%",
-                          top: `${screenSize === "smallIphone" ? "65%" : "54%"}`,
-                          ...style,
-                        }}
-                        animate={{
-                          left: `${playerPositions[gameState?.playerCount - 1]?.[(index + gameState.players.length - currentPlayerPosition) % gameState.players.length]?.leftPosition}`,
-                          top: `${playerPositions[gameState?.playerCount - 1]?.[(index + gameState.players.length - currentPlayerPosition) % gameState.players.length]?.topPosition}`,
-                          opacity: [0, 1, 1, 0]
-                        }}
-                        transition={{
-                          duration: 0.3,
-                          times: [0, 0.1, 0.9, 1],
-                          delay: 2 + chipIndex * 0.1 + getDelayedTime(gameState.gameIsAllIn),
-                          ease: "easeOut"
-                        }}
-                        key={`${player.uuid}${chip.chipName}`}
-                      >
-                        {renderChips(chip.chipsCount, chip.chipsType, chip.chipName, chip.zIndex)}
-                      </MotiView>
-                    ))} */}
+            <MotiView
+              style={{
+                flexDirection: "column-reverse",
+                alignItems: "flex-start",
+              }}
+            >
+              {renderChips(purpleChipsCount, typedCoinPurple, "coinpurple", 50)}
+              {renderChips(blackChipsCount, typedCoinBlack, "coinblack", 40)}
+              {renderChips(blueChipsCount, typedCoinBlue, "coinblue", 30)}
+              {renderChips(yellowChipsCount, typedCoinYellow, "coinyellow", 20)}
+              {renderChips(redChipsCount, typedCoinRed, "coinred", 10)}
+            </MotiView>
                     
-                  </AnimatePresence>
-                ) : null
-            ))
+            
           );
   }
+  return null;
 
 };
 
@@ -257,16 +204,18 @@ const styles = StyleSheet.create({
   },
   chipContainer: {
     flexDirection: "row",
+    position: 'absolute'
   },
   chipStack: {
     marginRight: 8,
-    flexDirection: "column",
-    justifyContent: "flex-end",
+    // flexDirection: "column",
+    // justifyContent: "flex-end",
   },
   chipImage: {
     width: 20,
     height: 20,
-    marginTop: -15,
+    marginTop:-10,
+    position: 'absolute',
   },
   valueText: {
     marginTop: -15,

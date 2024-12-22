@@ -2,7 +2,7 @@ import { type GameState } from "@/types/poker";
 
 export function getAggregateBestHand(gameState: GameState): string[] {
   const winningHands = gameState.netWinners.flatMap((winnerId) => {
-    const winner = gameState.players.find((player) => player.uuid === winnerId);
+    const winner = gameState.players.find((player) => player && player.uuid === winnerId);
     // eslint-disable-next-line
     return winner?.bestHand || [];
   });
