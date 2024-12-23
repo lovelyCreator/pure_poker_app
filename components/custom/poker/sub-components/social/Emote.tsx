@@ -16,38 +16,36 @@ const Emote: React.FC<EmoteProps> = ({ emote, isVisible }) => {
 
   return (
     <AnimatePresence>
-      {isVisible && (
-        <MotiView
-        style={[
-          styles.container,
-          isText ? styles.textContainer : styles.largeTextContainer,
-          isText && { borderColor: '#5f5f5f', borderWidth: 2, width: 60, }
-        ]}
-          from={{
-            opacity: 0,
-            scale: 0.5,
-            rotate: isText ? '0deg' : '-10deg',
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1.2,
-            rotate: isText ? '0deg' : '5deg',
-          }}
-          exit={{
-            opacity: 0,
-            scale: 0.5,
-            rotate: '10deg',
-          }}
-          transition={{
-            type: 'timing',
-            duration: 400,
-          }}
-        >
-          <Text style={isText ? styles.text : styles.emote}>
-            {emote}
-          </Text>
-        </MotiView>
-      )}
+      <MotiView
+      style={[
+        styles.container,
+        isText ? styles.textContainer : styles.largeTextContainer,
+        isText && { borderColor: '#5f5f5f', borderWidth: 2, width: 60, }
+      ]}
+        from={{
+          opacity: 0,
+          scale: 0.5,
+          rotate: isText ? '0deg' : '-10deg',
+        }}
+        animate={{
+          opacity: 1,
+          scale: 1.2,
+          rotate: isText ? '0deg' : '5deg',
+        }}
+        exit={{
+          opacity: 0,
+          scale: 0.5,
+          rotate: '10deg',
+        }}
+        transition={{
+          type: 'timing',
+          duration: 400,
+        }}
+      >
+        <Text style={isText ? styles.text : styles.emote}>
+          {emote}
+        </Text>
+      </MotiView>
     </AnimatePresence>
   );
 };

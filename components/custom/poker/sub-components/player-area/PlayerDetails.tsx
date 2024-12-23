@@ -73,7 +73,7 @@ const PlayerDetails: React.FC<PlayerDetailsProps> = ({
     {handsPlayed > 0 && !isCurrentPlayer && !gameIsOver && !sittingOut && (
       <View
         style={{ 
-          transform: "translate(-50%, -50%)", position: 'absolute', left: 16, marginTop: 0, zIndex: 20, 
+          transform: [{translateX: -50}, {translateY: -50}], position: 'absolute', left: 30, top: 90, zIndex: 50, 
           display: 'flex', height: 24, width: 24, alignItems: 'center', justifyContent: 'center', borderRadius: 18, backgroundColor: vpipColor
         }}
       >
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: 'column',
-    marginTop: 80,
+    marginTop: 30,
   },
   detailsContainer: {
     marginTop: -14,
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#1c202b",
     position: "relative",
-    zIndex: 100,
+    zIndex: 30,
   },
   playerName: {
     marginTop: -10,

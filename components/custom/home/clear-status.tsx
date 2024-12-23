@@ -11,7 +11,7 @@ import {
 import { useAuth } from "@/hooks/useAuth"; // Ensure this hook is compatible with React Native
 import { authApi } from "@/api/api"; // Ensure this API works in React Native
 import { Button } from "@/components/ui/button"; // Adjust this import as needed
-import { toast } from "sonner"; // Ensure this works in React Native
+import { toast } from "react-toastify"; // Ensure this works in React Native
 
 const ClearStatus: React.FC = () => {
   const user = useAuth();

@@ -21,6 +21,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Button } from '@/components/ui/button';
 import LoadingPage from '@/components/page/loading';
 import HomePage from '@/components/page/home';
+import { ToastContainer } from 'react-toastify';
 
 // const SignInCard = lazy(() => import('"@/components/custom/login/signInCard'));
 
@@ -28,6 +29,18 @@ export default function Home() {
 
   return (
     <Suspense fallback={<LoadingPage />}> 
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <HomePage />
     </Suspense>
   );

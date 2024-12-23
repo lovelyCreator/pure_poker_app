@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { toast } from "sonner"; // Ensure you have a toast library compatible with React Native
+import { toast } from "react-toastify"; // Ensure you have a toast library compatible with React Native
 import { useAuth } from "@/hooks/useAuth"; // Adjust import paths as needed
 import { useNavigation } from "@react-navigation/native";
 import { getPokerUrl } from "@/lib/poker";

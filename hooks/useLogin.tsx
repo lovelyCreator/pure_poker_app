@@ -41,8 +41,10 @@ import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 import { authApi } from '@/api/api'; // Adjust the import based on your file structure
 import { handleResponse } from '@/lib/fetch'; // Adjust the import based on your file structure
 import { env } from '@/env';
+import { useNavigation } from '@react-navigation/native';
 
 export default async function useLogin() {
+  const navigation = useNavigation();
   async function login(username: string, password: string) {
     try {
       // const response = await authApi.general.login.$post({
@@ -67,6 +69,9 @@ export default async function useLogin() {
       if (!response.ok) {
         const res = (await response.json() as {message: string;});
         await Promise.reject(res.message);
+      }
+      else {
+        navigation.navigate('home');
       }
     } catch (error) {
       await Promise.reject(error);

@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, Animated } from "react-native";
 import Card from "../Card"; // Ensure Card component is implemented
 import { Player, GameState } from "@/types/poker";
+import { MotiView } from "moti";
 
 interface PlayerCardsProps {
   gameState: GameState;
@@ -22,41 +23,32 @@ const PlayerCards: React.FC<PlayerCardsProps> = ({
   shouldShowWin,
   aggregateBestHand,
 }) => {
-  const isNoBetBombPot = gameState?.bombPotActive && !gameState.bombPotSettings.postFlopBetting;
+  const isNoBetBombPot = (gameState && gameState.bombPotActive && !gameState.bombPotSettings.postFlopBetting) ?? false;
   const shouldMakeCardsShowUp = isNoBetBombPot || gameState?.isBeginningOfTheHand;
 
   return (
     <View style={[styles.container, 
-      isCurrentPlayer ? {left: 70, top: 70} : {left: -20, top: 10}
+      isCurrentPlayer ? {left: 110, top: 20} : {left: -15, top: -15}
     ]}>
       {gameState.playerCount > 1 &&
-        playerHand.map((cardObj: string | null, index: number) => {
-          const animatedValue = new Animated.Value(shouldMakeCardsShowUp ? 0 : 1);
-
-          // Start animation
-          Animated.timing(animatedValue, {
-            toValue: 1,
-            duration: 800,
-            delay: index === 0 ? 1300 : 1600,
-            useNativeDriver: true,
-          }).start();
-
-          return (
-            <Animated.View
-              key={`${index}-${gameState?.gameStage}`} // Ensures re-render when condition changes
-              style={{
-                opacity: animatedValue,
-                transform: [
-                  {
-                    scale: animatedValue.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0.7, 1],
-                    }),
-                  },
-                ],
+        playerHand.map(
+          (cardObj: string | null, index: number) => (
+            <MotiView
+              key={`${index}-${gameState?.gameStage}`}
+              from={{ opacity: shouldMakeCardsShowUp ? 0 : 1,
+                scale: shouldMakeCardsShowUp ? 0.7 : 1
+              }}
+              animate={{
+                opacity:  1,
+                scale: 1
+              }}
+              transition={{
+                duration: 0.8,
+                delay: index === 0 ? 2000 : 2300,
               }}
             >
               <Card
+                key={index}
                 index={index}
                 card={cardObj ?? null}
                 side={index === 0 ? "left" : "right"}
@@ -67,10 +59,52 @@ const PlayerCards: React.FC<PlayerCardsProps> = ({
                 bestHand={aggregateBestHand}
                 showCards={player.showCards}
                 shouldShowWin={shouldShowWin}
-              />
-            </Animated.View>
-          );
-        })}
+              />              
+            </MotiView>
+          )
+          //   {
+          // const animatedValue = new Animated.Value(shouldMakeCardsShowUp ? 0 : 1);
+
+          // // Start animation
+          // Animated.timing(animatedValue, {
+          //   toValue: 1,
+          //   duration: 800,
+          //   delay: index === 0 ? 1300 : 1600,
+          //   useNativeDriver: true,
+          // }).start();
+
+          // return (
+          //   <Animated.View
+          //     key={`${index}-${gameState?.gameStage}`} // Ensures re-render when condition changes
+          //     style={{
+          //       opacity: animatedValue,
+          //       transform: [
+          //         {
+          //           scale: animatedValue.interpolate({
+          //             inputRange: [0, 1],
+          //             outputRange: [0.7, 1],
+          //           }),
+          //         },
+          //       ],
+          //     }}
+          //   >
+          //     <Card
+          //       index={index}
+          //       card={cardObj ?? null}
+          //       side={index === 0 ? "left" : "right"}
+          //       isCurrentPlayer={isCurrentPlayer}
+          //       gameIsOver={gameIsOver}
+          //       hasFolded={!player.inHand}
+          //       handDescription={player.handDescription}
+          //       bestHand={aggregateBestHand}
+          //       showCards={player.showCards}
+          //       shouldShowWin={shouldShowWin}
+          //     />
+          //   </Animated.View>
+          // );
+        // }
+        )
+        }
     </View>
   );
 };

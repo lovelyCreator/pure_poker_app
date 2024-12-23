@@ -443,6 +443,7 @@ const styles = StyleSheet.create({
   playerTurnContainer: {
     position: 'absolute',
     bottom: -160,
+    left: 0,
     // right: 25,
     height: 124,
     // left: '50%',

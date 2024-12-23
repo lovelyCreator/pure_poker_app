@@ -418,43 +418,32 @@ const Player: React.FC<PlayerProps> = ({
       }}
     >
       {/* Chips Animation */}
-      {/* <ChipsAnimation
+      <ChipsAnimation
         gameState={gameState ?? ({} as GameState)}
         playerCount={gameState?.playerCount ?? 0}
         screenSize={screenSize}
         index={index}
         player={player}
         currentPlayerPosition={currentPlayerPosition}
-        // allBoardCardsRevealed={allBoardCardsRevealed}
-      /> */}
+        allBoardCardsRevealed={allBoardCardsRevealed}
+      />
       <View
         style={{
           position: 'absolute', zIndex: -1,
           opacity: `${player?.inHand || gameIsOver ? 1 : 0.4}`,
           left: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.leftPosition}`,
           top: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.topPosition}`,
-          transform: "translate(-50%, -50%)",
+          // transform: "translate(-50%, -50%)",
+          
+          transform: [
+            { translateX: -50 }, // Assuming the width is 200, -125% would be -250
+            { translateY: -50 },  // Assuming the height is 100, -50% would be -50
+          ],
           // left: `${playerPositions[8]?.[0]?.leftPosition}`,
           // top: `${playerPositions[8]?.[0]?.topPosition}`,
         }}
         key={index}
       >
-        {/* Display the Emote */}
-        {/* <Emote emote={activeEmote} isVisible={isEmoteVisible} /> */}
-
-        {/* Toggle button for emote selector */}
-        {/* {showEmoteButtonSelector && isCurrentPlayer && (
-          <EmoteToggleButton
-            toggleEmoteSelector={toggleEmoteSelector}
-            isEmoteSelectorVisible={isEmoteSelectorVisible}
-          />
-        )} */}
-
-        {/* Emote Selector */}
-        {/* {isEmoteSelectorVisible && isCurrentPlayer && (
-          <EmoteSelector gameId={gameState.gameId} />
-        )} */}
-
         {isCurrentTurn &&
           isCurrentPlayer &&
           currentPlayerTurn.extraTime === 0 &&
@@ -540,6 +529,22 @@ const Player: React.FC<PlayerProps> = ({
           rotatedPosition={rotatedPosition}
           screenSize={screenSize}
         />
+        {/* Display the Emote */}
+        <Emote emote={activeEmote} isVisible={isEmoteVisible} />
+
+        {/* Toggle button for emote selector */}
+        {showEmoteButtonSelector && isCurrentPlayer && (
+          <EmoteToggleButton
+            toggleEmoteSelector={toggleEmoteSelector}
+            isEmoteSelectorVisible={isEmoteSelectorVisible}
+          />
+        )}
+
+        {/* Emote Selector */}
+        {isEmoteSelectorVisible && isCurrentPlayer && (
+          <EmoteSelector gameId={gameState.gameId} />
+        )}
+
       </View>
     </View>
   );

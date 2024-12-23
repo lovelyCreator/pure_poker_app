@@ -4,7 +4,7 @@ import useWebSocket from "react-use-websocket";
 import { getPokerUrl, sendPokerMessage } from "@/lib/poker";
 import { useAuth } from "@/hooks/useAuth";
 import { useSpan } from "@/utils/logging";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 import { PokerWebSocketMessage } from "@/types/pokerFrontend.";
 import { Button } from "@/components/ui/button";
 
@@ -94,7 +94,7 @@ const ShowCardControls: React.FC<ShowCardControlsProps> = ({
       </Button>
       <Button
         variant="secondary"
-        onPress={handleToggleFirstCard}
+        onPress={handleToggleSecondCard}
         style= {[{
           width: 110, paddingVertical: 4, borderColor: '#6B7280',borderRadius: 8, borderWidth: 1
         }, showSecondCard ? 
@@ -108,7 +108,7 @@ const ShowCardControls: React.FC<ShowCardControlsProps> = ({
       </Button>
       <Button
         variant="secondary"
-        onPress={handleToggleFirstCard}
+        onPress={handleToggleBoth}
         style= {[{
           width: 110, paddingVertical: 4, borderColor: '#6B7280', borderRadius: 8, borderWidth: 1 
         }, (showFirstCard && showSecondCard) ? 

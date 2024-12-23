@@ -5,8 +5,8 @@ import { sendPokerAction, WebSocketMessage } from "@/types/poker"; // Adjust the
 import { getPokerUrl } from "@/lib/poker"; // Adjust the import according to your project structure
 import { useSpan } from "@/utils/logging"; // Adjust the import according to your project structure
 import { useAuth } from "@/hooks/useAuth"; // Adjust the import according to your project structure
-import { toast } from "sonner"; // Ensure you have a toast library installed
-import { MotiView } from "moti";
+import { toast } from "react-toastify"; // Ensure you have a toast library installed
+import { AnimatePresence, MotiView } from "moti";
 
 interface EmoteSelectorProps {
   gameId: string;
@@ -50,33 +50,35 @@ const EmoteSelector: React.FC<EmoteSelectorProps> = ({ gameId }) => {
   };
 
   return (
-    <MotiView
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        transition={{ duration: 0.3 }}
-        style={[ styles.container, {
-            fontFamily: "'Comic Sans MS', 'Chalkboard SE', sans-serif",
-        }]}
-      >
-      <ScrollView contentContainerStyle={styles.scrollView}>
-      {[...emotes, ...texts].map((item) => (
-        <TouchableOpacity
-          key={item}
-          onPress={() => handleSendEmote(item)}
-          style={[
-            styles.button,
-            item.length === 2 ? styles.largeButton : styles.smallButton,
-            item.length > 2 && styles.dynamicWidth,
-          ]}
+    <AnimatePresence>
+      <MotiView
+          from={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          transition={{ type:'timing', duration: 0.3 }}
+          style={[ styles.container, {
+              fontFamily: "'Comic Sans MS', 'Chalkboard SE', sans-serif",
+          }]}
         >
-          <Text style={item.length === 2 ? styles.largeText : styles.smallText}>
-            {item}
-          </Text>
-        </TouchableOpacity>
-      ))}
-      </ScrollView>
-    </MotiView>
+        <ScrollView contentContainerStyle={styles.scrollView}>
+        {[...emotes, ...texts].map((item) => (
+          <TouchableOpacity
+            key={item}
+            onPress={() => handleSendEmote(item)}
+            style={[
+              styles.button,
+              item.length === 2 ? styles.largeButton : styles.smallButton,
+              item.length > 2 && styles.dynamicWidth,
+            ]}
+          >
+            <Text style={item.length === 2 ? styles.largeText : styles.smallText}>
+              {item}
+            </Text>
+          </TouchableOpacity>
+        ))}
+        </ScrollView>
+      </MotiView>
+    </AnimatePresence>
   );
 };
 

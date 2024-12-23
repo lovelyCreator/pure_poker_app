@@ -9,6 +9,9 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AvailableGame } from "@/types/poker"; // Ensure this type is compatible with React Native
+import { Dimensions } from "react-native";
+
+const screenWidth = Dimensions.get('screen').width * 0.6;
 
 interface AvailableGamesHomeProps {
   availableGame: AvailableGame;
@@ -19,11 +22,15 @@ const AvailableGamesHome: React.FC<AvailableGamesHomeProps> = ({
   availableGame,
   userIsVerified,
 }) => {
+  let len = 5;
+  if (availableGame.maxPlayers >= 5 ) len = 5
+  else len = availableGame.maxPlayers;
+  const spotWidth = screenWidth  / len - 10;
   const navigation = useNavigation();
 
   const handleJoinClick = () => {
-    // navigation.navigate("PlayPoker", { gameId: availableGame.gameId });
-    console.log('Join')
+    navigation.navigate("playPoker", { gameId: availableGame.gameId });
+    // console.log('Join')
   };
 
   return (
@@ -33,7 +40,10 @@ const AvailableGamesHome: React.FC<AvailableGamesHomeProps> = ({
         <View style={styles.imageContainer}>
           <Image
             source={require('@/assets/home/game-board.png')} // Adjust the path as needed
-            style={styles.image}
+            style={{
+              width: '90%',
+              height: 200
+            }}
             resizeMode="contain"
           />
         </View>
@@ -50,6 +60,7 @@ const AvailableGamesHome: React.FC<AvailableGamesHomeProps> = ({
                       index < availableGame.playerCount
                         ? "#2085F0"
                         : "#4B5563", // gray-700
+                    width: `${100/len - 1}%`,
                   },
                 ]}
               />
@@ -105,15 +116,17 @@ const styles = StyleSheet.create({
   imageContainer: {
     justifyContent: "center",
     alignItems: "center",
-  },
-  image: {
-    height: "auto",
-    width: "90%",
+    width: '100%'
   },
   playerCountContainer: {
     flexDirection: "row",
     gap: 8,
-    marginTop: 16,
+    marginTop: 20,
+    borderRadius: 10,
+    padding: 8,
+    backgroundColor: '#1F2937',
+    width: '90%',
+    justifyContent: 'space-between'
   },
   playerIndicator: {
     height: 8,

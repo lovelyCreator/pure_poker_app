@@ -191,10 +191,6 @@ interface PlayerBetProps {
   screenSize: ScreenSize;
   displayBB: boolean;
   initialBigBlind: number;
-  currentPlayerPosition: number;
-  index: number;
-  shouldShowWin?: boolean;
-  style?: React.CSSProperties;
 }
 
 const PlayerBet: React.FC<PlayerBetProps> = ({
@@ -204,10 +200,6 @@ const PlayerBet: React.FC<PlayerBetProps> = ({
   screenSize,
   initialBigBlind,
   displayBB,
-  currentPlayerPosition,
-  index,
-  style,
-  shouldShowWin = false,
 }) => {
   if (!(player.bet > 0 && gameState.gameInProgress)) return null;
 
@@ -228,15 +220,17 @@ const PlayerBet: React.FC<PlayerBetProps> = ({
   };
 
   return (
-    // <MotiView
-    //   key={`-${gameState?.isBeginningOfTheHand}`}
-    //   initial={{ opacity: gameState?.isBeginningOfTheHand ? 0 : 1 }}
-    //   animate={{ opacity: 1 }}
-    //   transition={{ duration: 1, delay: 1.8 }}
-    // >
-    <View>
+    <MotiView
+      key={`-${gameState?.isBeginningOfTheHand}`}
+      from={{ opacity: gameState?.isBeginningOfTheHand ? 0 : 1 }}
+      animate={{ opacity: 1 }}
+      transition={{ type: 'timing',
+          duration: 100,  // Duration in milliseconds
+          delay: 180    
+        }}
+    >
       <View
-        style={{ left: left+10, top: top+75, position: 'absolute', zIndex: 20, width: 20, }}
+        style={{ left: left+10, top: top+20, position: 'absolute', zIndex: 20, width: 20, }}
       >
         <View 
           style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginRight: 8, }}
@@ -258,8 +252,7 @@ const PlayerBet: React.FC<PlayerBetProps> = ({
           </View>
         </View>
       </View>
-    {/* </MotiView> */}
-    </View>
+    </MotiView>
   )
 
 };

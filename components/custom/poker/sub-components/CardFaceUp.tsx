@@ -37,6 +37,9 @@ export const CardFaceUp: React.FC<CardFaceUpProps> = ({
   } else if (side === "right") {
     rotateStyle = { transform: [{ rotate: "5deg" }] };
   }
+  if (noRotation) {
+    rotateStyle = {};
+  }
 
   const marginRight = side === "none" ? 0 : -6;
 

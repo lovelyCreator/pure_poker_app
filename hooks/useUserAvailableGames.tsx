@@ -1,5 +1,3 @@
-"use client";
-import { pokerApi } from "@/api/api";
 import { AvailableGame } from "@/types/poker";
 // import axios from "axios";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -14,7 +12,8 @@ export default function useAvailableGames(
   let arr: AvailableGame[] = [];
   async function getAvailableGames() {
     const token = await AsyncStorage.getItem('PP_TOKEN');
-    const res = await fetch(`${env.NEXT_PUBLIC_POKER_URL}poker`, {
+
+    const res = await fetch(`${env.NEXT_PUBLIC_POKER_URL}availableGames`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,22 +25,21 @@ export default function useAvailableGames(
     if (res.ok) {      
       arr = await res.json() as AvailableGame[];
       console.log(`res`, arr)
+      return arr;
     }
     if (!res.ok) {
-      console.log(`err`, res.json())
-      arr = []
-      // const error = await res.json();
+      const error = await res.json();
       // if (Array.isArray(error)) {
       //   throw new Error("An unknown error occurred");
       // } else {
-      //   throw new Error(error.message);
+        throw new Error(error.message);
       // }
-      return arr;
+      
     }
   }
 
   return useSuspenseQuery({
-    queryKey: ["available-games", groupIds],
+    queryKey: ["availableGames", groupIds],
     queryFn: () => getAvailableGames(),
     // refetchInterval: 1000 * 60 * 5,  // Optional, depends on how frequently you need to refresh
   });

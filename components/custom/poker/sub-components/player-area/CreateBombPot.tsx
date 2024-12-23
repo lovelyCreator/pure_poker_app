@@ -5,9 +5,10 @@ import useWebSocket from "react-use-websocket";
 import { getPokerUrl } from "@/lib/poker";
 import { useSpan } from "@/utils/logging";
 import { useAuth } from "@/hooks/useAuth";
-import { toast } from "sonner"; // Consider using a compatible toast library for React Native
+import { toast } from "react-toastify"; // Consider using a compatible toast library for React Native
 import { sendPokerAction, Player, GameState, WebSocketMessage } from "@/types/poker";
 import { Image } from 'react-native'; // Use Image from React Native
+import { MotiView } from "moti";
 
 type CreateBombPotProps = {
   thisPlayer: Player;
@@ -67,18 +68,30 @@ const CreateBombPot: React.FC<CreateBombPotProps> = ({ thisPlayer, gameId, gameS
   return (
     <>
       {/* Bomb Icon Button */}
-      <TouchableOpacity
-        onPress={toggleModal}
-        style={[
-          styles.bombButton,
-          isBombPotProposed && isInitiator && styles.activeBombButton,
-        ]}
+      <MotiView
+        from={isBombPotProposed && isInitiator ? { scale: 1} : undefined}
+        animate={
+          isBombPotProposed && isInitiator
+          ? { scale: [1, 1.1, 0.9, 1], rotate: [0, 5, -5, 0]}
+          : undefined
+        }
+        style={{
+          pointerEvents: isBombPotProposed && isInitiator ? 'none' : 'auto'
+        }}
       >
-        <Image
-          source={require('@/assets/game/bomb-pot-icon.png')} // Adjust path as necessary
-          style={styles.bombIcon}
-        />
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={toggleModal}
+          style={[
+            styles.bombButton,
+            isBombPotProposed && isInitiator && styles.activeBombButton,
+          ]}
+        >
+          <Image
+            source={require('@/assets/game/bomb-pot-icon.png')} // Adjust path as necessary
+            style={styles.bombIcon}
+          />
+        </TouchableOpacity>
+      </MotiView>
 
       {/* Modal */}
       <Modal
@@ -119,8 +132,8 @@ const CreateBombPot: React.FC<CreateBombPotProps> = ({ thisPlayer, gameId, gameS
 const styles = StyleSheet.create({
   bombButton: {
     position: 'absolute',
-    left: -85,
-    bottom: -75,
+    left: -150,
+    bottom: -150,
     padding: 10,
     borderRadius: 50,
   },

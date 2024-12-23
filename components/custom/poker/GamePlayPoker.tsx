@@ -335,20 +335,20 @@ const GameplayPokerMain = ({
     style={{marginHorizontal: 'auto', width: 'auto', maxWidth: 3000}}
     >
       <View style={{display: 'flex', width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-        {/* {gameState && screenSize !== "smallIphone" && (
+        {/* {gameState && screenSize !== "smallIphone" && ( */}
           <PokerChat gameState={gameState} screenSize={screenSize} />
-        )} */}
-        {/* <InformationBanner
+        {/* )} */}
+        <InformationBanner
           isSittingOut={isSittingOut}
           isSittingOutNextHand={isSittingOutNextHand}
           inactivityCount={inactivityCount}
           currentPlayer={currentPlayer!}
           isSpectator={isSpectator}
           screenSize={screenSize}
-        /> */}
-        {/* {showTimeBankAnimation && (
+        />
+        {showTimeBankAnimation && (
           <TimeBankAnimation setShowTimeBankAnimation={setShowTimeBankAnimation} />
-        )} */}
+        )}
         {gameState?.isBombPotProposed && gameState?.gameStage === "gameOver" && (
           <BombPotDecision
             isBombPotProposed={gameState.isBombPotProposed}
@@ -482,8 +482,7 @@ const GameplayPokerMain = ({
             isOpen={shouldShowPopup}
             gameId={gameId}
             playerId={playerId}
-            playerBalance={user.chips}
-          /> */}
+            playerBalance={user.chips} boughtChips={0} bigBlind={0}          /> */}
         </View>
       </View>
     </View>

@@ -1,293 +1,298 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from "react-native";
-import useWebSocket from "react-use-websocket";
-import { gameFinishedToWaitTime, getPokerUrl } from "@/lib/poker";
-import { useSpan } from "@/utils/logging";
-import { toast } from "sonner";
+// 
+
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import { MessageSquareMore, CircleX, Send } from "lucide-react-native"; // Ensure you have lucide-react-native installed
+import { MotiView, AnimatePresence } from "moti";
 import { GameState, sendPokerAction, WebSocketMessage } from "@/types/poker";
+import useWebSocket from "react-use-websocket";
+import { getPokerUrl, ScreenSize } from "@/lib/poker";
+import { useSpan } from "@/utils/logging";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
-type BombPotDecisionProps = {
-    isBombPotProposed: boolean;
-    gameIsAllIn: "preFlop" | "flop" | "turn" | "river";
-    gameOverTimeStamp: string;
-    thisPlayerBombPotDecision: "optIn" | "optOut" | "veto";
-    proposer: string;
-    bigBlinds: number;
-    postFlopBetting: boolean;
-    gameId: string;
-    gameState: GameState;
-    showBombPotDecisionModal: boolean;
-    setShowBombPotDecisionModal: (value: boolean) => void;
-};
+interface PokerChatProps {
+  gameState: GameState;
+  screenSize: ScreenSize;
+}
 
-const BombPotDecision: React.FC<BombPotDecisionProps> = ({
-    isBombPotProposed,
-    gameIsAllIn,
-    gameOverTimeStamp,
-    thisPlayerBombPotDecision,
-    proposer,
-    bigBlinds,
-    postFlopBetting,
-    gameId,
-    gameState,
-    showBombPotDecisionModal,
-    setShowBombPotDecisionModal
-}) => {
-    const [decision, setDecision] = useState<string>(thisPlayerBombPotDecision);
-    const [timeBarWidth, setTimeBarWidth] = useState(new Animated.Value(100)); // Start at 100%
+const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
+  const user = useAuth();
+  const span = useSpan("sendPokerChatMessage");
+  const [messages, setMessages] = useState(gameState.chatMessages || []);
+  const [newMessage, setNewMessage] = useState("");
+  const [chatIsOpen, setChatIsOpen] = useState(false);
+  const [seenMessagesCount, setSeenMessagesCount] = useState(messages.length);
+  const chatEndRef = useRef<View | null>(null);
+  const [unreadMessages, setUnreadMessages] = useState(messages.length - seenMessagesCount);
+  const [isAtBottom, setIsAtBottom] = useState(true);
 
-    const user = useAuth();
-    const span = useSpan("bombPotDecision");
-    const { sendJsonMessage } = useWebSocket(getPokerUrl(span, gameId, user.username), {
-        share: true,
-        onMessage: (event) => {
-            try {
-                const data: WebSocketMessage = JSON.parse(event.data);
-                if (data.action === "bombPotDecision" && data.statusCode !== 200) {
-                    toast.error("Failed to make bomb pot decision.");
-                }
-            } catch (e) {
-                toast.error("Failed to process bomb pot decision.");
+  const { sendJsonMessage } = useWebSocket(
+    getPokerUrl(span, gameState.gameId, user.username),
+    {
+      share: true,
+      onMessage: (event) => {
+        try {
+          const data: WebSocketMessage = JSON.parse(event.data);
+          if (data.action === "sendPokerChatMessage") {
+            if (data.statusCode !== 200) {
+              toast.dismiss();
+              toast.error("Failed to send message.");
             }
-        },
-    });
-
-    const handleMakeBombPotDecision = (newDecision: string) => {
-        setDecision(newDecision);
-        const bombPotMessage: sendPokerAction = {
-            action: "sendPokerAction",
-            gameId,
-            gameAction: "makeBombPotDecision",
-            bombPotDecision: newDecision,
-        };
-        sendJsonMessage(bombPotMessage);
-    };
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDecision(thisPlayerBombPotDecision);
-        }, 1000); // wait 1 second
-
-        return () => clearTimeout(timer);
-    }, [decision, thisPlayerBombPotDecision]);
-
-    useEffect(() => {
-        const timestamp = new Date(gameOverTimeStamp).getTime();
-        const currentTime = Date.now();
-        let showDownTime = gameFinishedToWaitTime[gameIsAllIn] * 1000;
-        if (gameState?.bombPotActive && gameIsAllIn === "preFlop") {
-            showDownTime = 12 * 1000;
+          }
+        } catch (e) {
+          toast.error("Failed to send message.");
         }
-        const delay = Math.max(0, timestamp + showDownTime - currentTime);
+      },
+    }
+  );
 
-        const showTimer = setTimeout(() => setShowBombPotDecisionModal(true), delay);
-        return () => clearTimeout(showTimer);
-    }, [gameOverTimeStamp, isBombPotProposed]);
+  useEffect(() => {
+    setMessages(gameState.chatMessages);
+    setUnreadMessages(gameState.chatMessages.length - seenMessagesCount);
+  }, [gameState.chatMessages]);
 
-    useEffect(() => {
-        let intervalId: NodeJS.Timeout;
-        let showDownTime = gameFinishedToWaitTime[gameIsAllIn] * 1000;
-        if (gameState?.bombPotActive && gameIsAllIn === "preFlop") {
-            showDownTime = 12 * 1000;
-        }
+  useEffect(() => {
+    if (isAtBottom) {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
-        if (showBombPotDecisionModal) {
-            const startTimestamp = new Date(gameOverTimeStamp).getTime() + showDownTime;
+  const handleSendMessage = () => {
+    if (newMessage.trim()) {
+      const pokerChatMessage: sendPokerAction = {
+        action: "sendPokerAction",
+        gameId: gameState.gameId,
+        gameAction: "sendPokerChatMessage",
+        buyIn: null,
+        raiseAmount: null,
+        groups: null,
+        message: newMessage
+      };
+      const dynamicMessage = {
+        username: user.username,
+        message: newMessage,
+        time: new Date().toISOString()
+      };
+      sendJsonMessage(pokerChatMessage);
+      setMessages((prevMessages) => [...prevMessages, dynamicMessage]);
+      setNewMessage("");
+    }
+  };
 
-            intervalId = setInterval(() => {
-                const currentTime = Date.now();
-                const elapsedTime = (currentTime - startTimestamp) / 1000; // elapsed time in seconds
-                const timeLimit = 10.5; // 10 seconds
+  const handleScroll = (event: any) => {
+    const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+    const isUserAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 5; // Small tolerance
+    setIsAtBottom(isUserAtBottom);
+  };
 
-                const remainingPercentage = Math.max(0, ((timeLimit - elapsedTime) / timeLimit) * 100);
-                setTimeBarWidth(new Animated.Value(remainingPercentage));
+  const handleOpenChat = () => {
+    setChatIsOpen(true);
+    setUnreadMessages(0);
+    setSeenMessagesCount(gameState.chatMessages.length);
+    setTimeout(() => {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 0);
+  };
 
-                if (remainingPercentage === 0) {
-                    clearInterval(intervalId); // Stop updates when time is up
-                }
-            }, 16);
-        }
+  const handleCloseChat = () => {
+    setChatIsOpen(false);
+    setUnreadMessages(0);
+    setSeenMessagesCount(gameState.chatMessages.length);
+  };
 
-        return () => {
-            if (intervalId) clearInterval(intervalId);
-        };
-    }, [showBombPotDecisionModal, gameOverTimeStamp]);
+  const handleInputChange = (input: string) => {
+    if (input.length <= 100) {
+      setNewMessage(input);
+    }
+  };
 
-    if (!showBombPotDecisionModal) return null;
-
-    return (
-        <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-                <Text style={styles.title}>
-                    <Text style={styles.proposer}>{proposer}</Text> has proposed a Bomb Pot for
-                    <Text style={styles.bigBlinds}> {bigBlinds} BBs</Text>{" "}
-                    <Text style={postFlopBetting ? styles.postFlop : styles.preFlop}>
-                        {postFlopBetting ? "with Post-Flop Betting" : "without Post-Flop Betting"}
+  return (
+    <>
+      <AnimatePresence>
+        {chatIsOpen ? (
+          <MotiView
+            key="chat"
+            from={{ opacity: 0, translateX: -200 }}
+            animate={{ opacity: 1, translateX: 0 }}
+            exit={{ opacity: 0, translateX: -200 }}
+            transition={{ duration: 200 }}
+            style={styles.chatContainer}
+          >
+            <TouchableOpacity style={styles.closeButton} onPress={handleCloseChat}>
+              <CircleX size={20} color="white" />
+            </TouchableOpacity>
+            <Text style={styles.title}>Game Chat</Text>
+            <ScrollView
+              style={styles.messagesContainer}
+              onScroll={handleScroll}
+              ref={chatEndRef}
+              scrollEventThrottle={16}
+            >
+              {messages.map((msg, index) => (
+                <View key={index} style={[styles.message, msg.username === user.username ? styles.myMessage : styles.otherMessage]}>
+                  <Text style={styles.messageHeader}>
+                    <Text style={msg.username === user.username ? styles.myUsername : styles.otherUsername}>
+                      {msg.username}
+                    </Text>{" "}
+                    <Text style={styles.messageTime}>
+                      {new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </Text>
-                </Text>
-
-                <View style={styles.buttonContainer}>
-                    {/* Opt In */}
-                    <View style={styles.buttonWrapper}>
-                        <Text style={styles.buttonLabel}>Opt In</Text>
-                        <TouchableOpacity
-                            onPress={() => handleMakeBombPotDecision("optIn")}
-                            style={[
-                                styles.button,
-                                decision === "optIn" ? styles.optInActive : styles.optInInactive
-                            ]}
-                        >
-                            <Text style={styles.buttonIcon}>✔️</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    {/* Opt Out */}
-                    <View style={styles.buttonWrapper}>
-                        <Text style={styles.buttonLabel}>Opt Out</Text>
-                        <TouchableOpacity
-                            onPress={() => handleMakeBombPotDecision("optOut")}
-                            style={[
-                                styles.button,
-                                decision === "optOut" ? styles.optOutActive : styles.optOutInactive
-                            ]}
-                        >
-                            <Text style={styles.buttonIcon}>❌</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    {/* Veto */}
-                    <View style={styles.buttonWrapper}>
-                        <Text style={styles.buttonLabel}>Veto</Text>
-                        <TouchableOpacity
-                            onPress={() => handleMakeBombPotDecision("veto")}
-                            style={[
-                                styles.button,
-                                decision === "veto" ? styles.vetoActive : styles.vetoInactive
-                            ]}
-                        >
-                            <Text style={styles.buttonIcon}>🚫</Text>
-                        </TouchableOpacity>
-                    </View>
+                  </Text>
+                  <Text style={styles.messageText}>{msg.message}</Text>
                 </View>
-
-                {/* Time Bar */}
-                <View style={styles.timeBarContainer}>
-                    <Animated.View
-                        style={[
-                            styles.timeBar,
-                            { width: timeBarWidth.interpolate({
-                                inputRange: [0, 100],
-                                outputRange: ["0%", "100%"],
-                            }) }
-                        ]}
-                    />
-                </View>
+              ))}
+              <View ref={chatEndRef} />
+            </ScrollView>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Type a message..."
+                placeholderTextColor="#ccc"
+                value={newMessage}
+                onChangeText={handleInputChange}
+                onSubmitEditing={handleSendMessage}
+              />
+              <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
+                <Send size={20} color="white" />
+              </TouchableOpacity>
+              <Text style={styles.charCount}>{newMessage.length}/100</Text>
             </View>
-        </View>
-    );
+          </MotiView>
+        ) : (
+          <MotiView
+            key="icon"
+            from={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            transition={{ duration: 200 }}
+            style={styles.iconContainer}
+          >
+            <TouchableOpacity 
+            onPress={handleOpenChat}>
+                <MessageSquareMore size={48} color="white" />
+                {!chatIsOpen && unreadMessages > 0 && (
+                <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{unreadMessages}</Text>
+                </View>
+                )}
+            </TouchableOpacity>
+          </MotiView>
+        )}
+      </AnimatePresence>
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
-    modalContainer: {
-        position: "absolute",
-        top: "45%",
-        left: "50%",
-        transform: [{ translateX: -50 }, { translateY: -50 }],
-        zIndex: 50,
-        backgroundColor: "#2D2D2D",
-        borderRadius: 15,
-        padding: 20,
-        width: "90%",
-        maxWidth: 400,
-        alignItems: "center",
-    },
-    modalContent: {
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    title: {
-        color: "white",
-        fontSize: 18,
-        fontWeight: "bold",
-        textAlign: "center",
-        marginBottom: 20,
-    },
-    proposer: {
-        color: "#3B82F6",
-    },
-    bigBlinds: {
-        color: "#FBBF24",
-        fontWeight: "bold",
-    },
-    postFlop: {
-        color: "#22C55E",
-        fontWeight: "bold",
-    },
-    preFlop: {
-        color: "#EF4444",
-        fontWeight: "bold",
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        width: "100%",
-    },
-    buttonWrapper: {
-        alignItems: "center",
-    },
-    buttonLabel: {
-        color: "white",
-        fontSize: 12,
-        fontWeight: "bold",
-        marginBottom: 5,
-    },
-    button: {
-        width: 60,
-        height: 60,
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-        borderWidth: 2,
-        borderColor: "transparent",
-    },
-    optInActive: {
-        backgroundColor: "#3B82F6",
-        borderColor: "#2563EB",
-    },
-    optInInactive: {
-        borderColor: "#3B82F6",
-    },
-    optOutActive: {
-        backgroundColor: "#4B5563",
-        borderColor: "#374151",
-    },
-    optOutInactive: {
-        borderColor: "#9CA3AF",
-    },
-    vetoActive: {
-        backgroundColor: "#DC2626",
-        borderColor: "#B91C1C",
-    },
-    vetoInactive: {
-        borderColor: "#EF4444",
-    },
-    buttonIcon: {
-        fontSize: 24,
-        color: "white",
-    },
-    timeBarContainer: {
-        marginTop: 20,
-        height: 10,
-        width: "100%",
-        backgroundColor: "#4B5563",
-        borderRadius: 5,
-    },
-    timeBar: {
-        height: "100%",
-        backgroundColor: "#3B82F6",
-        borderRadius: 5,
-    },
+  chatContainer: {
+    position: 'absolute',
+    bottom: -230,
+    left: 30,
+    width: 300,
+    height: 350,
+    backgroundColor: '#1c202b99',
+    padding: 10,
+    borderWidth: 2,
+    borderColor: '#5f5f5f',
+    borderRadius: 10,
+    zIndex: 50,
+  },
+  closeButton: {
+    alignSelf: 'flex-end',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'goldenrod',
+    marginBottom: 10,
+  },
+  messagesContainer: {
+    flex: 1,
+    marginBottom: 10,
+  },
+  message: {
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 2,
+    borderWidth: 1,
+    borderColor: '#5f5f5f',
+  },
+  myMessage: {
+    backgroundColor: '#1e84f099',
+  },
+  otherMessage: {
+    backgroundColor: '#2c2f3699',
+  },
+  messageHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  myUsername: {
+    fontWeight: 'bold',
+    color: '#fff700',
+  },
+  otherUsername: {
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  messageTime: {
+    fontSize: 10,
+    marginLeft: 5,
+    color: 'gray',
+  },
+  messageText: {
+    fontSize: 14,
+    color: 'white',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#2c2f36',
+    color: 'white',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#5f5f5f',
+    marginRight: 5,
+  },
+  sendButton: {
+    padding: 10,
+    backgroundColor: 'blue',
+    borderRadius: 5,
+  },
+  charCount: {
+    color: 'gray',
+    marginLeft: 5,
+  },
+  iconContainer: {
+    position: 'absolute',
+    // top: 200,
+    bottom: -250,
+    left: 50,
+    padding: 10,
+    backgroundColor: 'blue',
+    borderRadius: 50,
+    zIndex: 100
+  },
+  badge: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: 'red',
+    borderRadius: 50,
+    width: 25,
+    height: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  badgeText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
 
-export default BombPotDecision;
+export default PokerChat;

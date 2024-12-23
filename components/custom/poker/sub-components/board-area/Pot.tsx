@@ -33,49 +33,25 @@ const Pot: React.FC<PotProps> = ({
   displayBB,
 }) => {
   const [isVisible, setIsVisible] = React.useState(true);
+
   const purpleChipsCount = Math.floor(amountInBigBlinds / 50); // 25BB
   const blackChipsCount = Math.floor((amountInBigBlinds % 50) / 15); // 10BB
   const blueChipsCount = Math.floor((amountInBigBlinds % 15) / 5); // 5BB
   const yellowChipsCount = Math.floor((amountInBigBlinds % 5) / 2); // 2BB
   const redChipsCount = Math.floor((amountInBigBlinds % 2) / 0.5); // 0.5BB
 
-  // const allInTotalPot = gameState.pot /10;
-  // const allInPurpleChipsCount = Math.floor(allInTotalPot / 50); // 25BB
-  // const allInBlackChipsCount = Math.floor((allInTotalPot % 50) / 15); // 10BB
-  // const allInBlueChipsCount = Math.floor((allInTotalPot % 15) / 5); // 5BB
-  // const allInYellowChipsCount = Math.floor((allInTotalPot % 5) / 2); // 2BB
-  // const allInRedChipsCount = Math.floor((allInTotalPot % 2) / 0.5); // 0.5BB
-
-  // const allInChipsDistribution = [
-  //   {chipsCount: allInRedChipsCount, chipsType: typedCoinRed, chipName: "coinred", zIndex: 10, chipIndex: 1 },
-  //   {chipsCount: allInYellowChipsCount, chipsType: typedCoinYellow, chipName: "coinyellow", zIndex: 20, chipIndex: 2 },
-  //   {chipsCount: allInBlueChipsCount, chipsType: typedCoinBlue, chipName: "coinblue", zIndex: 30, chipIndex: 3 },
-  //   {chipsCount: allInBlackChipsCount, chipsType: typedCoinBlack, chipName: "coinblack", zIndex: 40, chipIndex: 4 },
-  //   {chipsCount: allInPurpleChipsCount, chipsType: typedCoinPurple, chipName: "coinpurple", zIndex: 50, chipIndex: 5 },
-  // ]
-
-  // const getDelayedTime = (state: string): number => {
-  //   switch (state) {
-  //     case "preFlop":
-  //       return 6;
-  //     case "flop":
-  //       return 3;
-  //     case "turn":
-  //       return 2;
-  //     default:
-  //       return 0;
-  //   }
-  // }
-  // const [playerPositions, setPlayerPositions] = useState(generatePlayerPositions(screenSize));
-  const renderChips = (count: number, image: any, alt: string,
-    zIndexBase: number,) => {
-      let chipsPerStack = 4;
-      let stacks = Math.ceil(count / chipsPerStack);
-      if (isMovingToPot !== 0) {
-        stacks = 1;
-        chipsPerStack = 9;
-      }
-  
+  const renderChips = (
+    count: number, 
+    image: any, 
+    alt: string,
+    zIndexBase: number,
+  ) => {
+    let chipsPerStack = 4;
+    let stacks = Math.ceil(count / chipsPerStack);
+    if (isMovingToPot !== 0) {
+      stacks = 1;
+      chipsPerStack = 9;
+    }  
 
     return (
       <View style={styles.chipContainer}>
@@ -145,49 +121,47 @@ const Pot: React.FC<PotProps> = ({
     );
     case 1:
       return (
-            <MotiView
-              style={{
-                height: "30px",
-                position: "relative", // Keep this to make it responsive to the parent container
-                display: "flex",
-                flexDirection: "column", // Ensure chips are stacked vertically (one pile)
-                alignItems: "start", // Center the chips vertically
-                justifyContent: "center", // Center the chips horizontally within the div
-                ...style,
-                translateX: "50%" // Apply any additional styles passed via props
-              }}
-              animate={{ left: "0%", top: "0%" }} // Adjust based on desired animation
-              transition={{ duration: 0.3, type: "spring", stiffness: 50 }}
-              onAnimationComplete={() => {
-                if (onAnimationDone) {
-                  onAnimationDone();
-                }
-              }}
-            >
-              {renderChips(purpleChipsCount, typedCoinPurple, "coinpurple", 50)}
-              {renderChips(blackChipsCount, typedCoinBlack, "coinblack", 40)}
-              {renderChips(blueChipsCount, typedCoinBlue, "coinblue", 30)}
-              {renderChips(yellowChipsCount, typedCoinYellow, "coinyellow", 20)}
-              {renderChips(redChipsCount, typedCoinRed, "coinred", 10)}
-            </MotiView>
+        <MotiView
+          style={{
+            height: "30px",
+            position: "relative", // Keep this to make it responsive to the parent container
+            display: "flex",
+            flexDirection: "column", // Ensure chips are stacked vertically (one pile)
+            alignItems: "start", // Center the chips vertically
+            justifyContent: "center", // Center the chips horizontally within the div
+            ...style,
+            translateX: "50%" // Apply any additional styles passed via props
+          }}
+          animate={{ left: "0%", top: "0%" }} // Adjust based on desired animation
+          transition={{ duration: 0.3, type: "spring", stiffness: 50 }}
+          onAnimationComplete={() => {
+            if (onAnimationDone) {
+              onAnimationDone();
+            }
+          }}
+        >
+          {renderChips(purpleChipsCount, typedCoinPurple, "coinpurple", 50)}
+          {renderChips(blackChipsCount, typedCoinBlack, "coinblack", 40)}
+          {renderChips(blueChipsCount, typedCoinBlue, "coinblue", 30)}
+          {renderChips(yellowChipsCount, typedCoinYellow, "coinyellow", 20)}
+          {renderChips(redChipsCount, typedCoinRed, "coinred", 10)}
+        </MotiView>
       );
       case 2: // moving from pot to winner
-          return (
-            <MotiView
-              style={{
-                flexDirection: "column-reverse",
-                alignItems: "flex-start",
-              }}
-            >
-              {renderChips(purpleChipsCount, typedCoinPurple, "coinpurple", 50)}
-              {renderChips(blackChipsCount, typedCoinBlack, "coinblack", 40)}
-              {renderChips(blueChipsCount, typedCoinBlue, "coinblue", 30)}
-              {renderChips(yellowChipsCount, typedCoinYellow, "coinyellow", 20)}
-              {renderChips(redChipsCount, typedCoinRed, "coinred", 10)}
-            </MotiView>
-                    
-            
-          );
+        return (
+          <MotiView
+            style={{
+              flexDirection: "column-reverse",
+              alignItems: "flex-start",
+            }}
+          >
+            {renderChips(purpleChipsCount, typedCoinPurple, "coinpurple", 50)}
+            {renderChips(blackChipsCount, typedCoinBlack, "coinblack", 40)}
+            {renderChips(blueChipsCount, typedCoinBlue, "coinblue", 30)}
+            {renderChips(yellowChipsCount, typedCoinYellow, "coinyellow", 20)}
+            {renderChips(redChipsCount, typedCoinRed, "coinred", 10)}
+          </MotiView>          
+        );
   }
   return null;
 
@@ -204,7 +178,7 @@ const styles = StyleSheet.create({
   },
   chipContainer: {
     flexDirection: "row",
-    position: 'absolute'
+    // position: 'absolute'
   },
   chipStack: {
     marginRight: 8,

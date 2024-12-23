@@ -7,7 +7,7 @@ import { useSearchParams } from 'expo-router/build/hooks';
 import GamePlayPoker from "@/components/custom/poker/GamePlayPoker";
 import { useAuth } from '@/hooks/useAuth';
 import PlayPokerNav from "@/components/custom/poker/PlayPokerNav";
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 import assert from "assert";
 import type { PokerActionsFrontend } from '@/types/pokerFrontend.';
 import JoinPopup from "@/components/custom/poker/JoinPopup";

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert } from "react-native";
 import { Copy, ExternalLink, X } from "lucide-react"; // Ensure you have lucide-react or similar icon library installed
-import { toast } from "sonner"; // Make sure to have a toast library installed
+import { toast } from "react-toastify"; // Make sure to have a toast library installed
 import { Clipboard } from 'react-native-clipboard/clipboard'; // Import Clipboard 
 
 const GameSharePopup: React.FC<{ gameId: string }> = ({ gameId }) => {

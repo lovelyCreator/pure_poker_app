@@ -50,7 +50,7 @@ const BoardArea: React.FC<BoardAreaProps> = ({
       key={`-${gameState?.isBeginningOfTheHand}-${gameState?.gameOverTimeStamp}`}
       from={{ opacity: gameState?.isBeginningOfTheHand ? 0 : 1 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1, delay: 1.8 }}
+      transition={{ duration: 100, delay: 180 }}
       style={{width: '100%', height: '100%', display: 'flex'}}
     >
       {/* Pot Information */}
@@ -102,23 +102,25 @@ const BoardArea: React.FC<BoardAreaProps> = ({
         {/* Community Cards */}
         <View style={styles.cardsContainer}>
           {gameState?.communityCards.map((card, i) => (
-            <MotiView
-              key={i}
-              custom={i}
-              from={{ opacity: 0 }}
-              animate={
-                previousCommunityCards.length <= gameState.communityCards.length
-                  ? { opacity: 1 }
-                  : { opacity: 0 }
+          <MotiView
+            key={i}
+            from={{ opacity: 0, translateY: -20 }} // Starting state
+            animate={{
+              opacity: previousCommunityCards.length <= gameState.communityCards.length ? 1 : 0,
+              translateY: previousCommunityCards.length <= gameState.communityCards.length ? 0 : -20,
+            }}
+            transition={{
+              type: 'timing',
+              duration: 300,
+              delay: i * 300, // Stagger animations
+            }}
+            onAnimationComplete={() => {
+              if (i === gameState?.communityCards.length - 1) {
+                console.log("Animation is over, setting allBoardCardsReveal to true.");
+                setAllBoardCardsRevealed(true);
               }
-              transition={{ duration: 0.5 }}
-              onAnimationComplete={() => {
-                if (i === gameState?.communityCards.length - 1) {
-                  console.log("Animation is over, setting allBoardCardsReveal to true.");
-                  setAllBoardCardsRevealed(true);
-                }
-              }}
-            >
+            }}
+          >
               <Card
                 index={i}
                 card={card}

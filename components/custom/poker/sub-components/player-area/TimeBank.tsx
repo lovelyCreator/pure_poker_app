@@ -5,7 +5,7 @@ import { Player, sendPokerAction, WebSocketMessage } from "@/types/poker";
 import { getPokerUrl } from "@/lib/poker";
 import { useSpan } from "@/utils/logging";
 import { useAuth } from "@/hooks/useAuth";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 
 type TimeBankProps = {
   player: Player;

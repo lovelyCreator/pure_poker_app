@@ -2,19 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 interface TooltipSliderProps {
-  max?: number;
-  min?: number;
-  value?: number;
-  onChange?: (value: number) => void;
-  tipFormatter?: (value: number) => string; // Add tipFormatter prop
+  value: number;
+  children: React.ReactElement;
+  visible: boolean;
+  tipFormatter?: (value: number) => React.ReactNode;
 }
 
 const TooltipSlider: React.FC<TooltipSliderProps> = ({
-  max = 100,
-  min = 1,
-  value = min,
-  onChange,
-  tipFormatter = (val) => `${val}`, // Default formatter
+  value,
+  children,
+  visible,
+  tipFormatter = (val) => `${val}`,
+  ...restProps
 }) => {
   const [sliderValue, setSliderValue] = useState(value);
 

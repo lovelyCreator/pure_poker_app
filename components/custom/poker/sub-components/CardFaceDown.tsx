@@ -12,6 +12,8 @@ export const CardFaceDown: React.FC<CardFaceDownProps> = ({ side }) => {
     rotateStyle = { transform: [{ rotate: "-7deg" }] };
   } else if (side === "right") {
     rotateStyle = { transform: [{ rotate: "6deg" }] };
+  } else {
+    {}
   }
 
   const marginRight = side === "none" ? 0 : -6;

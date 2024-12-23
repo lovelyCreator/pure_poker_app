@@ -31,8 +31,8 @@ const DealerButton: React.FC<DealerButtonProps> = ({
       style={[
         styles.button,
         {
-          left: left+120 , // Adjusting for the 100% offset
-          top: top + 150,    // Adjusting for the 50% offset
+          left: left+115 , // Adjusting for the 100% offset
+          top: top + 120,    // Adjusting for the 50% offset
           transform: [{ translateX: -50 }, { translateY: -50 }],
         },
       ]}

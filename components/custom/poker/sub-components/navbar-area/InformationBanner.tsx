@@ -22,7 +22,7 @@ const InformationBanner: React.FC<InformationBannerProps> = ({
 }) => {
   // Don't show any banner if the player is in buyBackIn state
   if (currentPlayer?.chips === 0) return null;
-  console.log("SitOutState ====> ", isSittingOut, !isSittingOutNextHand, inactivityCount)
+  // console.log("SitOutState ====> ", isSittingOut, !isSittingOutNextHand, inactivityCount)
 
   return (
     <View style={styles.container}>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   inactivityWarning: {
     position: 'absolute',
     left: '50%',
-    top: 50,
+    top: 100,
     transform: [{ translateX: -50 }],
     backgroundColor: 'rgba(255, 0, 0, 0.6)',
     borderRadius: 8,

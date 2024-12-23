@@ -1,3 +1,4 @@
+import { MotiView } from "moti";
 import React from "react";
 import { View, StyleSheet, Animated } from "react-native";
 
@@ -23,7 +24,7 @@ const PlayerTimeBar: React.FC<PlayerTimeBarProps> = ({
 
   return (
     <View style={styles.container}>
-      <Animated.View
+      <MotiView
         style={[
           styles.timeBar,
           {
@@ -36,6 +37,12 @@ const PlayerTimeBar: React.FC<PlayerTimeBarProps> = ({
               : "rgba(59, 130, 246, 1)", // Blue otherwise
           },
         ]}
+        animate={{width: `${timeBarWidth}%`}}
+        transition={{
+          type: 'timing',
+          duration: 16, // Duration in milliseconds (0.016 seconds = 16ms)
+          easing: (t) => t, // Linear easing function
+        }}
       />
     </View>
   );

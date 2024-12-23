@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, Linking, StyleSheet, ScrollView } from "react-native";
 import { useAuth } from "@/hooks/useAuth"; // Adjust the import path as necessary
 import { authApi } from "@/api/api"; // Adjust the import path as necessary
-import { toast } from "sonner"; // Adjust the import path as necessary
+import { toast } from "react-toastify"; // Adjust the import path as necessary
 import { Button } from "@/components/ui/button"; // Adjust the import path as necessary
 
 const MassPayStatus: React.FC = () => {

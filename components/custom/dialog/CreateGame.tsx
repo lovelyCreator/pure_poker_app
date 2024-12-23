@@ -10,6 +10,7 @@ import type { createGame } from "@/types/poker";
 import { useAuth } from "@/hooks/useAuth";
 
 import Toast from 'react-native-toast-message';
+import { toast } from "react-toastify";
 
 import { getPokerUrl } from "@/lib/poker";
 import useUserGroups from "@/hooks/useUserGroups";
@@ -100,36 +101,22 @@ const CreateGameSchema = z
             
             if (res.action === "createGame") {
               if (res.statusCode === 200) {
-                Toast.hide();
-                Toast.show({
-                  text1: 'Success',
-                  text2: 'Game created successfully!',
-                  position: 'top',
-                  type: 'success',
-                  visibilityTime: 4000,
-                  onHide: () => console.log('Success toast hidden'),
-                });
-    
+                toast.dismiss();
+                toast.success("Game created successfully!");
+
                 const g_span = s_span.span("success", res);
                 g_span.info("Adjusting path to corresponding gameId.");
                 navigation.navigate('playPoker', { gameId: res.gameId });
                 closeDialog();
               } else if (res.statusCode === 401) {
                 // Handle authentication failure
-                Toast.hide();
-                Toast.show({
-                  text1: 'Error',
-                  text2: 'Authentication failed. Please try again.',
-                  position: 'top',
-                  type: 'error',
-                  visibilityTime: 4000,
-                  onHide: () => console.log('Error toast hidden'),
-                });
+                toast.dismiss();
+                toast.error("Please Try Again now.");
     
                 // Optional: Retry authentication
-                setTimeout(() => {
-                  authenticate(); // Call authenticate function to retry
-                }, 5000); // Retry after 5 seconds
+                // setTimeout(() => {
+                //   authenticate(); // Call authenticate function to retry
+                // }, 5000); // Retry after 5 seconds
               }
             }
           } catch (e) {

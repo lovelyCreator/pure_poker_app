@@ -38,6 +38,7 @@ export default function HomePage() {
   const groupsQuery = useUserGroups();
   const groupIds = groupsQuery.data?.map((group) => group.groupId) || [];
   const { data: availableGames} = useAvailableGames(groupIds, user.id);
+  console.log("Available Games", availableGames)
 
   const [showAllGames, setShowAllGames] = useState(false);
   const handleSeeAllClick = () => {
@@ -47,122 +48,6 @@ export default function HomePage() {
   const handleSeeLessClick = () => {
     setShowAllGames(false);
   }
-  console.log("Available Games", availableGames)
-  // const renderContent = () => (
-  //   <>
-  //     {!userIsVerified && (
-  //       <View style={{marginTop: 0}}>
-  //         <ClearStatus />
-  //       </View>
-  //     )}
-  //     {userIsVerified && !massPayAccountCreated && (
-  //       <View style={{marginTop: 0}}> 
-  //         <MassPayStatus />
-  //       </View>
-  //     )}
-  //     {userIsVerified && massPayAccountCreated && (
-  //       <View style={{marginTop: 0}}>
-  //         <Welcome />
-  //       </View>
-  //     )}
-  //     <View style={{marginTop: 16, display: 'flex', flexDirection: 'column',}}>
-  //       <CardGradient
-  //         gradient="purple"
-  //         style={[
-  //           styles.gradient,
-  //           !userIsVerified && styles.disabled
-  //         ]}
-  //       >
-  //         <CreateOrJoinGame userIsVerified={userIsVerified} isCreateGame={true}>
-  //         <Image source={require('@/assets/home/icon/plus.png')}
-  //           alt='Create Game'
-  //           style={{cursor: 'pointer'}}
-  //         />
-  //         </CreateOrJoinGame>
-  //         <Text style={styles.subTitle}>Create New Game</Text>
-  //         <Text style={styles.content}>
-  //           Customize Your Poker Experience
-  //         </Text>
-  //       </CardGradient>
-  //       <CardGradient
-  //         gradient="blue"
-  //         style={[
-  //           styles.gradient,
-  //           !userIsVerified && styles.disabled
-  //         ]}
-  //       >
-  //         <CreateOrJoinGame userIsVerified={userIsVerified} isCreateGame={true}>
-  //         <Image 
-  //           source={require('@/assets/home/icon/friends.png')}
-  //           alt='Join Game'
-  //           style={{cursor: 'pointer'}}
-  //         />
-  //         </CreateOrJoinGame>
-  //         <Text style={styles.subTitle}>Join Game</Text>
-  //         <Text style={styles.content}>
-  //           Find and Join Exciting Poker Games
-  //         </Text>
-  //       </CardGradient>
-  //       <CardGradient
-  //         gradient="orange"
-  //         style={[
-  //           styles.gradient,
-  //           !userIsVerified && styles.disabled
-  //         ]}
-  //       >
-  //         <CreateOrJoinGame userIsVerified={userIsVerified} isCreateGame={true}>
-  //         <Image 
-  //           source={require('@/assets/home/icon/friends.png')}
-  //           alt='Create Group'
-  //           style={{cursor: 'pointer'}}
-  //         />
-  //         </CreateOrJoinGame>
-  //         <Text style={styles.subTitle}>Create Group</Text>
-  //         <Text style={styles.content}>
-  //           Explore and Become a Member of Viewerse Groups
-  //         </Text>
-  //       </CardGradient>
-  //     </View>
-  //     <View style={styles.seeAll}>
-  //       <View style={{marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-  //         <Text style={{fontSize: 18, lineHeight: 27, color: '#D1D5DB'}}>Available Games</Text>
-  //         {availableGames && availableGames.length > 3 && (
-  //           <Button
-  //             onPress={showAllGames ? handleSeeLessClick : handleSeeAllClick}
-  //             style={styles.button}
-  //             textStyle={styles.text}
-  //           >
-  //             {showAllGames ? "See Less" : "See All"}
-  //           </Button>
-  //         )}
-  //       </View>
-  //       {showAllGames ? (
-  //         <SeeAllGames
-  //           availableGames={availableGames}
-  //           userIsVerified={userIsVerified}
-  //         />
-  //       ) : (
-  //         <View style={{
-  //           flexDirection: 'row', // Use row for columns
-  //           flexWrap: 'wrap',     // Allow wrapping to create multiple rows
-  //           justifyContent: 'space-between', // Space between items
-  //           margin: -8,   }}>
-  //           {availableGames?.slice(0, 3) // Show only first 3 games
-  //               .map((game) => (
-  //                 <AvailableGamesHome
-  //                   key={game.gameId}
-  //                   availableGame={game}
-  //                   userIsVerified={userIsVerified}
-  //                 />
-  //               ))}
-  //         </View>
-  //       )}
-  //       {availableGames?.length === 0 && (
-  //         <Text style={{paddingVertical: 16, textAlign: 'center'}}>No games found.</Text>
-  //       )}
-  //     </View>
-  //   </>
-  // )
   const [chipState, setChipState] = useState(false);
 
   return (
@@ -238,40 +123,40 @@ export default function HomePage() {
                 <View style={{marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                   <Text style={{fontSize: 18, lineHeight: 27, color: '#D1D5DB'}}>Available Games</Text>
                   {availableGames && availableGames.length > 3 && (
-                  <Button
-                    onPress={showAllGames ? handleSeeLessClick : handleSeeAllClick}
-                    style={styles.button}
-                    textStyle={styles.text}
-                  >
-                    {showAllGames ? "See Less" : "See All"}
-                  </Button>
+                    <Button
+                      onPress={showAllGames ? handleSeeLessClick : handleSeeAllClick}
+                      style={styles.button}
+                      textStyle={styles.text}
+                    >
+                      {showAllGames ? "See Less" : "See All"}
+                    </Button>
+                  )}
+                </View>
+                {showAllGames ? (
+                  <SeeAllGames
+                    availableGames={availableGames}
+                    userIsVerified={userIsVerified}
+                  />
+                ) : (
+                  <View style={{
+                    flexDirection: 'column', // Use row for columns
+                    flexWrap: 'wrap',     // Allow wrapping to create multiple rows
+                    justifyContent: 'space-between', // Space between items
+                    margin: -8,  }}>
+                    {availableGames?.slice(0, 3) // Show only first 3 games
+                      .map((game) => (
+                        <AvailableGamesHome
+                          key={game.gameId}
+                          availableGame={game}
+                          userIsVerified={userIsVerified}
+                        />
+                      ))}
+                  </View>
+                )}
+                {availableGames?.length === 0 && (
+                  <Text style={{paddingVertical: 16, textAlign: 'center', color: 'white'}}>No games found.</Text>
                 )}
               </View>
-              {showAllGames ? (
-                <SeeAllGames
-                  availableGames={availableGames}
-                  userIsVerified={userIsVerified}
-                />
-              ) : (
-                <View style={{
-                  flexDirection: 'column', // Use row for columns
-                  flexWrap: 'wrap',     // Allow wrapping to create multiple rows
-                  justifyContent: 'space-between', // Space between items
-                  margin: -8,   }}>
-                  {availableGames?.slice(0, 3) // Show only first 3 games
-                    .map((game) => (
-                      <AvailableGamesHome
-                        key={game.gameId}
-                        availableGame={game}
-                        userIsVerified={userIsVerified}
-                      />
-                    ))}
-                </View>
-              )}
-              {availableGames?.length === 0 && (
-                <Text style={{paddingVertical: 16, textAlign: 'center', color: 'white'}}>No games found.</Text>
-              )}
-            </View>
           </View>
         </ScrollView>
       </SpanWrapper>
@@ -283,7 +168,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     height: '100%',
     width: '100%',
-    backgroundColor: '#11141D'
+    backgroundColor: '#11141D',
+    paddingBottom: 60
   },
   gradient: {
     marginBottom: 16, // mb-4
@@ -314,7 +200,7 @@ const styles = StyleSheet.create({
   seeAll: {
     width: '90%',
     marginTop: 16, // mt-4
-    marginBottom: 12, // mb-3
+    marginBottom: 30, // mb-3
     padding: 12, // p-3
     borderRadius: 16, // rounded-2xl
     borderWidth: 1, // border
@@ -334,7 +220,8 @@ const styles = StyleSheet.create({
   },
   topBar: {
     position: 'absolute',
-    top: 10,
+    top: 0,
+    paddingTop: 10,
     left: 10,
     opacity: 1,
     display: 'flex',

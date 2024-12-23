@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle } from 'lucide-react';
 import type { StaticImport } from "next/dist/shared/lib/get-img-props";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 import useWebSocket from "react-use-websocket";
 import { useSpan } from "@/utils/logging";
 import { getPokerUrl } from "@/lib/poker";

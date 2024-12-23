@@ -3,7 +3,7 @@ import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import useWebSocket from "react-use-websocket";
 import { gameFinishedToWaitTime, getPokerUrl } from "@/lib/poker";
 import { useSpan } from "@/utils/logging";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 import { GameState, sendPokerAction, WebSocketMessage } from "@/types/poker";
 import { useAuth } from "@/hooks/useAuth";
 import { Animated } from "react-native";

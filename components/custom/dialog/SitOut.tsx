@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Modal, StyleSheet, TouchableOpacity } from "react-native";
 import useWebSocket from "react-use-websocket";
-import { toast } from "sonner"; // Ensure you have a toast library compatible with React Native
+import { toast } from "react-toastify"; // Ensure you have a toast library compatible with React Native
 import { useAuth } from "@/hooks/useAuth"; // Adjust import paths as needed
 import { getPokerUrl } from "@/lib/poker";
 import type { sendPokerAction } from "@/types/poker";

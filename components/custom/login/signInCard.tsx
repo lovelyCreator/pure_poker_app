@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert, Dimensions, Platform} from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, Dimensions, Platform, Image} from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import useLogin from '@/hooks/useLogin';
 
 import { Input } from '@/components/ui/input';
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 import { Link, Stack } from 'expo-router';
 import { PasswordInput } from '@/components/ui/password-input';
 import { authApi } from '@/api/api';
@@ -67,13 +67,6 @@ export default function SignInCard() {
 
   logger.info('Init');
   const login = useLogin();
-  // const form = useForm<z.infer<typeof SignInSchema>>({
-  //   resolver: zodResolver(SignInSchema),
-  //   defaultValues: {
-  //     username: '',
-  //     password: '',
-  //   },
-  // });
 
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(SignInSchema),
@@ -82,76 +75,111 @@ export default function SignInCard() {
       password: '',
     },
   });
+  const loginSuc = (error) => {
+    if (!error) {
+
+      logger.info("User logged in");
+      console.log('error')
+      setTimeout(() => {
+        // router.push("/home");
+        navigation.navigate('home')
+      }, 0);
+      return "Login successful";
+    }
+  }
+  const loginErr = (error) => {
+    logger.error("Login failed", error);
+    return "Login failed";
+  }
 
   async function onSubmit(values: z.infer<typeof SignInSchema>) {
     // console.log('signIn datas==========>',values);
     logger.info("Submitted", values);
     
-
-    try {
-      const result = await (await login).mutateAsync({
-          username: values.username,
-          password: values.password,
-      });
-
-      console.log("LogInState", result);
-      console.log("Login successful:", result); // Handle success (e.g., store token, redirect)
-      navigation.navigate('home')
-    } catch (error) {
-        console.error("Login failed:", error.message); // Handle failure (e.g., show error message)
-    }
+    toast.promise(
+      (await login).mutateAsync({
+        username: values.username,
+        password: values.password,
+      }),
+      {
+        pending: "Logging in...",
+        // success: () => loginSuc(), // Pass as a callback
+        // error: (error) => loginErr(error), 
+        success: "Login successful", // Pass as a callback
+        error: "Login failed", 
+      },
+    );
   }
+
+    // try {
+    //   const result = await (await login).mutateAsync({
+    //       username: values.username,
+    //       password: values.password,
+    //   });
+
+    //   console.log("LogInState", result);
+    //   console.log("Login successful:", result); // Handle success (e.g., store token, redirect)
+    //   navigation.navigate('home')
+    // } catch (error) {
+    //     console.error("Login failed:", error.message); // Handle failure (e.g., show error message)
+    // }
 
   return (
     <View style={[styles.container, {height: adjustedHeight}]}>
-      <Card style={styles.card}>
-        <CardTitle style={styles.cardTitle}>
-          <Text style={styles.title}>Sign In</Text>
-        </CardTitle>
-        <CardContent style={styles.cardContent}> 
-          <Text style={styles.subtitle}>Email</Text>         
-          <Controller
-            control={control}
-            name="username"
-            render={({ field }) => (
-              <Input
-                placeholder="jsmith@gmail.com"
-                {...field}
-                style={{borderRadius: 24, width: '100%'}}
-              />
-            )}
-          />
-          {errors.username && <Text style={styles.error}>{errors.username.message}</Text>}
-          <Text style={styles.subtitle}>Password</Text>   
-          <Controller
-            control={control}
-            name="password"
-            render={({ field }) => (
-              <PasswordInput
-                placeholder='At least minimum 8 characters'
-                {...field}
-                style={{borderRadius: 24}}
-              />
-            )}
-          />
-          {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
-          <Text style={[styles.subtitle, {textAlign: 'right', marginBottom: 20}]}>Forgot Password?</Text>
-          <Button onPress={handleSubmit(onSubmit)} variant={'full'} 
-            style={{width: '100%'}}
-            textStyle={{color: 'white'}}
-          >
-            Sign In
-          </Button>
-          <Text style={styles.signupText}>
-            Don't have an account? 
-          </Text> 
-          <Text style={styles.signupLink} 
-          onPress={async() => await WebBrowser.openBrowserAsync('https://www.purepokerworld.com')}
-          > 
-              Visit: purepoker.world
-          </Text>
-        </CardContent>
-      </Card>
+      
+      <Image style={[styles.mark]} source={require('@/assets/global/pure-poker-logo.png')} />
+      <View style={styles.main}>
+        <Card style={styles.card}>
+          <CardTitle style={styles.cardTitle}>
+            <Text style={styles.title}>Sign In</Text>
+          </CardTitle>
+          <CardContent style={styles.cardContent}> 
+            <Text style={styles.subtitle}>Email</Text>         
+            <Controller
+              control={control}
+              name="username"
+              render={({ field }) => (
+                <Input
+                  placeholder="jsmith@gmail.com"
+                  {...field}
+                  style={{borderRadius: 24, width: '100%'}}
+                />
+              )}
+            />
+            {errors.username && <Text style={styles.error}>{errors.username.message}</Text>}
+            <Text style={styles.subtitle}>Password</Text>   
+            <Controller
+              control={control}
+              name="password"
+              render={({ field }) => (
+                <PasswordInput
+                  placeholder='At least minimum 8 characters'
+                  {...field}
+                  style={{borderRadius: 24}}
+                />
+              )}
+            />
+            {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
+            <Text style={[styles.subtitle, {textAlign: 'right', marginBottom: 20}]}>Forgot Password?</Text>
+            <Button onPress={handleSubmit(onSubmit)} variant={'full'} 
+              style={{width: '100%'}}
+              textStyle={{color: 'white'}}
+            >
+              Sign In
+            </Button>
+            <Text style={styles.signupText}>
+              Don't have an account? 
+            </Text> 
+            <Text style={styles.signupLink} 
+            onPress={async() => await WebBrowser.openBrowserAsync('https://www.purepokerworld.com')}
+            > 
+                Visit: purepoker.world
+            </Text>
+          </CardContent>
+        </Card>
+      </View>
+      <Image style={[styles.rightmark]} source={require('@/assets/groups/Group.png')} />
+      <Image style={[styles.leftmark]} source={require('@/assets/groups/Group 1.png')} />
     </View>
   );
 }
@@ -163,6 +191,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     width: '100%',
+  },
+  main: {
+    display: 'flex',
+    height: 'auto',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   card: {
     borderRadius: 10, // rounded-lg
@@ -222,4 +257,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#1E84F0',
   },
+  mark: {
+    width: 44,
+    height: 44,
+    borderRadius: 30,
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    opacity: 1,
+  },
+  leftmark: {
+    position: 'absolute',
+    left: 0,
+    top: '60%'
+  },
+  rightmark: {
+    position: 'absolute',
+    right: 0,
+    top: '20%'
+  }
 });
