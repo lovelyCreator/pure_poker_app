@@ -4,19 +4,20 @@ import { View, Image, StyleSheet } from "react-native";
 interface CardFaceDownProps {
   side: "left" | "right" | "none";
   style?: React.CSSProperties;
+  isDealing ?: boolean;
 }
 
-export const CardFaceDown: React.FC<CardFaceDownProps> = ({ side }) => {
+export const CardFaceDown: React.FC<CardFaceDownProps> = ({ side, isDealing }) => {
   let rotateStyle = {};
-  if (side === "left") {
-    rotateStyle = { transform: [{ rotate: "-7deg" }] };
-  } else if (side === "right") {
-    rotateStyle = { transform: [{ rotate: "6deg" }] };
-  } else {
-    {}
+  if (isDealing) {
+    if (side === "left") {
+      rotateStyle = { transform: [{ rotate: "-7deg" }] };
+    } else if (side === "right") {
+      rotateStyle = { transform: [{ rotate: "6deg" }] };
+    } 
   }
 
-  const marginRight = side === "none" ? 0 : -6;
+  const marginRight = side === "none" ? 0 : -16;
 
   return (
     <View
@@ -24,6 +25,7 @@ export const CardFaceDown: React.FC<CardFaceDownProps> = ({ side }) => {
         styles.cardContainer,
         rotateStyle,
         { marginRight },
+        isDealing ? {width: 45, height: 60, borderRadius: 10} : {width: 30, height: 40, borderRadius: 2}
       ]}
     >
       <Image
@@ -38,9 +40,9 @@ export const CardFaceDown: React.FC<CardFaceDownProps> = ({ side }) => {
 const styles = StyleSheet.create({
   cardContainer: {
     position: 'relative',
-    height: 60,
-    width: 45,
-    borderRadius: 10,
+    // height: 60,
+    // width: 45,
+    // borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,

@@ -9,12 +9,13 @@ import useWebSocket from "react-use-websocket";
 import { getEasyBettingOptions, getPokerUrl, ScreenSize } from "@/lib/poker";
 import { sendPokerMessage } from "@/lib/poker";
 import { Button } from "@/components/ui/button";
-import TooltipSlider from "@/components/ui/sliderRc";
+import TooltipSlider, { HandleTooltip } from "@/components/ui/sliderRc";
 import { useSpan } from "@/utils/logging";
 import type { User } from "@/types/user";
 import ShowCardControls from "./sub-components/player-area/ShowCardControls";
 import TimeBank from "./sub-components/player-area/TimeBank";
 import { StyleSheet, TextInput, View, Text } from "react-native";
+import Slider from "@react-native-community/slider";
 
 interface BettingControlsProps {
   gameId: string;
@@ -145,7 +146,7 @@ const BettingControls: React.FC<BettingControlsProps> = ({
   }, [gameState.currentTurn]);
 
   return (
-    <View style={{marginTop: 60, zIndex: -1}}>
+    <View style={{marginTop: 60, width: '100%'}}>
       {!isPlayerTurn && !hasFolded && !gameIsOver && (
         <View style={styles.absoluteBottom}>
           <Button
@@ -262,22 +263,6 @@ const BettingControls: React.FC<BettingControlsProps> = ({
               </View>
             )}
 
-            <View style={styles.sliderContainer}>
-              {gameState.minRaiseAmount < currentPlayer.chips + currentPlayer.bet && currentPlayer.canRaise && (
-                <TooltipSlider
-                  tipFormatter={(value: any) => `${value}`}
-                  min={gameState.minRaiseAmount}
-                  max={currentPlayer?.chips + currentPlayer?.bet}
-                  value={Math.max(gameState.minRaiseAmount, raiseAmount)} // Ensure the slider never shows values below the min
-                  onChange={(value: any) => {
-                    if (typeof value === "number") {
-                      setRaiseAmount(value);
-                      setInputValue((value / 100).toString()); // Update input field when slider changes
-                    }
-                  }}
-                />
-              )}
-            </View>
           </View>
           <View style={styles.actionButtonsContainer}>
             <View style={styles.actionButtons}>
@@ -391,6 +376,36 @@ const BettingControls: React.FC<BettingControlsProps> = ({
                 )}
             </View>
           </View>
+        <View style={styles.sliderContainer}
+          id="slider"
+        >
+          {gameState.minRaiseAmount < currentPlayer.chips + currentPlayer.bet && currentPlayer.canRaise && (
+            <>
+              <Slider
+                minimumValue={gameState.minRaiseAmount}
+                maximumValue={currentPlayer?.chips + currentPlayer?.bet}
+                step={10}
+                value={Math.max(gameState.minRaiseAmount, raiseAmount)}
+                onValueChange={(value: any) => {
+                  if (typeof value === "number") {
+                    setRaiseAmount(value);
+                    setInputValue((value / 100).toString()); // Update input field when slider changes
+                  }
+                }}
+                thumbTintColor="#38D24A"
+                minimumTrackTintColor="#12571b"
+                maximumTrackTintColor="#464A52"
+                // style={styles.slider}
+                />
+                {inputValue !== undefined && (
+                  <HandleTooltip value={raiseAmount} visible={true} 
+                  tipFormatter={(value: any) => `${value}`}>
+                    <View style={styles.tooltipWrapper} />
+                  </HandleTooltip>
+                )}
+            </>
+          )}
+        </View>
         </View>
       )}
     </View>
@@ -403,6 +418,7 @@ const styles = StyleSheet.create({
     bottom: -20,
     right: -20,    
     transform: [{ translateX: -50 }, { translateY: 100 }],
+    zIndex: 60,
   },
   button: {
     height: 50,
@@ -431,26 +447,28 @@ const styles = StyleSheet.create({
   },
   showCardControls: {
     position: 'absolute',
+    left: '7%',
     bottom: -40,
-    left: '10%',
-    width: '80%',
-    right: 70, // Default right position for medium screens
+    width: '100%',
     transform: [
         { translateX: -50 }, // Move left by 50% of width
         { translateY: 100 }, // Move down by 100% of height
     ],
+    justifyContent: 'space-between',
+    flexDirection: 'row'
   },
   playerTurnContainer: {
     position: 'absolute',
     bottom: -160,
-    left: 0,
+    left: -50,
     // right: 25,
     height: 124,
     // left: '50%',
-    width: '80%',
+    width: '100%',
     maxWidth: 600,
     transform: [{translateX: 50}],
-    display: 'flex'
+    display: 'flex', 
+    zIndex:  100
   },
   bettingOptionsContainer: {
     // marginVertical: 10,
@@ -492,7 +510,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     left: '55%',
-    top: -10
+    marginTop:10,
+    zIndex: 150
   },
   actionButtonsContainer: {
     marginTop: 45,
@@ -502,7 +521,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%'
-  }
+  },
+  slider: {
+    width: '100%',
+    height: 0,
+  },
+  tooltipWrapper: {
+    position: 'absolute',
+    // top: 50, // Adjust based on your layout
+    left: '50%',
+    transform: [{ translateX: -50 }],
+  },
 });
 
 

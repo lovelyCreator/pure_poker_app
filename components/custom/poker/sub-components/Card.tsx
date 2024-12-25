@@ -23,6 +23,7 @@ interface CardProps {
   style?: React.CSSProperties;
   showCards?: boolean[] | null;
   shouldShowWin?: boolean;
+  isDealing?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -41,6 +42,7 @@ const Card: React.FC<CardProps> = ({
   endPos,
   duration = 1,
   shouldShowWin = false,
+  isDealing
 }) => {
   // console.log("HHHHHHAAAAANNNNNNDDDDD", handDescription)
   const CardWrapper = isAnimating ? MotiView : View;
@@ -61,7 +63,7 @@ const Card: React.FC<CardProps> = ({
     },
     transition: {
       type: 'timing',
-      duration: 1000, // Flip animation duration in milliseconds
+      duration: 500, // Flip animation duration in milliseconds
       delay: 1000, // Delay before starting the animation
       easing: (t: number) => t * (2 - t), // Custom easing function for smooth animation
     },
@@ -84,7 +86,7 @@ const Card: React.FC<CardProps> = ({
         />
       );
     } else if (opponentMustShowCards) {
-      console.log("Card Shown.")
+      // console.log("Card Shown.")
       const value = card.slice(0, -1).replace("T", "10");
       const suite = card.slice(-1);
       return (
@@ -134,10 +136,10 @@ const Card: React.FC<CardProps> = ({
         //     />
         //   </MotiView>
         // </MotiView>
-    <MotiView
+        <MotiView
       from={{ rotateY: '0deg' }}
       animate={{ rotateY: '180deg' }} // Animate to flip the card
-      transition={{ type: 'timing', duration: 200 }} // Transition duration
+      transition={{ type: 'timing', duration: 500 }} // Transition duration
       style={{
         height: 60,
         width: 45,
@@ -158,7 +160,7 @@ const Card: React.FC<CardProps> = ({
           height: '100%',
         }}
       >
-        <CardFaceDown side={side} />
+        <CardFaceDown side={side} isDealing = {isDealing} />
       </MotiView>
 
       {/* Front side (CardFaceUp) */}
@@ -289,7 +291,7 @@ const Card: React.FC<CardProps> = ({
         return null;
       }
     } else if (!isCurrentPlayer && !gameIsOver && !hasFolded) {
-      return <CardFaceDown side={side} />;
+      return <CardFaceDown side={side} isDealing = {isDealing} />;
     } else if (
       card &&
       !isCurrentPlayer &&
@@ -312,7 +314,7 @@ const Card: React.FC<CardProps> = ({
         />
       );
     } else {
-      return <CardFaceDown side={side}/>;
+      return <CardFaceDown side={side} isDealing = {isDealing}/>;
     }
   };
 

@@ -104,13 +104,15 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-evenly",
+        justifyContent: "center",
+        gap: 5,
+        zIndex: 100
     },
     button: {
         flexDirection: "row",
         alignItems: "center",
         padding: 10,
-        backgroundColor: "#1f1f1f",
+        backgroundColor: "#1B1F28",
         borderRadius: 5,
         fontSize: 12
     },

@@ -36,9 +36,9 @@ const CreateBombPot: React.FC<CreateBombPotProps> = ({ thisPlayer, gameId, gameS
       }
     },
   });
-
+  console.log('Create Bomb:', thisPlayer, "GameStates", gameState, "GameIds",gameId)
   const isBombPotProposed = gameState.isBombPotProposed ?? false;
-  const isInitiator = gameState.bombPotSettings?.initiatorUsername === thisPlayer.username;
+  // const isInitiator = gameState.bombPotSettings?.initiatorUsername === thisPlayer.username;
 
   const handleProposeBombPot = () => {
     const bombPotMessage: sendPokerAction = {
@@ -48,7 +48,7 @@ const CreateBombPot: React.FC<CreateBombPotProps> = ({ thisPlayer, gameId, gameS
       bombPotSettings: {
         numberOfBigBlinds,
         postFlopBetting,
-        initiatorUsername: thisPlayer.username,
+        // initiatorUsername: thisPlayer.username,
       },
     };
     sendJsonMessage(bombPotMessage);
@@ -97,7 +97,7 @@ const CreateBombPot: React.FC<CreateBombPotProps> = ({ thisPlayer, gameId, gameS
       <Modal
         visible={isModalOpen}
         transparent={true}
-        animationType="slide"
+        animationType="fade"
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   bombButton: {
     position: 'absolute',
     left: -150,
-    bottom: -150,
+    bottom: -180,
     padding: 10,
     borderRadius: 50,
   },
@@ -141,8 +141,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 0, 0.5)',
   },
   bombIcon: {
-    width: 80,
-    height: 80,
+    width: 50,
+    height: 50,
   },
   modalContainer: {
     flex: 1,

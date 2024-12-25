@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 
 import { useSearchParams } from 'expo-router/build/hooks';
+import { useRoute } from "@react-navigation/native";
 import { useAuth } from "@/hooks/useAuth";
 import SitOut from "../../../dialog/SitOut"; // Ensure this is compatible with React Native
 
@@ -15,7 +16,7 @@ const SitOutPopUp: React.FC<SitOutPopUpProps> = ({
   setIsSittingOutNextHand,
 }) => {
   const auth = useAuth();
-  const gameId = useSearchParams().get("gameId"); // This may need to be handled differently in React Native
+  const {gameId} = useRoute().params;
 
   return (
     <View style={styles.container}>

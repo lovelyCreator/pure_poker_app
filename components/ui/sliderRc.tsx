@@ -95,7 +95,7 @@ interface HandleTooltipProps {
   tipFormatter?: (val: number) => string;
 }
 
-const HandleTooltip: React.FC<HandleTooltipProps> = (props) => {
+export const HandleTooltip: React.FC<HandleTooltipProps> = (props) => {
   const {
     value,
     children,
@@ -174,7 +174,7 @@ const TooltipSlider: React.FC<TooltipSliderProps> = ({
         minimumTrackTintColor="#12571b"
         maximumTrackTintColor="#464A52"
         style={styles.slider}
-      />
+        />
       {value !== undefined && (
         <HandleTooltip value={value} visible={true} tipFormatter={tipFormatter}>
           <View style={styles.tooltipWrapper} />
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
   tooltip: {
     position: 'absolute',
-    top: -40, // Adjust based on your layout
+    top: -50, // Adjust based on your layout
     left: '50%',
     transform: [{ translateX: -50 }],
     backgroundColor: '#333',

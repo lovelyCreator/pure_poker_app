@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 
 // import useWebSocket from 'react-use-websocket';
 // import { useAuth } from '@/hooks/useAuth';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { sendPokerAction } from '@/types/poker';
 import { getPokerUrl } from '@/lib/poker';
@@ -37,7 +37,7 @@ const JoinGameSchema = z.object({
   export function JoinGameDialog({ defaultGameId, seatPosition }: { defaultGameId?: string;  seatPosition: number }) {
     const span = useSpan("JoinGameDialog");
     const user = useAuth();
-    const userId = user.id;
+
     const context = useContext(DialogContext);
     if (!context) throw new Error('DialogTrigger must be used within a DialogProvider');
     const { closeDialog } = context;  
@@ -154,7 +154,7 @@ const JoinGameSchema = z.object({
         return;
       }
   
-      // toast.loading("Confirming your location...");
+      toast.loading("Confirming your location...");
       // // Perform Radar location verification
       // const result = await verifyLocation(user.id);
       // const { success, token } = result;

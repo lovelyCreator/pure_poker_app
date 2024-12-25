@@ -51,7 +51,7 @@ const CreateGameSchema = z
     },
   );   
 
-  export function CreateGameDialog() {
+  export function CreateGameDialog( ) {
     const span = useSpan("CreateGameDialog");
     const navigation = useNavigation();
   
@@ -89,6 +89,7 @@ const CreateGameSchema = z
               action: "authenticate",
               token: token,
             });
+            console.log('message sent successfully')
           } else {
             console.error('Token not found');
             // Handle missing token case (e.g., show an error message)
@@ -106,13 +107,13 @@ const CreateGameSchema = z
 
                 const g_span = s_span.span("success", res);
                 g_span.info("Adjusting path to corresponding gameId.");
-                navigation.navigate('playPoker', { gameId: res.gameId });
+                navigation.navigate('playPoker', {gameId: res.gameId});
                 closeDialog();
               } else if (res.statusCode === 401) {
                 // Handle authentication failure
                 toast.dismiss();
                 toast.error("Please Try Again now.");
-    
+                console.log("You are not authenticated")
                 // Optional: Retry authentication
                 // setTimeout(() => {
                 //   authenticate(); // Call authenticate function to retry
@@ -125,20 +126,6 @@ const CreateGameSchema = z
         },
       },
     );
-    const authenticate = async () => {
-      const token = await AsyncStorage.getItem("PP_TOKEN");
-      console.log('Retrying authentication with token:', token);
-      
-      if (token) {
-        sendJsonMessage({
-          action: "authenticate",
-          token: token,
-        });
-      } else {
-        console.error('Token not found on retry');
-        // Handle missing token case
-      }
-    };
 
     useEffect(() => {
       return () => {
@@ -171,15 +158,9 @@ const CreateGameSchema = z
       values.bigBlind = values.bigBlind * 100;
   
       if (values.buyIn > userChips) {
-        
-        Toast.show({
-          text1: 'Error',
-          text2: `You do not have enough chips. You currently have ${centsToDollars(userChips)} chips on your account.`,
-          position: 'top',
-          type: 'error', // Type can be 'success'
-          visibilityTime: 4000,
-          onHide: () => console.log('Success toast hidden'),
-        });
+        toast.error(
+          `You do not have enough chips. You currently have ${centsToDollars(userChips)} chips on your account.`,
+        );
         return;
       }
   
@@ -192,14 +173,7 @@ const CreateGameSchema = z
   
       try {
         
-        Toast.show({
-          text1: 'Error',
-          text2: "Confirming your location...",
-          position: 'top',
-          type: 'loading', // Type can be 'success'
-          visibilityTime: 4000,
-          onHide: () => console.log('Success toast hidden'),
-        });
+        toast.loading("Confirming your location...");
         //Perform Radar location verification
         // const result = await verifyLocation(userId);
         // const { success, token, expiresIn } = result;
@@ -230,26 +204,12 @@ const CreateGameSchema = z
         // Delay the JSON message by 1.5 seconds
         setTimeout(() => {
           sendJsonMessage(createGame);
-          Toast.show({
-            text1: 'Error',
-            text2: "Creating game...",
-            position: 'top',
-            type: 'loading', // Type can be 'success'
-            visibilityTime: 4000,
-            onHide: () => console.log('Success toast hidden'),
-          });
+          toast.loading("Creating game...");
         }, 1500);
       } catch (error) {
         console.error("Radar location verification failed:", error);
-        
-        Toast.show({
-          text1: 'Error',
-          text2: "An error occurred while verifying your location. Please try again.",
-          position: 'top',
-          type: 'error', // Type can be 'success'
-          visibilityTime: 4000,
-          onHide: () => console.log('Success toast hidden'),
-        });
+        toast.error("An error occurred while verifying your location. Please try again.");
+
       }
     }
     return (

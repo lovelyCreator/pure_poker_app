@@ -344,6 +344,7 @@ const CardDealer: React.FC<CardDealerProps> = ({
                     gameIsOver={false}
                     hasFolded={!player.inHand}
                     index={cardIndex}
+                    isDealing = {true}
                   />
                 </MotiView>
               ))}

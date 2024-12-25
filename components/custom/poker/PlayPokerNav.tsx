@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import GameSharePopup from "./sub-components/social/GmaeSharePopup";
+import GameSharePopup from "./sub-components/social/GameSharePopup";
 import SettingsPopup from "./sub-components/settings.tsx/SettingPopup";
 import QuitGamePopup from "./sub-components/navbar-area/QuitGamePopup";
 import BuyBackInPopup from "../dialog/BuyBackInPopup";

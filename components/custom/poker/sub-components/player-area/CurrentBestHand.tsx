@@ -39,7 +39,7 @@ const CurrentBestHand: React.FC<CurrentBestHandProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    left: '50%',
+    // left: '50%',
     bottom: -20, // Adjust as necessary
     transform: [{ translateX: -50 }, { translateY: 100 }],
     backgroundColor: 'rgba(128, 128, 128, 0.75)', // Gray with opacity

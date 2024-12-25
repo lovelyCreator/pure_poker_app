@@ -73,7 +73,7 @@ const PlayerDetails: React.FC<PlayerDetailsProps> = ({
     {handsPlayed > 0 && !isCurrentPlayer && !gameIsOver && !sittingOut && (
       <View
         style={{ 
-          transform: [{translateX: -50}, {translateY: -50}], position: 'absolute', left: 30, top: 90, zIndex: 50, 
+          transform: [{translateX: -50}, {translateY: -50}], position: 'absolute', left: 50, top: 70, zIndex: 50, 
           display: 'flex', height: 24, width: 24, alignItems: 'center', justifyContent: 'center', borderRadius: 18, backgroundColor: vpipColor
         }}
       >
@@ -85,25 +85,27 @@ const PlayerDetails: React.FC<PlayerDetailsProps> = ({
       <PlayerAvatar playerId={playerId} profilePicture={profilePicture} />
 
       <View style={styles.detailsContainer}>
-        <Text
-          style={[
-            styles.playerName,
-            { color: isCurrentPlayer ? "#FFF700" : "#FFFFFF" },
-            {fontSize: 10}
-            // {fontSize: calculateFontSize(playerName, 50)}
-            // { fontSize: usernameLengthToFontSize(playerName.length, screenSize) },
-          ]}
-        >
-          {playerName}
-        </Text>
 
-        <Text style={styles.chipsDisplay}>
-          {!gameIsOver
-            ? displayValue
-            : shouldShowWin || hasFolded
-            ? displayValue
-            : "..."}
-        </Text>
+          <View style={styles.detailsBox}>
+            <Text
+              style={[
+                styles.playerName,
+                { color: isCurrentPlayer ? "#FFF700" : "#FFFFFF" }
+              ]}
+            >
+              {playerName}
+            </Text>
+
+            <Text style={[styles.chipsDisplay,
+              { color: isCurrentPlayer ? "#FFF700" : "#FFFFFF" }
+            ]}>
+              {!gameIsOver
+                ? displayValue
+                : shouldShowWin || hasFolded
+                ? displayValue
+                : "..."}
+            </Text>
+          </View>
 
         {sittingOut && (
           <Text style={styles.sittingOutText}>sitting out</Text>
@@ -126,34 +128,50 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: 'column',
-    marginTop: 30,
+    top: 40,
+    left: 10,
   },
   detailsContainer: {
-    marginTop: -14,
-    width: 85,
-    overflow: "hidden",
-    paddingTop: 3,
-    borderColor: "#ffffff1a",
-    borderRadius: 10,
-    backgroundColor: "#1c202b",
-    position: "relative",
-    zIndex: 30,
+    width: 85, 
+    height: 40, 
+    borderTopLeftRadius: 10, 
+    borderTopRightRadius: 10, 
+    overflow: 'hidden',
+    marginTop: -20,
+    zIndex: 20
+  },
+  detailsBox: {
+    borderTopColor: "#1c202b",
+    width: 85, // Width of the base
+    backgroundColor: 'transparent', // Make background transparent
+    borderTopWidth: 40, // Height of the trapezoid
+    borderLeftWidth: 5, // Left slant
+    borderLeftColor: 'transparent', // Make left border transparent
+    borderRightWidth: 5, // Right slant
+    borderRightColor: 'transparent', // Make right border transparent
+    justifyContent: 'center', // Center text vertically
+    alignItems: 'center', // Center text horizontally
+    position: 'relative',
   },
   playerName: {
-    marginTop: -10,
     textAlign: "center",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    zIndex: 100,
+    zIndex: 50,
+    position: 'absolute', 
+    top: -40,
+    width: '100%',
+    borderColor: "#232935",
+    paddingVertical: 2,
+    borderBottomWidth: 1,
+    fontSize: 10
   },
   chipsDisplay: {
-    borderTopWidth: 1,
-    borderColor: "#ffffff1a",
     textAlign: "center",
-    paddingVertical: 5,
-    fontWeight: "bold",
-    fontSize: 16,
-    color: '#ffffff99'
+    zIndex: 50,
+    position: 'absolute', 
+    fontWeight: 'bold',
+    fontSize: 12,
+    top: -20,
+    width: '100%',
   },
   sittingOutText: {
     borderTopWidth: 1,

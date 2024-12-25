@@ -15,10 +15,14 @@ import { useNavigation } from 'expo-router';
 import { SpanInheritor, SpanWrapper, useSpan } from '@/utils/logging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MobilePlayerPokerNav from '../custom/poker/MobilePlayPokerNav';
+import { useRoute } from '@react-navigation/native';
 
 export default function Poker() {
   const searchParams = useSearchParams();
-  const gameId = searchParams.get("gameId");
+  // const gameId = searchParams.get("gameId");
+  const route = useRoute(); 
+  const { gameId } = route.params;
+  console.log("GameId: ", gameId)
   const span = useSpan("PokerPage", { gameId: gameId });
 
   const navigation = useNavigation();
@@ -168,28 +172,52 @@ export default function Poker() {
     }
   }, [gameState, user.username, navigation]);
 
+  
   useEffect(() => {
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const timeSinceLastSync = (now - lastSynced) / 1000; // Time in seconds
-  
-      if (timeSinceLastSync > 3) {
-        // console.log("Game state is stale. Refreshing...");
-        fetchGameState(gameId!)
-        .then((gameData) => {
-          if (gameData) {
-            setGameState(gameData);
-            setLastSynced(Date.now()); // Update last synced time
-          }
-        })
-        .catch((error) => {
-          console.error("Error refreshing game state:", error);
-        });
-      }
+    const interval = setInterval(async () => {
+        const now = Date.now();
+        const timeSinceLastSync = (now - lastSynced) / 1000; // Time in seconds
+        if (timeSinceLastSync > 3) {
+            const res = await fetchGameState(gameId);
+            if (res.ok) {
+                const gameData = await res.json(); // Assuming fetchGameState returns a response
+                if (gameData) {
+                    setGameState(gameData);
+                    setLastSynced(Date.now()); // Update last synced time
+                }
+            }
+        }
     }, 2000); // Check every 2 seconds
-  
+
     return () => clearInterval(interval); // Cleanup on unmount
-  }, [lastSynced, gameState]);
+}, [lastSynced, gameId]);
+
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     const now = Date.now();
+  //     const timeSinceLastSync = (now - lastSynced) / 1000; // Time in seconds
+  
+  //     if (timeSinceLastSync > 3) {
+  //       // console.log("Game state is stale. Refreshing...");
+  //       const res = await fetchGameState(gameId);
+  //       // if (res.ok) {
+
+  //       // }
+  //       fetchGameState(gameId)
+  //       .then((gameData) => {
+  //         if (gameData) {
+  //           setGameState(gameData);
+  //           setLastSynced(Date.now()); // Update last synced time
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error refreshing game state:", error);
+  //       });
+  //     }
+  //   }, 2000); // Check every 2 seconds
+  
+  //   return () => clearInterval(interval); // Cleanup on unmount
+  // }, [lastSynced, gameState]);
 
   //Function to handle displaying an emote
   const showEmoteForPlayer = (playerId: string, emote: string) => {
@@ -215,100 +243,100 @@ export default function Poker() {
     <SpanInheritor span={span}>
       <View     style={{width: '100%', height: '100%', backgroundColor: '#11141D', position: 'relative', zIndex: 0}}
       >
-        <SpanWrapper name="PlayPokerGame">
-          <GamePlayPoker
-            gameId={gameId ?? ""}
-            gameState={gameState ?? undefined}
-            currentPlayerId={
-              gameState?.players[gameState.currentTurn]?.id ?? null
-            }
-            playerId={user.username}
-            isSpectator={isSpectator}
-            isSittingOut={isSittingOut}
-            isSittingOutNextHand={isSittingOutNextHand}
-            allBoardCardsRevealed={allBoardCardsRevealed}
-            showDealingAnimation={showDealingAnimation}
-            setAllBoardCardsRevealed={setAllBoardCardsRevealed}
-            setIsSittingOut={setISSittingOut}
-            setIsSittingOutNextHand={setIsSittingOutNextHand}
-            setShowDealingAnimation={setShowDealingAnimation}
-            activeEmotes={activeEmotes}
-            isEmoteVisible={isEmoteVisible}
-            showEmoteButtonSelector={showEmoteButtonSelector}
-            isEmoteSelectorVisible={isEmoteSelectorVisible}
-            setIsEmoteSelectorVisible={setIsEmoteSelectorVisible}
-            showTimeBankAnimation={showTimeBankAnimation}
-            setShowTimeBankAnimation={setShowTimeBankAnimation}
-            displayBB={displayBB}
-            setDisplayBB={setDisplayBB}
-            playSoundEnabled={playSoundEnabled}
-            previousCommunityCards={previousCommunityCards}
-            setPreviousCommunityCards={setPreviousCommunityCards}
-            shouldShowWin={shouldShowWin}
-            setShouldShowWin={setShouldShowWin}
-            showBombPotDecisionModal={showBombPotDecisionModal}
-            setShowBombPotDecisionModal={setShowBombPotDecisionModal}
-          />
-        </SpanWrapper>
-        <View style={{position: 'absolute', top: 0, right: 0}}>
-          <SpanWrapper name="PlayPokerNav">
-            {/* <PlayPokerNav
-              playerId={user.username}
-              gameId={gameId ?? ""}
-              gameState={gameState ?? undefined}
-              vpip={vpip}
-              buyIn={
-                player?.buyIn ?? 0
-              }
-              gameChips={
-                player?.chips ?? 0
-              }
-              playerBalance={user.chips}
-              isSpectator={isSpectator}
-              allBoardCardsRevealed={allBoardCardsRevealed}
-              setAllBoardCardsRevealed={setAllBoardCardsRevealed}
-              isSittingOutNextHand={isSittingOutNextHand}
-              setIsSittingOutNextHand={setIsSittingOutNextHand}
-              displayBB={displayBB}
-              setDisplayBB={setDisplayBB}
-              playSoundEnabled={playSoundEnabled}
-              setPlaySoundEnabled={setPlaySoundEnabled}
-            /> */}
-            
-            <MobilePlayerPokerNav
-              gameId={gameId ?? ""}
-              playerId={user.username}
-              gameState={gameState ?? undefined}
-              vpip={vpip}
-              playerBalance={user.chips}
-              buyIn={
-                gameState?.players.find((p) => p && p.id === user.username)?.buyIn ?? 0
-              }
-              gameChips={
-                gameState?.players.find((p) => p && p.id === user.username)?.chips ?? 0
-              }
-              allBoardCardsRevealed={allBoardCardsRevealed}
-              setAllBoardCardsRevealed={setAllBoardCardsRevealed}
-              isSpectator={isSpectator}
-              isSittingOutNextHand={isSittingOutNextHand}
-              setIsSittingOutNextHand={setIsSittingOutNextHand}
-              displayBB={displayBB}
-              setDisplayBB={setDisplayBB}
-              playSoundEnabled={playSoundEnabled}
-              setPlaySoundEnabled={setPlaySoundEnabled}
-            />
-          </SpanWrapper>
-        </View>
-
-        {/* {showJoinPopup && (
-          <JoinPopup
-            userIsVerified={user.clearApproval === "approved"}
-            gameId={gameId!}
-            setShowJoinPopup={setShowJoinPopup}
-            setIsSpectator={setIsSpectator}
-          />
-        )} */}
-      </View>
+    
+            <View style={{position: 'absolute', inset: 0, zIndex: 1, height: 50}}>
+              <SpanWrapper name="PlayPokerNav">
+                {/* <PlayPokerNav
+                  playerId={user.username}
+                  gameId={gameId ?? ""}
+                  gameState={gameState ?? undefined}
+                  vpip={vpip}
+                  buyIn={
+                    player?.buyIn ?? 0
+                  }
+                  gameChips={
+                    player?.chips ?? 0
+                  }
+                  playerBalance={user.chips}
+                  isSpectator={isSpectator}
+                  allBoardCardsRevealed={allBoardCardsRevealed}
+                  setAllBoardCardsRevealed={setAllBoardCardsRevealed}
+                  isSittingOutNextHand={isSittingOutNextHand}
+                  setIsSittingOutNextHand={setIsSittingOutNextHand}
+                  displayBB={displayBB}
+                  setDisplayBB={setDisplayBB}
+                  playSoundEnabled={playSoundEnabled}
+                  setPlaySoundEnabled={setPlaySoundEnabled}
+                /> */}
+                
+                <MobilePlayerPokerNav
+                  gameId={gameId ?? ""}
+                  playerId={user.username}
+                  gameState={gameState ?? undefined}
+                  vpip={vpip}
+                  playerBalance={user.chips}
+                  buyIn={
+                    gameState?.players.find((p) => p && p.id === user.username)?.buyIn ?? 0
+                  }
+                  gameChips={
+                    gameState?.players.find((p) => p && p.id === user.username)?.chips ?? 0
+                  }
+                  allBoardCardsRevealed={allBoardCardsRevealed}
+                  setAllBoardCardsRevealed={setAllBoardCardsRevealed}
+                  isSpectator={isSpectator}
+                  isSittingOutNextHand={isSittingOutNextHand}
+                  setIsSittingOutNextHand={setIsSittingOutNextHand}
+                  displayBB={displayBB}
+                  setDisplayBB={setDisplayBB}
+                  playSoundEnabled={playSoundEnabled}
+                  setPlaySoundEnabled={setPlaySoundEnabled}
+                />
+              </SpanWrapper>
+            </View>
+            {/* {showJoinPopup && (
+              <JoinPopup
+                userIsVerified={user.clearApproval === "approved"}
+                gameId={gameId!}
+                setShowJoinPopup={setShowJoinPopup}
+                setIsSpectator={setIsSpectator}
+              />
+            )} */}
+            <SpanWrapper name="PlayPokerGame">
+              <GamePlayPoker
+                gameId={gameId ?? ""}
+                gameState={gameState ?? undefined}
+                currentPlayerId={
+                  gameState?.players[gameState.currentTurn]?.id ?? null
+                }
+                playerId={user.username}
+                isSpectator={isSpectator}
+                isSittingOut={isSittingOut}
+                isSittingOutNextHand={isSittingOutNextHand}
+                allBoardCardsRevealed={allBoardCardsRevealed}
+                showDealingAnimation={showDealingAnimation}
+                setAllBoardCardsRevealed={setAllBoardCardsRevealed}
+                setIsSittingOut={setISSittingOut}
+                setIsSittingOutNextHand={setIsSittingOutNextHand}
+                setShowDealingAnimation={setShowDealingAnimation}
+                activeEmotes={activeEmotes}
+                isEmoteVisible={isEmoteVisible}
+                showEmoteButtonSelector={showEmoteButtonSelector}
+                isEmoteSelectorVisible={isEmoteSelectorVisible}
+                setIsEmoteSelectorVisible={setIsEmoteSelectorVisible}
+                showTimeBankAnimation={showTimeBankAnimation}
+                setShowTimeBankAnimation={setShowTimeBankAnimation}
+                displayBB={displayBB}
+                setDisplayBB={setDisplayBB}
+                playSoundEnabled={playSoundEnabled}
+                previousCommunityCards={previousCommunityCards}
+                setPreviousCommunityCards={setPreviousCommunityCards}
+                shouldShowWin={shouldShowWin}
+                setShouldShowWin={setShouldShowWin}
+                showBombPotDecisionModal={showBombPotDecisionModal}
+                setShowBombPotDecisionModal={setShowBombPotDecisionModal}
+              />
+            </SpanWrapper>
+          </View>
     </SpanInheritor>
   );
 }

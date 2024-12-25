@@ -50,6 +50,7 @@ interface PlayerProps {
   initialBigBlind: number; // New prop
   playSoundEnabled: boolean;
   showBombPotDecisionModal: boolean;
+  smallIphonedimensions: {};
 }
 
 const Player: React.FC<PlayerProps> = ({
@@ -80,6 +81,7 @@ const Player: React.FC<PlayerProps> = ({
   initialBigBlind,
   playSoundEnabled,
   showBombPotDecisionModal,
+  smallIphonedimensions,
 }) => {
 
 
@@ -309,9 +311,8 @@ const Player: React.FC<PlayerProps> = ({
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.3,
               shadowRadius: 4,
-              
-              left: -20,
-              top: 20,         
+              left: -25,    
+              top: 10,
               backgroundColor: '#A0AEC0', // bg-gray-400
               color: '#A0AEC0', // text-gray-600
               opacity: 0.5,
@@ -348,88 +349,91 @@ const Player: React.FC<PlayerProps> = ({
           </View>
         </View>
         :
-      <CreateOrJoinGame
-        userIsVerified={userIsVerified}
-        isCreateGame={false}
-        defaultGameId={gameState.gameId}
-        seatPosition={index}
-      >
-        <View
-          style={[
-            {
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.3s',
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.3,
-              shadowRadius: 4,
-              
-              left: -20,
-              top: 20,
-              backgroundColor: '#A0AEC0', // bg-gray-500
-              color: '#4A5568', // text-gray-800
-            }
-          ]}
-          // disabled={isDisabled}
-          >
-          <View style={{
-            width: 28,
-            height: 28,
-            position: 'relative',
-            borderRadius: 14,
-          }} >
+        <CreateOrJoinGame
+          userIsVerified={userIsVerified}
+          isCreateGame={false}
+          defaultGameId={gameState.gameId}
+          seatPosition={index}
+        >
+          <View
+            style={[
+              {
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.3s',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 4,
+                left: -25,    
+                top: 10,
+                backgroundColor: '#A0AEC0', // bg-gray-500
+                color: '#4A5568', // text-gray-800
+              }
+            ]}
+            // disabled={isDisabled}
+            >
             <View style={{
-              position: 'absolute',
-              width: '100%',
-              height: 6,
-              left: 0,
-              backgroundColor: 'currentColor',
-              top: 8,
-              borderRadius: 6,
-              transform: [{translateY: '50%'}]
-            }}/>
-            <View style={{
-              position: 'absolute',
-              width: 6,
-              height: '100%',
-              left: 8,
-              backgroundColor: 'currentColor',
-              top: 0,
-              borderRadius: 6,
-              transform: [{translateX: '50%'}]
-            }}/>
+              width: 28,
+              height: 28,
+              position: 'relative',
+              borderRadius: 14,
+            }} >
+              <View style={{
+                position: 'absolute',
+                width: '100%',
+                height: 6,
+                left: 0,
+                backgroundColor: 'currentColor',
+                top: 8,
+                borderRadius: 6,
+                transform: [{translateY: '50%'}]
+              }}/>
+              <View style={{
+                position: 'absolute',
+                width: 6,
+                height: '100%',
+                left: 8,
+                backgroundColor: 'currentColor',
+                top: 0,
+                borderRadius: 6,
+                transform: [{translateX: '50%'}]
+              }}/>
+            </View>
           </View>
-        </View>
-      </CreateOrJoinGame>
-    }
+        </CreateOrJoinGame>
+      }
     </View>
     );
   }
   return (
-    <View 
-      style={{
-        width: '100%', 
-        position: 'absolute', 
-        inset: 0,
-      }}
-    >
-      {/* Chips Animation */}
-      <ChipsAnimation
-        gameState={gameState ?? ({} as GameState)}
-        playerCount={gameState?.playerCount ?? 0}
-        screenSize={screenSize}
-        index={index}
-        player={player}
-        currentPlayerPosition={currentPlayerPosition}
-        allBoardCardsRevealed={allBoardCardsRevealed}
-      />
+    // <View 
+    //   style={{
+    //     position: 'relative',
+    //     width: '100%',
+    //     height: '100%',
+    //     zIndex: 100,
+    //   }}
+    // >
+    //   {/* Chips Animation */}
+    //   <ChipsAnimation
+    //     gameState={gameState ?? ({} as GameState)}
+    //     playerCount={gameState?.playerCount ?? 0}
+    //     screenSize={screenSize}
+    //     index={index}
+    //     player={player}
+    //     currentPlayerPosition={currentPlayerPosition}
+    //     allBoardCardsRevealed={allBoardCardsRevealed}
+    //   />
       <View
         style={{
-          position: 'absolute', zIndex: -1,
+          position: 'absolute',
+          // height: smallIphonedimensions.height*0.9, 
+          // width: smallIphonedimensions.width*0.8, 
+          
           opacity: `${player?.inHand || gameIsOver ? 1 : 0.4}`,
           left: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.leftPosition}`,
           top: `${playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.topPosition}`,
@@ -439,19 +443,21 @@ const Player: React.FC<PlayerProps> = ({
             { translateX: -50 }, // Assuming the width is 200, -125% would be -250
             { translateY: -50 },  // Assuming the height is 100, -50% would be -50
           ],
+          zIndex: 110,
           // left: `${playerPositions[8]?.[0]?.leftPosition}`,
           // top: `${playerPositions[8]?.[0]?.topPosition}`,
         }}
         key={index}
       >
-        {isCurrentTurn &&
+        {/* {isCurrentTurn &&
           isCurrentPlayer &&
           currentPlayerTurn.extraTime === 0 &&
           screenSize !== "smallIphone" && (
             <TimeBank player={currentPlayerTurn} gameId={gameState.gameId} />
-          )}
+          )
+        } */}
         
-        {isCurrentPlayer && gameState.gameStarted && screenSize !== "smallIphone" &&
+        {isCurrentPlayer && gameState.gameStarted &&
           <CreateBombPot 
             thisPlayer={thisPlayer} 
             gameId={gameState.gameId} 
@@ -519,6 +525,7 @@ const Player: React.FC<PlayerProps> = ({
           player={player}
           shouldShowWin={shouldShowWin}
           aggregateBestHand={aggregateBestHand}
+          totalPlayerCount={totalPlayerCount}
           key={`${gameState?.gameStage}-${gameState?.startTurnTimeStamp}-${gameState?.gameOverTimeStamp}`}
         />
 
@@ -546,7 +553,7 @@ const Player: React.FC<PlayerProps> = ({
         )}
 
       </View>
-    </View>
+    // </View>
   );
 };
 

@@ -155,7 +155,8 @@ const GameplayPokerMain = ({
   const thisPlayer = gameState?.players.find(
     (player) => player && player.id === playerId,
   );
-
+  const totalPlayerCount = gameState?.players.length;
+  console.log("Player Counts", totalPlayerCount)
   // const isPlayerInGame = gameState?.players.some(
   //   (player) => player.id === playerId,
   // );
@@ -266,7 +267,7 @@ const GameplayPokerMain = ({
       ),
     );
   }, [gameState?.gameStage]);
-
+  // console.log("Players Data:", gameState?.players)
   // only update if it is bigger than the current raiseAmount
   useEffect(() => {
     //eslint-disable-next-line
@@ -302,7 +303,7 @@ const GameplayPokerMain = ({
     const updateTableImage = () => {
       const screenSize = getScreenSize();
       setScreenSize(screenSize);
-      console.log('GetSreenSize', screenSize)
+      // console.log('GetSreenSize', screenSize)
           setTableImage(require('@/assets/game/table-small-iphone.png'));
           setdimensions(smallIphonedimensions);
       // switch (screenSize) {
@@ -336,7 +337,6 @@ const GameplayPokerMain = ({
     >
       <View style={{display: 'flex', width: '100%', height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
         {/* {gameState && screenSize !== "smallIphone" && ( */}
-          <PokerChat gameState={gameState} screenSize={screenSize} />
         {/* )} */}
         <InformationBanner
           isSittingOut={isSittingOut}
@@ -364,12 +364,11 @@ const GameplayPokerMain = ({
             setShowBombPotDecisionModal={setShowBombPotDecisionModal}
           />
         )}
-        <View style={{ height: smallIphonedimensions.height, width: smallIphonedimensions.width, position: 'relative',  top: 0, maxHeight: 750, maxWidth: 1700}}>
+        <View style={{ height: smallIphonedimensions.height*0.9, width: smallIphonedimensions.width*0.8,  top: 70, maxHeight: 750, maxWidth: 1700}}>
           <View style={{
             position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, 
             marginBottom: dimensions.marginBottom, marginLeft: dimensions.marginLeft,
             display: 'flex',
-            zIndex: -1
             }}
           >
             <Image source={tableImage} style={styles.tableImage} />
@@ -414,6 +413,7 @@ const GameplayPokerMain = ({
               initialBigBlind={gameState.initialBigBlind}
               playSoundEnabled={playSoundEnabled}
               showBombPotDecisionModal={showBombPotDecisionModal}
+              smallIphonedimensions = {smallIphonedimensions}
             />
           ))}
           {/* WaitingPlayers */}
@@ -493,7 +493,7 @@ const styles = StyleSheet.create({
   tableSubContainer: {
     display: 'flex',
     position: 'absoulte',
-    top: 0,
+    top: 50,
     left: 0,
     right: 0,
     bottom: 0,
@@ -501,14 +501,14 @@ const styles = StyleSheet.create({
     justityContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: '100%',
+    height: 'auto',
   },
   tableImage: {
     marginTop: 50,
     // left: 5,
     width: '100%',
     resizeMode:'stretch',
-    height: smallIphonedimensions.height,
+    height: smallIphonedimensions.height*0.9,
   },
 });
 

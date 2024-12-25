@@ -19,11 +19,13 @@ interface PokerChatProps {
 const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
   const user = useAuth();
   const span = useSpan("sendPokerChatMessage");
-  const [messages, setMessages] = useState(gameState.chatMessages || []);
+  const [messages, setMessages] = useState(gameState?.chatMessages || []);
   const [newMessage, setNewMessage] = useState("");
   const [chatIsOpen, setChatIsOpen] = useState(false);
+  const [chatSize, setChatSize] = useState({ width: 350, height: 350 });
   const [seenMessagesCount, setSeenMessagesCount] = useState(messages.length);
   const chatEndRef = useRef<View | null>(null);
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [unreadMessages, setUnreadMessages] = useState(messages.length - seenMessagesCount);
   const [isAtBottom, setIsAtBottom] = useState(true);
 
@@ -48,9 +50,9 @@ const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
   );
 
   useEffect(() => {
-    setMessages(gameState.chatMessages);
-    setUnreadMessages(gameState.chatMessages.length - seenMessagesCount);
-  }, [gameState.chatMessages]);
+    setMessages(gameState?.chatMessages);
+    setUnreadMessages(gameState?.chatMessages.length - seenMessagesCount);
+  }, [gameState?.chatMessages]);
 
   useEffect(() => {
     if (isAtBottom) {
@@ -80,16 +82,19 @@ const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
     }
   };
 
-  const handleScroll = (event: any) => {
-    const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
-    const isUserAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 5; // Small tolerance
-    setIsAtBottom(isUserAtBottom);
-  };
+  const handleScroll = () => {
+    if (chatContainerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+        const isUserAtBottom = scrollTop + clientHeight >= scrollHeight - 5; // Small tolerance
+        setIsAtBottom(isUserAtBottom);
+    }
+};
+
 
   const handleOpenChat = () => {
     setChatIsOpen(true);
     setUnreadMessages(0);
-    setSeenMessagesCount(gameState.chatMessages.length);
+    setSeenMessagesCount(gameState?.chatMessages.length);
     setTimeout(() => {
       chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 0);
@@ -98,7 +103,7 @@ const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
   const handleCloseChat = () => {
     setChatIsOpen(false);
     setUnreadMessages(0);
-    setSeenMessagesCount(gameState.chatMessages.length);
+    setSeenMessagesCount(gameState?.chatMessages.length);
   };
 
   const handleInputChange = (input: string) => {
@@ -106,6 +111,35 @@ const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
       setNewMessage(input);
     }
   };
+  const handleMouseDown = (e: React.MouseEvent) => {
+      e.preventDefault();
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const startWidth = chatSize.width;
+      const startHeight = chatSize.height;
+
+      const handleMouseMove = (moveEvent: MouseEvent) => {
+          const newWidth = Math.min(
+          Math.max(300, startWidth + (moveEvent.clientX - startX)),
+          700
+          );
+          const newHeight = Math.min(
+          Math.max(200, startHeight - (moveEvent.clientY - startY)),
+          700
+          );
+
+          setChatSize({ width: newWidth, height: newHeight });
+      };
+
+      const handleMouseUp = () => {
+          document.removeEventListener("mousemove", handleMouseMove);
+          document.removeEventListener("mouseup", handleMouseUp);
+      };
+
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+  };
+
 
   return (
     <>
@@ -115,7 +149,7 @@ const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
             key="chat"
             from={{ opacity: 0, translateX: -200 }}
             animate={{ opacity: 1, translateX: 0 }}
-            exit={{ opacity: 0, translateX: -200 }}
+            exit={{ opacity: 0, translateX: 200 }}
             transition={{ duration: 200 }}
             style={styles.chatContainer}
           >
@@ -169,8 +203,8 @@ const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
             style={styles.iconContainer}
           >
             <TouchableOpacity 
-            onPress={handleOpenChat}>
-                <MessageSquareMore size={48} color="white" />
+              onPress={handleOpenChat}>
+                <MessageSquareMore size={20} color="white" />
                 {!chatIsOpen && unreadMessages > 0 && (
                 <View style={styles.badge}>
                     <Text style={styles.badgeText}>{unreadMessages}</Text>
@@ -187,8 +221,8 @@ const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
 const styles = StyleSheet.create({
   chatContainer: {
     position: 'absolute',
-    bottom: -230,
-    left: 30,
+    top: 30,
+    right: 10,
     width: 300,
     height: 350,
     backgroundColor: '#1c202b99',
@@ -269,13 +303,11 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   iconContainer: {
-    position: 'absolute',
-    // top: 200,
-    bottom: -250,
-    left: 50,
     padding: 10,
-    backgroundColor: 'blue',
+    backgroundColor: '#1B1F28',
     borderRadius: 50,
+    width: 40,
+    height: 40,
     zIndex: 100
   },
   badge: {
@@ -284,8 +316,8 @@ const styles = StyleSheet.create({
     right: -5,
     backgroundColor: 'red',
     borderRadius: 50,
-    width: 25,
-    height: 25,
+    width: 10,
+    height: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },

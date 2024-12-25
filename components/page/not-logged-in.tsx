@@ -7,7 +7,7 @@ import { View, StyleSheet } from "react-native";
 export default function NotLoggedIn() {
   const navigation = useNavigation();
   useEffect(() => {
-    navigation.navigate('/')
+    navigation.navigate('index')
   }, []);
 
   return (

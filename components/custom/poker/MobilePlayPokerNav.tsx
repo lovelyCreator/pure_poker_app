@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react"; // Icons for menu open/close
 import { GameState } from "@/types/poker";
-import GameSharePopup from "./sub-components/social/GmaeSharePopup";
+import GameSharePopup from "./sub-components/social/GameSharePopup";
 import QuitGamePopup from "./sub-components/navbar-area/QuitGamePopup";
 import BuyChipsPopup from "./sub-components/BuyChipsPopup";
 import SitOutPopUp from "./sub-components/navbar-area/SitOutPopUp";
 import SettingsPopup from "./sub-components/settings.tsx/SettingPopup";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { Button } from "@/components/ui/button";
+import PokerChat from "./sub-components/social/PokerChat";
 
 interface MobilePlayerPokerNavProps {
   gameId: string;
@@ -84,9 +85,24 @@ const MobilePlayerPokerNav: React.FC<MobilePlayerPokerNavProps> = ({
     <View style={styles.container}>
       {/* Mobile menu toggle button */}
       
-        {!isMobileMenuOpen && <Button style={styles.toggleButton} onPress={toggleMobileMenu}>
-          <Menu size={24} />
-      </Button>}
+      {!isMobileMenuOpen && 
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: 50,
+          paddingHorizontal: 30
+
+        }}>
+          <Button style={styles.toggleButton} onPress={toggleMobileMenu}>
+            <Menu size={24} />
+          </Button>
+          <GameSharePopup gameId={gameId} />
+          <View style={{width: 40, height: 40}}>
+            <PokerChat gameState={gameState} screenSize={"smallIphone"} />
+          </View>
+        </View>
+      }
 
       {/* Mobile dropdown menu */}
       {isMobileMenuOpen && (
@@ -109,7 +125,7 @@ const MobilePlayerPokerNav: React.FC<MobilePlayerPokerNavProps> = ({
 
             {/* Game Share Popup */}
             <View style={styles.shareSettingsContainer}>
-              <GameSharePopup gameId={gameId} />
+            <GameSharePopup gameId={gameId} />
               <SettingsPopup
                 displayBB={displayBB}
                 setDisplayBB={setDisplayBB}
@@ -161,29 +177,28 @@ const MobilePlayerPokerNav: React.FC<MobilePlayerPokerNavProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
+    display: 'flex'
   },
   toggleButton: {
-    position: 'absolute',
-    zIndex: 100,
-    top: 10,
-    right: 10,
+    // zIndex: 100,
+    width: 40,
     color: 'white',
   },
   menuOverlay: {
     position: 'fixed',
     inset: 0,
-    zIndex: 50,
+    // zIndex: 50,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   menuContent: {
     position: 'absolute',
-    right: 0,
+    left: 0,
     top: 0,
     height: '100%',
     width: 256,
     backgroundColor: '#11141D',
     padding: 16,
+    zIndex: 100
   },
   header: {
     flexDirection: 'row',

@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, StyleSheet, View } from "react-native";
+// import { playerAvatars } from "@/lib/poker";
 
 interface PlayerAvatarProps {
   playerId: string;
@@ -15,13 +16,24 @@ interface PlayerAvatarProps {
 //   }
 // };
 
+// Mapping of profile picture names to local images
+const playerAvatars = {
+  'shark-pink': require('@/assets/profile/shark-pink.png'),
+  'bear-blue': require('@/assets/profile/david.png'),
+  // Add more mappings as needed
+  default: require('@/assets/profile/testProfilePic.png'), // Default image
+};
+
 const PlayerAvatar: React.FC<PlayerAvatarProps> = ({ playerId, profilePicture }) => {
+  // const avatarSource = {uri: `../../../../../public/assets/profile/${profilePicture}.png`}
+  const avatarSource = playerAvatars[profilePicture] ? playerAvatars[profilePicture] : playerAvatars.default;
+  // console.log('avatarsource', profilePicture)
   // const avatarSource = loadImage(profilePicture);
   return (
   <View style={styles.container}>
     <Image
-      // source={avatarSource} // Adjust the URI as necessary
-      source={require('@/assets/profile/testProfilePic.png')}
+      source={avatarSource} // Adjust the URI as necessary
+      // source={require('@/assets/profile/testProfilePic.png')}
       style={styles.avatar}
       accessibilityLabel="Profile Picture"
     />

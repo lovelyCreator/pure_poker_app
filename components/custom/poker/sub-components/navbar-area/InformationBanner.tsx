@@ -71,16 +71,18 @@ const InformationBanner: React.FC<InformationBannerProps> = ({
 const styles = StyleSheet.create({
   container: {
     // position: 'relative',
+    position: 'absolute',
+    zIndex: 100,
+    width: '80%',
+    left: 80
   },
   inactivityWarning: {
     position: 'absolute',
-    left: '50%',
-    top: 100,
     transform: [{ translateX: -50 }],
     backgroundColor: 'rgba(255, 0, 0, 0.6)',
     borderRadius: 8,
     padding: 10,
-    zIndex: 10,
+    zIndex: 150,
   },
   banner: {
     position: 'absolute',

@@ -52,7 +52,6 @@ export const chipsToBB = (chips: number, initialBigBlind: number): number => {
   }
   
 export async function fetchGameState(gameId: string): Promise<GameState | null> {
-  const navigation = useNavigation();
     async function fetchFromApi(gameId: string) {
       // const query = { gameId };
       // const url = new URL(env.NEXT_PUBLIC_POKER_URL);
@@ -60,7 +59,7 @@ export async function fetchGameState(gameId: string): Promise<GameState | null> 
       // Object.keys(query).forEach(key => url.searchParams.append(key, query[key as keyof GetItemQuery]));
       // console.log(url, 'URL')
       const token = await AsyncStorage.getItem('PP_TOKEN');
-      const res = await fetch(`${env.NEXT_PUBLIC_POKER_URL}poker?gameId=${encodeURIComponent(gameId)}`, {
+      const res = await fetch(`${env.NEXT_PUBLIC_POKER_URL}poker?gameId=${gameId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -73,6 +72,7 @@ export async function fetchGameState(gameId: string): Promise<GameState | null> 
         return [await res.json(), false];
       }
       if (res.status === 401 || res.status === 404) {
+        // navigation.navigate('404');
         return [null, true];
       }
       if (!res.ok) {
@@ -939,3 +939,79 @@ flop: 8,
 turn: 6,
 river: 5,
 };
+
+
+
+// export const playerAvatars = {
+//   'bear-blue': require('@/public/assets/profile/bear-blue.png'),
+//   'bear-green': require('@/public/assets/profile/bear-green.png'),
+//   'bear-orange': require('@/public/assets/profile/bear-orange.png'),
+//   'bear-pink': require('@/public/assets/profile/bear-pink.png'),
+//   'bear-grey': require('@/public/assets/profile/bear-grey.png'),
+//   'bear-purple': require('@/public/assets/profile/bear-purple.png'),
+  
+//   'dog-blue': require('@/public/assets/profile/dog-blue.png'),
+//   'dog-green': require('@/public/assets/profile/dog-green.png'),
+//   'dog-orange': require('@/public/assets/profile/dog-orange.png'),
+//   'dog-pink': require('@/public/assets/profile/dog-pink.png'),
+//   'dog-grey': require('@/public/assets/profile/dog-grey.png'),
+//   'dog-purple': require('@/public/assets/profile/dog-purple.png'),
+  
+//   'eagle-blue': require('@/public/assets/profile/eagle-blue.png'),
+//   'eagle-green': require('@/public/assets/profile/eagle-green.png'),
+//   'eagle-orange': require('@/public/assets/profile/eagle-orange.png'),
+//   'eagle-pink': require('@/public/assets/profile/eagle-pink.png'),
+//   'eagle-grey': require('@/public/assets/profile/eagle-grey.png'),
+//   'eagle-purple': require('@/public/assets/profile/eagle-purple.png'),
+  
+//   'elephant-blue': require('@/public/assets/profile/elephant-blue.png'),
+//   'elephant-green': require('@/public/assets/profile/elephant-green.png'),
+//   'elephant-orange': require('@/public/assets/profile/elephant-orange.png'),
+//   'elephant-pink': require('@/public/assets/profile/elephant-pink.png'),
+//   'elephant-grey': require('@/public/assets/profile/elephant-grey.png'),
+//   'elephant-purple': require('@/public/assets/profile/elephant-purple.png'),
+  
+//   'lion-blue': require('@/public/assets/profile/lion-blue.png'),
+//   'lion-green': require('@/public/assets/profile/lion-green.png'),
+//   'lion-orange': require('@/public/assets/profile/lion-orange.png'),
+//   'lion-pink': require('@/public/assets/profile/lion-pink.png'),
+//   'lion-grey': require('@/public/assets/profile/lion-grey.png'),
+//   'lion-purple': require('@/public/assets/profile/lion-purple.png'),
+  
+//   'monkey-blue': require('@/public/assets/profile/monkey-blue.png'),
+//   'monkey-green': require('@/public/assets/profile/monkey-green.png'),
+//   'monkey-orange': require('@/public/assets/profile/monkey-orange.png'),
+//   'monkey-pink': require('@/public/assets/profile/monkey-pink.png'),
+//   'monkey-grey': require('@/public/assets/profile/monkey-grey.png'),
+//   'monkey-purple': require('@/public/assets/profile/monkey-purple.png'),
+  
+//   'orca-blue': require('@/public/assets/profile/orca-blue.png'),
+//   'orca-green': require('@/public/assets/profile/orca-green.png'),
+//   'orca-orange': require('@/public/assets/profile/orca-orange.png'),
+//   'orca-pink': require('@/public/assets/profile/orca-pink.png'),
+//   'orca-grey': require('@/public/assets/profile/orca-grey.png'),
+//   'orca-purple': require('@/public/assets/profile/orca-purple.png'),
+  
+//   'panda-blue': require('@/public/assets/profile/panda-blue.png'),
+//   'panda-green': require('@/public/assets/profile/panda-green.png'),
+//   'panda-orange': require('@/public/assets/profile/panda-orange.png'),
+//   'panda-pink': require('@/public/assets/profile/panda-pink.png'),
+//   'panda-grey': require('@/public/assets/profile/panda-grey.png'),
+//   'panda-purple': require('@/public/assets/profile/panda-purple.png'),
+  
+//   'shark-blue': require('@/public/assets/profile/shark-blue.png'),
+//   'shark-green': require('@/public/assets/profile/shark-green.png'),
+//   'shark-orange': require('@/public/assets/profile/shark-orange.png'),
+//   'shark-pink': require('@/public/assets/profile/shark-pink.png'),
+//   'shark-grey': require('@/public/assets/profile/shark-grey.png'),
+//   'shark-purple': require('@/public/assets/profile/shark-purple.png'),
+  
+//   'snake-blue': require('@/public/assets/profile/snake-blue.png'),
+//   'snake-green': require('@/public/assets/profile/snake-green.png'),
+//   'snake-orange': require('@/public/assets/profile/snake-orange.png'),
+//   'snake-pink': require('@/public/assets/profile/snake-pink.png'),
+//   'snake-grey': require('@/public/assets/profile/snake-grey.png'),
+//   'snake-purple': require('@/public/assets/profile/snake-purple.png'),
+
+//   default : require('@/public/assets/profile/shark-pink.png'),
+// }

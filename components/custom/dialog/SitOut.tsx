@@ -24,6 +24,7 @@ const SitOut: React.FC<SitOutProps> = ({
   isSittingOutNextHand,
   setIsSittingOutNextHand,
 }) => {
+  console.log('GAMEID________________:', gameId)
   const span = useSpan("sitOut");
   const user = useAuth();
   const navigation = useNavigation ();
@@ -34,14 +35,15 @@ const SitOut: React.FC<SitOutProps> = ({
     {
       share: true,
       onMessage: (event) => {
+        console.log(event.data)
         try {
           const data: WebSocketMessage = JSON.parse(event.data);
+          console.log('Sittingout Data', data)
           if (data.action === "sitOutNextHand") {
             if (data.statusCode === 200) {
               toast.dismiss();
               setIsOpen(false);
               setIsSittingOutNextHand(!isSittingOutNextHand);
-              console.log(isSittingOutNextHand, "isSittingoutNextHand")
               return;
             }
             if (data.statusCode === 404) {
@@ -73,6 +75,7 @@ const SitOut: React.FC<SitOutProps> = ({
       raiseAmount: null,
       groups: null,
     };
+    console.log(sitOutNextHandMessage)
     sendJsonMessage(sitOutNextHandMessage);
     toast.loading(
       isSittingOutNextHand

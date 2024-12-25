@@ -85,7 +85,7 @@ const EmoteSelector: React.FC<EmoteSelectorProps> = ({ gameId }) => {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    right: -125,
+    left: 100,
     top: -70,
     width: 120,
     height: 100,
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: "#5f5f5f",
-    zIndex: 20,
+    zIndex: 150,
     overflow: "hidden",
     shadowColor: "#000",
     shadowOffset: {

@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 10,
     width: 65, // Adjust width as necessary
-    top: 40, // Adjust top position as necessary
-    left: 10, // Adjust left position as necessary
+    top: 60, // Adjust top position as necessary
+    left: 20, // Adjust left position as necessary
     borderWidth: 2,
     borderRadius: 5,
     paddingHorizontal: 8,

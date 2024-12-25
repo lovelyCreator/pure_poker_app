@@ -54,10 +54,10 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     transform: [{ translateX: '50%' }],
-    zIndex: 20,
+    zIndex: 150,
   },
   textContainer: {
-    right: -55, // Equivalent to -right-[95px]
+    right: 55, // Equivalent to -right-[95px]
     backgroundColor: '#2c2f36',
     paddingHorizontal: 12, // Equivalent to px-3
     paddingVertical: 4, // Equivalent to py-1

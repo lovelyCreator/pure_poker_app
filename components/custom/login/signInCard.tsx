@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Button } from '@/components/ui/button';
 import useLogin from '@/hooks/useLogin';
 
@@ -34,36 +34,71 @@ export default function SignInCard() {
   const logger = useLogger();
 
 
-  useEffect(() => {
-    const validateToken = async () => {
-        try {
-            const token = await AsyncStorage.getItem('PP_TOKEN');
+//   useEffect(() => {
+//     const validateToken = async () => {
+//         try {
+//             const token = await AsyncStorage.getItem('PP_TOKEN');
 
-            if (!token) {
-                console.error('No token found');
-                return; // Handle the case where no token is found
-            }
+//             if (!token) {
+//                 console.error('No token found');
+//                 return; // Handle the case where no token is found
+//             }
 
-            const res = await fetch(`${env.NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
+//             const res = await fetch(`${env.NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
+//                 method: 'GET',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'Authorization': `Bearer ${token}`,
+//                 },
+//             });
 
-            if (!res.ok) {
-                throw new Error('Token validation failed');
-            }
-            navigation.navigate('index');
-            // Handle the response data as needed
-        } catch (error) {
-            console.error('Error validating token:', error);
-        }
-    };
+//             if (!res.ok) {
+//                 throw new Error('Token validation failed');
+//             }
+//             navigation.navigate('index');
+//             // Handle the response data as needed
+//         } catch (error) {
+//             console.error('Error validating token:', error);
+//         }
+//     };
 
-    validateToken();
-}, []);
+//     validateToken();
+// }, []);
+
+
+useFocusEffect(
+  React.useCallback(() => {
+      const validateToken = async () => {
+          try {
+              const token = await AsyncStorage.getItem('PP_TOKEN');
+
+              if (!token) {
+                  console.error('No token found');
+                  return; // Handle the case where no token is found
+              }
+
+              const res = await fetch(`${env.NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
+                  method: 'GET',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`,
+                  },
+              });
+
+              if (!res.ok) {
+                  throw new Error('Token validation failed');
+              }
+              
+              // If token is valid, navigate to 'index'
+              navigation.navigate('index');
+          } catch (error) {
+              console.error('Error validating token:', error);
+          }
+      };
+
+      validateToken();
+  }, [navigation])
+);
 
   logger.info('Init');
   const login = useLogin();
@@ -76,18 +111,15 @@ export default function SignInCard() {
     },
   });
   const loginSuc = (error) => {
-    if (!error) {
-
-      logger.info("User logged in");
-      console.log('error')
-      setTimeout(() => {
-        // router.push("/home");
-        navigation.navigate('home')
-      }, 0);
-      return "Login successful";
-    }
+    logger.info("User logged in");
+    console.log('error')
+    setTimeout(() => {
+      // router.push("/home");
+      navigation.navigate('home')
+    }, 0);
+    return "Login successful";
   }
-  const loginErr = (error) => {
+  const loginErr = (error: Error) => {
     logger.error("Login failed", error);
     return "Login failed";
   }

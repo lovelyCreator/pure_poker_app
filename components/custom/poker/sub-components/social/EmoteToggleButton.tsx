@@ -20,6 +20,7 @@ const EmoteToggleButton: React.FC<EmoteToggleButtonProps> = ({
       ]}
     >
       <MessageCircleMore
+        id="toggleButton"
         style={[
           styles.icon,
           isEmoteSelectorVisible ? styles.iconActive : styles.iconInactive,
@@ -34,8 +35,8 @@ const styles = StyleSheet.create({
   },
   button: {
     position: "absolute",
-    right: -10,
-    top: 20,
+    left: 80,
+    top: 30,
     zIndex: 150,
     padding: 4,
     borderRadius: 50,

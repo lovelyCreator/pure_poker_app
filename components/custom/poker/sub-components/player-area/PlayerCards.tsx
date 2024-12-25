@@ -12,6 +12,7 @@ interface PlayerCardsProps {
   player: Player;
   shouldShowWin: boolean;
   aggregateBestHand: string[] | null;
+  totalPlayerCount: number;
 }
 
 const PlayerCards: React.FC<PlayerCardsProps> = ({
@@ -22,13 +23,18 @@ const PlayerCards: React.FC<PlayerCardsProps> = ({
   player,
   shouldShowWin,
   aggregateBestHand,
+  totalPlayerCount
 }) => {
   const isNoBetBombPot = (gameState && gameState.bombPotActive && !gameState.bombPotSettings.postFlopBetting) ?? false;
   const shouldMakeCardsShowUp = isNoBetBombPot || gameState?.isBeginningOfTheHand;
-
+  console.log('totalPlayeCount', totalPlayerCount)
   return (
     <View style={[styles.container, 
-      isCurrentPlayer ? {left: 110, top: 20} : {left: -15, top: -15}
+      isCurrentPlayer ? {left: 105, top: 60} : 
+      player.position < totalPlayerCount/2 ?
+      {left: -10, top: 25}
+      :
+      {left: 50, top: 25}
     ]}>
       {gameState.playerCount > 1 &&
         playerHand.map(
@@ -59,6 +65,7 @@ const PlayerCards: React.FC<PlayerCardsProps> = ({
                 bestHand={aggregateBestHand}
                 showCards={player.showCards}
                 shouldShowWin={shouldShowWin}
+                isDealing = {false}
               />              
             </MotiView>
           )

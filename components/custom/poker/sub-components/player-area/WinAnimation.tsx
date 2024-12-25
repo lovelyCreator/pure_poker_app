@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 44,
     zIndex: 10,
+    left: 10
   },
   box: {
     width: 80,
