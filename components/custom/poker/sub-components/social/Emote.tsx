@@ -28,9 +28,9 @@ const Emote: React.FC<EmoteProps> = ({ emote, isVisible }) => {
           rotate: isText ? '0deg' : '-10deg',
         }}
         animate={{
-          opacity: 1,
-          scale: 1.2,
-          rotate: isText ? '0deg' : '5deg',
+          opacity: isVisible ? 1 : 0,
+          scale: isVisible ? 1.2 : 0.5,
+          rotate: isText ? 0 : isVisible ? [0, -5, 5, -3, 3, 0] : -10,
         }}
         exit={{
           opacity: 0,

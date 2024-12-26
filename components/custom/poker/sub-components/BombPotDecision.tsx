@@ -40,30 +40,35 @@ const BombPotDecision: React.FC<BombPotDecisionProps> = ({
 
     const {user} = useAuth();
     const span = useSpan("bombPotDecision");
-    const { sendJsonMessage } = useWebSocket(getPokerUrl(span, gameId, user.username), {
+    const { sendJsonMessage } = useWebSocket(getPokerUrl(span, gameId, user?.username), {
         share: true,
         onMessage: (event) => {
-            console.log('BombPot')
+            console.log('BombPot-----This is bombpot decisionhis is bombpot decision')
             try {
                 const data: WebSocketMessage = JSON.parse(event.data);
+                console.log("BombPot Decision Response: ", data)
                 if (data.action === "bombPotDecision" && data.statusCode !== 200) {
                     toast.error("Failed to make bomb pot decision.");
                 }
             } catch (e) {
                 toast.error("Failed to process bomb pot decision.");
+                console.error(e)
             }
         },
     });
 
     const handleMakeBombPotDecision = (newDecision: string) => {
         setDecision(newDecision);
+        console.log("What is decision ?", newDecision)
         const bombPotMessage: sendPokerAction = {
             action: "sendPokerAction",
             gameId,
             gameAction: "makeBombPotDecision",
             bombPotDecision: newDecision,
         };
+        console.log("starting send message!!!")
         sendJsonMessage(bombPotMessage);
+        console.log("finished sending message!!!")
     };
 
     useEffect(() => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
-import useWebSocket from "react-native-use-websocket";
+import useWebSocket from "react-use-websocket";
 import { sendPokerAction, WebSocketMessage } from "@/types/poker"; // Adjust the import according to your project structure
 import { getPokerUrl } from "@/lib/poker"; // Adjust the import according to your project structure
 import { useSpan } from "@/utils/logging"; // Adjust the import according to your project structure
@@ -18,36 +18,46 @@ const texts: string[] = []; // Placeholder for additional texts
 const EmoteSelector: React.FC<EmoteSelectorProps> = ({ gameId }) => {
   const {user} = useAuth();
   const span = useSpan("sendEmote");
-  const { sendJsonMessage } = useWebSocket(getPokerUrl(span, gameId, user.username), {
-    share: true,
-    onMessage: (event: any) => {
-      try {
-        console.log('EmoteMessage')
-        const data: WebSocketMessage = JSON.parse(event.data);
-        if (data.action === "sendEmote" && data.statusCode !== 200) {
-          toast.dismiss();
-          toast.error("Failed to send emote.");
-        }
-      } catch {
-        toast.error("Failed to send emote.");
+  const { sendJsonMessage } = useWebSocket(
+      getPokerUrl(span, gameId, user?.username),
+      {
+          share: true,
+          onMessage: (event) => {
+              console.log("States =========>", span, gameId, user?.username,getPokerUrl(span, gameId, user?.username) )
+              try {
+              // eslint-disable-next-line
+              console.log('EmoteMessage')
+              const data: WebSocketMessage = JSON.parse(event.data);
+              console.log("Received Emote State", data)
+              if (data.action === "sendEmote") {
+                  if (data.statusCode !== 200) {
+                      toast.dismiss();
+                      toast.error("Failed to send emote.");
+                  } 
+              }
+              } catch (e) {
+                  toast.error("Failed to send emote.");
+              }
+          },
       }
-    },
-  });
-
+  );
+  
   const handleSendEmote = (emote: string) => {
-    if (emote) {
-      const emoteMessage: sendPokerAction = {
-        action: "sendPokerAction",
-        gameId: gameId,
-        gameAction: "sendEmote",
-        buyIn: null,
-        raiseAmount: null,
-        groups: null,
-        message: null,
-        emote: emote,
-      };
-      sendJsonMessage(emoteMessage);
-    }
+      if (emote) {
+          console.log("Emote selection state: ", emote)
+          const emoteMessage: sendPokerAction = {
+              action: "sendPokerAction",
+              gameId: gameId,
+              gameAction: "sendEmote",
+              buyIn: null,
+              raiseAmount: null,
+              groups: null,
+              message: null,
+              emote: emote,
+          };
+          console.log("Emote message: ", emoteMessage)
+          sendJsonMessage(emoteMessage);
+      }
   };
 
   return (

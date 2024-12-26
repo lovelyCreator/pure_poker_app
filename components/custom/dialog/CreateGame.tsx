@@ -66,9 +66,9 @@ const CreateGameSchema = z
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(CreateGameSchema),
         defaultValues: {
-            bigBlind: 0.1,
-            maxPlayers: 2,
-            buyIn: 10,
+            bigBlind: 0.5,
+            maxPlayers: 9,
+            buyIn: 50,
             groupSelection: "Network (all your groups)", // Default value for group selection
         },
     });

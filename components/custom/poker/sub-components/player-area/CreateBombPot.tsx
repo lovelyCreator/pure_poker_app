@@ -23,10 +23,9 @@ const CreateBombPot: React.FC<CreateBombPotProps> = ({ thisPlayer, gameId, gameS
 
   const {user} = useAuth();
   const span = useSpan("createBombPot");
-  const { sendJsonMessage } = useWebSocket(getPokerUrl(span, gameId, user.username), {
+  const { sendJsonMessage } = useWebSocket(getPokerUrl(span, gameId, user?.username), {
     share: true,
     onMessage: (event) => {
-      console.log('CreateBomb')
       try {
         const data: WebSocketMessage = JSON.parse(event.data);
         if (data.action === "createBombPot" && data.statusCode !== 200) {
@@ -39,7 +38,7 @@ const CreateBombPot: React.FC<CreateBombPotProps> = ({ thisPlayer, gameId, gameS
   });
   console.log('Create Bomb:', thisPlayer, "GameStates", gameState, "GameIds",gameId)
   const isBombPotProposed = gameState.isBombPotProposed ?? false;
-  // const isInitiator = gameState.bombPotSettings?.initiatorUsername === thisPlayer.username;
+  const isInitiator = gameState.bombPotSettings?.initiatorUsername === thisPlayer.username;
 
   const handleProposeBombPot = () => {
     const bombPotMessage: sendPokerAction = {
@@ -49,7 +48,7 @@ const CreateBombPot: React.FC<CreateBombPotProps> = ({ thisPlayer, gameId, gameS
       bombPotSettings: {
         numberOfBigBlinds,
         postFlopBetting,
-        // initiatorUsername: thisPlayer.username,
+        initiatorUsername: thisPlayer.username
       },
     };
     sendJsonMessage(bombPotMessage);

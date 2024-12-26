@@ -30,13 +30,13 @@ const SitOut: React.FC<SitOutProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const { sendJsonMessage } = useWebSocket(
-    getPokerUrl(span, gameId, user.username),
+    getPokerUrl(span, gameId, user?.username),
     {
       share: true,
       onMessage: (event) => {
-        console.log('SitOut')
         try {
           const data: WebSocketMessage = JSON.parse(event.data);
+          console.log('Sitoutmessage:', data)         
           if (data.action === "sitOutNextHand") {
             if (data.statusCode === 200) {
               toast.dismiss();
