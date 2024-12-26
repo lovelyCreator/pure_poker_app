@@ -9,6 +9,8 @@ interface DealerButtonProps {
   dealerIndex: number;
   rotatedPosition: number;
   screenSize: ScreenSize;
+  totalPlayerCount: number;
+  playerPosition: number;
 }
 
 const DealerButton: React.FC<DealerButtonProps> = ({
@@ -16,7 +18,9 @@ const DealerButton: React.FC<DealerButtonProps> = ({
   index,
   dealerIndex,
   rotatedPosition,
-  screenSize
+  screenSize,
+  totalPlayerCount,
+  playerPosition,
 }) => {
   // Return null if the game is not in progress or if this is not the dealer's index
   if (!gameState.gameInProgress || index !== dealerIndex) return null;
@@ -31,10 +35,16 @@ const DealerButton: React.FC<DealerButtonProps> = ({
       style={[
         styles.button,
         {
-          left: left+115 , // Adjusting for the 100% offset
           top: top + 120,    // Adjusting for the 50% offset
           transform: [{ translateX: -50 }, { translateY: -50 }],
         },
+        playerPosition < totalPlayerCount/2 ? 
+        {
+          left: left+115 , // Adjusting for the 100% offset
+        } :
+        {
+          left: left+20
+        }
       ]}
     >
       <Text style={styles.text}>BTN</Text>

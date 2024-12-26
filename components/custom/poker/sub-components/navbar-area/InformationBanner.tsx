@@ -22,8 +22,7 @@ const InformationBanner: React.FC<InformationBannerProps> = ({
 }) => {
   // Don't show any banner if the player is in buyBackIn state
   if (currentPlayer?.chips === 0) return null;
-  // console.log("SitOutState ====> ", isSittingOut, !isSittingOutNextHand, inactivityCount)
-
+  
   return (
     <View style={styles.container}>
       {/* Inactivity warning */}

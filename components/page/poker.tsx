@@ -11,11 +11,10 @@ import { toast } from 'react-toastify';
 import assert from "assert";
 import type { PokerActionsFrontend } from '@/types/pokerFrontend.';
 import JoinPopup from "@/components/custom/poker/JoinPopup";
-import { useNavigation } from 'expo-router';
 import { SpanInheritor, SpanWrapper, useSpan } from '@/utils/logging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MobilePlayerPokerNav from '../custom/poker/MobilePlayPokerNav';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 export default function Poker() {
   const searchParams = useSearchParams();
@@ -26,9 +25,10 @@ export default function Poker() {
   const span = useSpan("PokerPage", { gameId: gameId });
 
   const navigation = useNavigation();
-  const user = useAuth()
+  const {user} = useAuth()
 
-  const gameStateQuery = useGameState(gameId!)
+  const gameStateQuery = useGameState(gameId!);
+  console.log("useGameStateQuery ======>", gameStateQuery)
   const [gameState, setGameState] = useState(gameStateQuery.data);
   const [lastSynced, setLastSynced] = useState(Date.now());
 
@@ -141,10 +141,11 @@ export default function Poker() {
       }
     }
   );
+  
   useEffect(() => {
     if (!gameState) {
       // router.push("/404");
-      navigation.navigate('404')
+      navigation.navigate('notFound')
     } else {
       const playerId = user.username;
       const isPlayerInGame = gameState.players.some(
@@ -173,24 +174,24 @@ export default function Poker() {
   }, [gameState, user.username, navigation]);
 
   
-  useEffect(() => {
-    const interval = setInterval(async () => {
-        const now = Date.now();
-        const timeSinceLastSync = (now - lastSynced) / 1000; // Time in seconds
-        if (timeSinceLastSync > 3) {
-            const res = await fetchGameState(gameId);
-            if (res.ok) {
-                const gameData = await res.json(); // Assuming fetchGameState returns a response
-                if (gameData) {
-                    setGameState(gameData);
-                    setLastSynced(Date.now()); // Update last synced time
-                }
-            }
-        }
-    }, 2000); // Check every 2 seconds
+//   useEffect(() => {
+//     const interval = setInterval(async () => {
+//         const now = Date.now();
+//         const timeSinceLastSync = (now - lastSynced) / 1000; // Time in seconds
+//         if (timeSinceLastSync > 3) {
+//             const res = await fetchGameState(gameId);
+//             if (res.ok) {
+//                 const gameData = await res.json(); // Assuming fetchGameState returns a response
+//                 if (gameData) {
+//                     setGameState(gameData);
+//                     setLastSynced(Date.now()); // Update last synced time
+//                 }
+//             }
+//         }
+//     }, 2000); // Check every 2 seconds
 
-    return () => clearInterval(interval); // Cleanup on unmount
-}, [lastSynced, gameId]);
+//     return () => clearInterval(interval); // Cleanup on unmount
+// }, [lastSynced, gameId]);
 
   // useEffect(() => {
   //   const interval = setInterval(async () => {

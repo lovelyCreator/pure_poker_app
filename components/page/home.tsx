@@ -1,10 +1,10 @@
 import { StyleSheet, Image, View, Text, Animated, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 
-import React, { lazy, Suspense, useState,  useRef } from 'react';
+import React, { lazy, Suspense, useState,  useRef, useEffect } from 'react';
 import CreateOrJoinGame from '@/components/custom/dialog/CreateOrJoinGame';
 import Welcome from '@/components/custom/home/welcome';
 import CardGradient from '@/components/custom/home/card-gradiant';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useAuth } from '@/hooks/useAuth';
 import ErrorBoundary from '@/components/custom/ErrorBondary';
 import CommunityError from '@/components/custom/home/community-error';
@@ -20,24 +20,27 @@ import MassPayStatus from '@/components/custom/home/masspay-status';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Button } from '@/components/ui/button';
 import LoadingPage from '@/components/page/loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AvailableGame } from '@/types/poker';
 
 // const SignInCard = lazy(() => import('"@/components/custom/login/signInCard'));
 
-export default function HomePage() {
+export default function HomePage () {
   const span = useSpan('displayHomePage');
   const navigation = useNavigation();
   span.info('Initializing')
+  const {user, refetchUser} = useAuth();
 
-  const user = useAuth();
-  // console.log('Auth---->', user)
-  const userIsVerified = user.clearApproval === "approved";
+
+  console.log('Auth---->', user)
+  const userIsVerified = user?.clearApproval === "approved";
   // const userIsVerified = true;
   // const availableGames = [true, true, false];
-  const massPayAccountCreated = user.massPayToken;
+  const massPayAccountCreated = user?.massPayToken;
   span.info('Provided User', user);
   const groupsQuery = useUserGroups();
-  const groupIds = groupsQuery.data?.map((group) => group.groupId) || [];
-  const { data: availableGames} = useAvailableGames(groupIds, user.id);
+  const groupIds = groupsQuery.data?.map((group: { groupId: any; }) => group.groupId) || [];
+  const { data: availableGames} = useAvailableGames(groupIds, user?.id);
   console.log("Available Games", availableGames)
 
   const [showAllGames, setShowAllGames] = useState(false);
@@ -61,7 +64,7 @@ export default function HomePage() {
               <Image style={{width: 16, height: 16}} source={require(`@/assets/home/icon/pro.png`)} />
             </TouchableOpacity>
             {
-              user.profilePicture !== '' ? 
+              user?.profilePicture !== '' ? 
               <Image style={[styles.mark, {opacity: 1, marginLeft: 5}]} source={require(`@/assets/profile/shark-pink.png`)} />
               : 
               <></> 
@@ -122,7 +125,7 @@ export default function HomePage() {
               <View style={styles.seeAll}>
                 <View style={{marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                   <Text style={{fontSize: 18, lineHeight: 27, color: '#D1D5DB'}}>Available Games</Text>
-                  {availableGames && availableGames.length > 3 && (
+                  {availableGames && availableGames?.length > 3 && (
                     <Button
                       onPress={showAllGames ? handleSeeLessClick : handleSeeAllClick}
                       style={styles.button}
@@ -144,7 +147,7 @@ export default function HomePage() {
                     justifyContent: 'space-between', // Space between items
                     margin: -8,  }}>
                     {availableGames?.slice(0, 3) // Show only first 3 games
-                      .map((game) => (
+                      .map((game: AvailableGame) => (
                         <AvailableGamesHome
                           key={game.gameId}
                           availableGame={game}

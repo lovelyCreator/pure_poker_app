@@ -31,7 +31,7 @@ const AllInPopup: React.FC<AllInPopupProps> = ({
   bigBlind,
 }) => {
   const span = useSpan("AllInPopup");
-  const user = useAuth();
+  const {user} = useAuth();
   const [showBuyChipsInput, setShowBuyChipsInput] = useState(false);
   const [chipsToBuy, setChipsToBuy] = useState(50 * bigBlind / 100);
   const [inputError, setInputError] = useState<string | null>(null);
@@ -44,6 +44,7 @@ const AllInPopup: React.FC<AllInPopupProps> = ({
     {
       share: true,
       onMessage: (event) => {
+        console.log('BuyBackInPoupu')
         try {
           assert(typeof event.data === "string", "Event is not a string");
           const data: PokerActionsFrontend = JSON.parse(event.data);

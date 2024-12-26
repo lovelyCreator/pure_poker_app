@@ -6,7 +6,7 @@ import LeaveGame from "../../../dialog/LeaveGame"; // Ensure this is compatible 
 import { Image } from 'react-native'; // Use Image from React Native
 
 const QuitGamePopup: React.FC = () => {
-  const auth = useAuth();
+  const auth = useAuth().user;
   const route = useRoute(); // Get the route object
   const gameId = route.params?.gameId; // Access gameId from route parameters
 

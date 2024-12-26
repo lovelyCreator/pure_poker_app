@@ -15,7 +15,7 @@ const SitOutPopUp: React.FC<SitOutPopUpProps> = ({
   isSittingOutNextHand,
   setIsSittingOutNextHand,
 }) => {
-  const auth = useAuth();
+  const auth = useAuth().user;
   const {gameId} = useRoute().params;
 
   return (

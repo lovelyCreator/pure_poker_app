@@ -81,6 +81,7 @@ const CreateGameSchema = z
       {
         share: true,
         onOpen: async () => {
+          console.log('Create Game')
           wsRef.current = getWebSocket();
           const token = await AsyncStorage.getItem("PP_TOKEN");
           
@@ -156,6 +157,7 @@ const CreateGameSchema = z
     async function onSubmit(values: z.infer<typeof CreateGameSchema>) {
       values.buyIn = values.buyIn * 100;
       values.bigBlind = values.bigBlind * 100;
+      console.log("Yeah, I'm ready for Create Game")
   
       if (values.buyIn > userChips) {
         toast.error(

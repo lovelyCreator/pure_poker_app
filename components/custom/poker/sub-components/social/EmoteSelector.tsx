@@ -16,12 +16,13 @@ const emotes = ["🤣", "😡", "😩", "🤡", "😁", "🤑", "🥲", "😘", 
 const texts: string[] = []; // Placeholder for additional texts
 
 const EmoteSelector: React.FC<EmoteSelectorProps> = ({ gameId }) => {
-  const user = useAuth();
+  const {user} = useAuth();
   const span = useSpan("sendEmote");
   const { sendJsonMessage } = useWebSocket(getPokerUrl(span, gameId, user.username), {
     share: true,
     onMessage: (event: any) => {
       try {
+        console.log('EmoteMessage')
         const data: WebSocketMessage = JSON.parse(event.data);
         if (data.action === "sendEmote" && data.statusCode !== 200) {
           toast.dismiss();

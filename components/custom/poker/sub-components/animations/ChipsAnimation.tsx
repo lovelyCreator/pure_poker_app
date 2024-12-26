@@ -26,7 +26,6 @@ const ChipsAnimation = ({
    const [animationPlayed, setAnimationPlayed] = useState(false);
    const playerPositions = generatePlayerPositions(screenSize);
    const bettingAndDealerPositions = getBettingAndDealerPositions(screenSize);
-   // console.log("ChipsAnimation", screenSize, player)
    const onAnimationEnd = () => {
       setAnimationPlayed(true);
    }

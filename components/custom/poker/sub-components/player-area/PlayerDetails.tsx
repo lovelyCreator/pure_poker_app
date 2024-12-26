@@ -22,6 +22,8 @@ interface PlayerDetailsProps {
   initialBigBlind: number;
   handsPlayed: number;
   vpip: number;
+  totalPlayerCount: number;
+  playerPosition: number;
 }
 
 const PlayerDetails: React.FC<PlayerDetailsProps> = ({
@@ -42,6 +44,8 @@ const PlayerDetails: React.FC<PlayerDetailsProps> = ({
   initialBigBlind,
   handsPlayed,
   vpip,
+  totalPlayerCount,
+  playerPosition
 }) => {
   // Determine display value based on `displayBB` state
   const displayValue = displayBB
@@ -72,10 +76,14 @@ const PlayerDetails: React.FC<PlayerDetailsProps> = ({
     {/* VPIP Indicator */}
     {handsPlayed > 0 && !isCurrentPlayer && !gameIsOver && !sittingOut && (
       <View
-        style={{ 
-          transform: [{translateX: -50}, {translateY: -50}], position: 'absolute', left: 50, top: 70, zIndex: 50, 
+        style={[{ 
+          transform: [{translateX: -50}, {translateY: -50}], position: 'absolute', top: 70, zIndex: 100, 
           display: 'flex', height: 24, width: 24, alignItems: 'center', justifyContent: 'center', borderRadius: 18, backgroundColor: vpipColor
-        }}
+        }, 
+        playerPosition < totalPlayerCount/2 ?
+        {left: 110}
+        :
+        {left: 50}]}
       >
         <Text style={{color: 'white', fontSize: vpipFont, fontWeight: 'bold'}}>
           {Math.round(vpip)}%

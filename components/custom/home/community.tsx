@@ -16,7 +16,7 @@ import { useLogger } from '@/utils/logging';
 
 const Community: React.FC = () => {
   const span = useLogger();
-  const user = useAuth();
+  const {user} = useAuth();
   const deleteMutation = useDeletePost();
   const messageRef = useRef<TextInput>(null);
   const [charCount, setCharCount] = useState(0);

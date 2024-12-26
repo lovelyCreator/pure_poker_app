@@ -5,7 +5,7 @@ import Poker from "@/components/page/poker";
 import {ToastContainer} from 'react-toastify'
 
 
-export default function PlayPoker( {route} ) {
+export default function PlayPoker( ) {
   return (
     // <View style={{ flex: 1 }}>
       <Suspense fallback={<LoadingPage />}> 

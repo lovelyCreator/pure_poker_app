@@ -20,13 +20,14 @@ const ShowCardControls: React.FC<ShowCardControlsProps> = ({
   secondCardName,
 }) => {
   const span = useSpan("ShowCardControls");
-  const user = useAuth();
+  const {user} = useAuth();
 
   const { sendJsonMessage } = useWebSocket(
     getPokerUrl(span, gameId || undefined, user.username),
     {
       share: true,
       onMessage: (event) => {
+        console.log('ShowCardControl')
         const data: PokerWebSocketMessage = JSON.parse(event.data);
 
         if (data.action === "showCardsSuccessPersonal") {

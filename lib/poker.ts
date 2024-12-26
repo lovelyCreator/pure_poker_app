@@ -8,6 +8,7 @@ import { refreshToken } from "@/lib/fetch";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { Navigation } from "lucide-react-native";
+import { toast } from "react-toastify";
 
 export const chipsToBB = (chips: number, initialBigBlind: number): number => {
     if (initialBigBlind <= 0) {
@@ -21,8 +22,8 @@ export const chipsToBB = (chips: number, initialBigBlind: number): number => {
     gameId?: string,
     playerId?: string,
   ): string {
+    console.log('websocket_URL: What is that ', gameId, playerId)
     const span = o_span.span("getPokerUrl", { playerId})
-    // const span = o_span.span("getPokerUrl", { playerId });
   
     span.info("Constructing query string");
     
@@ -54,10 +55,10 @@ export const chipsToBB = (chips: number, initialBigBlind: number): number => {
 export async function fetchGameState(gameId: string): Promise<GameState | null> {
     async function fetchFromApi(gameId: string) {
       // const query = { gameId };
-      // const url = new URL(env.NEXT_PUBLIC_POKER_URL);
+      const url = new URL(env.NEXT_PUBLIC_POKER_URL);
 
       // Object.keys(query).forEach(key => url.searchParams.append(key, query[key as keyof GetItemQuery]));
-      // console.log(url, 'URL')
+      console.log(url, 'URL')
       const token = await AsyncStorage.getItem('PP_TOKEN');
       const res = await fetch(`${env.NEXT_PUBLIC_POKER_URL}poker?gameId=${gameId}`, {
         method: 'GET',
@@ -91,12 +92,14 @@ export async function fetchGameState(gameId: string): Promise<GameState | null> 
   
     if (isUnauthorized) {
       await refreshToken(); // Refresh the token
+      console.log('RefreshTokens');
       [gameState, isUnauthorized] = await fetchFromApi(gameId);
   
       if (isUnauthorized) {
         // Token refresh failed, force reload
         // window.location.reload();
-        navigation.navigate('playPoker', gameId={gameId})
+        // navigation.navigate('playPoker', gameId={gameId})
+        toast.warning("You are not unauthorized!")
       }
     }
   

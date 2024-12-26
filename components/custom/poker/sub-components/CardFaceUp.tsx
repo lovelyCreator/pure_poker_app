@@ -1,3 +1,4 @@
+import { AnimatePresence, MotiView } from "moti";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
@@ -46,9 +47,11 @@ export const CardFaceUp: React.FC<CardFaceUpProps> = ({
   let backgroundColor = "white";
   let animationStyle: React.CSSProperties = {};
   let cardOpacity = 1;
+  let isCardWinAnimation = 0;
 
   if (gameIsOver && shouldShowWin) {
     if (bestHand && bestHand.includes(card)) {
+      isCardWinAnimation = 1;
       backgroundColor = "yellow";
       animationStyle = {
         backgroundSize: "200% auto",
@@ -57,10 +60,45 @@ export const CardFaceUp: React.FC<CardFaceUpProps> = ({
       };
     } else if (boardCard) {
       cardOpacity = 0.8;
+      isCardWinAnimation = 0;
     }
+  }
+  if (gameIsOver && !shouldShowWin && bestHand && bestHand.includes(card) ) {
+    console.log('Yes Please show best hans--')
+  } else {
+    console.log('No Please go on games--', gameIsOver, shouldShowWin)
+
   }
 
   return (
+    gameIsOver && !shouldShowWin && bestHand && bestHand.includes(card) ?      
+    <AnimatePresence>
+      <MotiView
+        from = {{backgroundColor: '#FFF700', opacity: 0.8}}
+        animate = {{backgroundColor: '#FFF700', opacity: 1}}
+        exit = {{opacity: 0.8, backgroundColor: '#FFF700'}}
+        transition={{
+          type: 'timing',
+          duration: 300,
+          loop: true,
+        }}
+        style={[
+          styles.cardContainer,
+          rotateStyle,
+          animationStyle,
+          { marginRight },
+        ]}
+      >
+        <View style={[styles.suiteContainer]}>
+          <Text style={[styles.valueText, {color: suiteToColor[suite]}]}>{value}</Text>
+          <Text style={[styles.suiteText, {color: suiteToColor[suite]}]}>{suite}</Text>
+        </View>
+        <View style={[styles.suiteContainer, { position: 'absolute', left: 28, top: -2 }]}>
+          <Text style={[styles.suiteText, {color: suiteToColor[suite]}]}>{suite}</Text>
+        </View>
+      </MotiView>
+    </AnimatePresence>
+    :
     <View
       style={[
         styles.cardContainer,

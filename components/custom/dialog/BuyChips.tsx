@@ -44,7 +44,7 @@ const BuyChips: React.FC<BuyChipsProps> = ({
 }) => {
   const navigation = useNavigation();
   const span = useSpan("buyChips");
-  const user = useAuth();
+  const {user} = useAuth();
   const logger = useLogger();
 
   const { sendJsonMessage } = useWebSocket(
@@ -52,6 +52,7 @@ const BuyChips: React.FC<BuyChipsProps> = ({
     {
       share: true,
       onMessage: (event) => {
+        console.log('BuyChip')
         try {
           const data: WebSocketMessage = JSON.parse(event.data);
           if (data.action === "buyMoreChips") {

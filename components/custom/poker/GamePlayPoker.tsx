@@ -116,7 +116,7 @@ const GameplayPokerMain = ({
   setShowBombPotDecisionModal
 }: GameplayPokerMainProps) => {
   const span = useSpan("GameplayPokerMain");
-  const user = useAuth();
+  const {user} = useAuth();
 
   useEffect(() => {
     const handleUrl = (url:string) => {
@@ -267,7 +267,6 @@ const GameplayPokerMain = ({
       ),
     );
   }, [gameState?.gameStage]);
-  // console.log("Players Data:", gameState?.players)
   // only update if it is bigger than the current raiseAmount
   useEffect(() => {
     //eslint-disable-next-line

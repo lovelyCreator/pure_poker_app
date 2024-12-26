@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 16,
+    zIndex: 50
     // zIndex: -1
   },
 });

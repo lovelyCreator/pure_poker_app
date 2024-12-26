@@ -87,6 +87,9 @@ const BettingControls: React.FC<BettingControlsProps> = ({
     getPokerUrl(span, gameId || undefined, user.username),
     {
       share: true,
+      onMessage: (event) => {
+        console.log('BettingControl')
+      }
     },
   );
 

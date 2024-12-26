@@ -17,23 +17,24 @@ interface PokerChatProps {
 }
 
 const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
-  const user = useAuth();
+  const {user} = useAuth();
   const span = useSpan("sendPokerChatMessage");
   const [messages, setMessages] = useState(gameState?.chatMessages || []);
   const [newMessage, setNewMessage] = useState("");
   const [chatIsOpen, setChatIsOpen] = useState(false);
   const [chatSize, setChatSize] = useState({ width: 350, height: 350 });
-  const [seenMessagesCount, setSeenMessagesCount] = useState(messages.length);
+  const [seenMessagesCount, setSeenMessagesCount] = useState(messages?.length);
   const chatEndRef = useRef<View | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
-  const [unreadMessages, setUnreadMessages] = useState(messages.length - seenMessagesCount);
+  const [unreadMessages, setUnreadMessages] = useState(messages?.length - seenMessagesCount);
   const [isAtBottom, setIsAtBottom] = useState(true);
 
   const { sendJsonMessage } = useWebSocket(
-    getPokerUrl(span, gameState.gameId, user.username),
+    getPokerUrl(span, gameState?.gameId, user.username),
     {
       share: true,
       onMessage: (event) => {
+        console.log('PokerChat')
         try {
           const data: WebSocketMessage = JSON.parse(event.data);
           if (data.action === "sendPokerChatMessage") {
@@ -51,7 +52,7 @@ const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
 
   useEffect(() => {
     setMessages(gameState?.chatMessages);
-    setUnreadMessages(gameState?.chatMessages.length - seenMessagesCount);
+    setUnreadMessages(gameState?.chatMessages?.length - seenMessagesCount);
   }, [gameState?.chatMessages]);
 
   useEffect(() => {
@@ -94,7 +95,7 @@ const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
   const handleOpenChat = () => {
     setChatIsOpen(true);
     setUnreadMessages(0);
-    setSeenMessagesCount(gameState?.chatMessages.length);
+    setSeenMessagesCount(gameState?.chatMessages?.length);
     setTimeout(() => {
       chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 0);
@@ -103,11 +104,11 @@ const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
   const handleCloseChat = () => {
     setChatIsOpen(false);
     setUnreadMessages(0);
-    setSeenMessagesCount(gameState?.chatMessages.length);
+    setSeenMessagesCount(gameState?.chatMessages?.length);
   };
 
   const handleInputChange = (input: string) => {
-    if (input.length <= 100) {
+    if (input?.length <= 100) {
       setNewMessage(input);
     }
   };
@@ -190,7 +191,7 @@ const PokerChat: React.FC<PokerChatProps> = ({ gameState, screenSize }) => {
               <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
                 <Send size={20} color="white" />
               </TouchableOpacity>
-              <Text style={styles.charCount}>{newMessage.length}/100</Text>
+              <Text style={styles.charCount}>{newMessage?.length}/100</Text>
             </View>
           </MotiView>
         ) : (

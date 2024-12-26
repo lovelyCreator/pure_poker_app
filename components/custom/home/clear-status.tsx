@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"; // Adjust this import as needed
 import { toast } from "react-toastify"; // Ensure this works in React Native
 
 const ClearStatus: React.FC = () => {
-  const user = useAuth();
+  const {user} = useAuth();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [clearLink, setClearLink] = useState<string>(user.clearVerificationLink);

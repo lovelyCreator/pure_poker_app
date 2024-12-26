@@ -2,20 +2,16 @@ import { type User } from "@/types/user";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useNavigation } from '@react-navigation/native';
-import { authApi } from "@/api/api";
-import { centsToDollars } from "@/utils/magnitudeConversion";
 import { handleResponse } from "@/lib/fetch";
 import { env } from "@/env";
 
 export default function useUserDetails() {
 
-  const navigation = useNavigation();
 
   async function INNER_FetchUserDetails(): Promise<[User | null, boolean]> {
     try {
       const token = await AsyncStorage.getItem('PP_TOKEN');
-
+      console.log("Token---------------------> ", token)
       const res = await fetch(`${env.NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
         method: 'GET',
         headers: {
@@ -25,25 +21,27 @@ export default function useUserDetails() {
         },
       });
       
-      handleResponse(res);
+      await handleResponse(res);
       if (res.status === 404) {
-        navigation.navigate("index");
+        console.log("404 FetchUser")
         // throw new Error("Invalid credentials");
         return [null, true];
       }
       if (res.status === 401) {
+        console.log("401 FetchUser")
         return [null, true];
       }
       if (res.ok) {
         const user = await res.json();
+        console.log("200 FetchUser")
         // user.chips = Number(centsToDollars(user.chips));
         return [user as User, false];
       }
+      console.log("500 FetchUser")
       // throw new Error("Invalid credentials");
       return [null, true];
     } catch (e) {
     //   router.push("/sign-in");
-        navigation.navigate("index");
       return [null, true];
     }
   }
@@ -59,8 +57,6 @@ export default function useUserDetails() {
   return useSuspenseQuery({
     queryKey: ["user"],
     queryFn: fetchUserDetails,
-    // retry: 1,
-    // retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
   });
   // return {'user': fetchUserDetails()}
 }

@@ -14,13 +14,14 @@ type TimeBankProps = {
 
 const TimeBank: React.FC<TimeBankProps> = ({ player, gameId }) => {
   const timeBanksRemaining = player.timeBanksRemaining;
-  const user = useAuth();
+  const {user} = useAuth();
   const span = useSpan("addTime");
   const { sendJsonMessage } = useWebSocket(
     getPokerUrl(span, gameId, user.username),
     {
       share: true,
       onMessage: (event) => {
+        console.log('TimeBank')
         try {
           const data: WebSocketMessage = JSON.parse(event.data);
           if (data.action === "addTime") {

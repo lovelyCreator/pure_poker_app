@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button';
 import useLogin from '@/hooks/useLogin';
 
 import { Input } from '@/components/ui/input';
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { Link, Stack } from 'expo-router';
 import { PasswordInput } from '@/components/ui/password-input';
 import { authApi } from '@/api/api';
@@ -19,6 +20,8 @@ import { Signin } from '@/api/auth';
 import * as WebBrowser from 'expo-web-browser';
 import { env } from '@/env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '@/hooks/useAuth';
+import { refreshToken } from '@/lib/fetch';
 const { height } = Dimensions.get('window');
 const calculatedHeight = height - 64; // 4rem = 64px
 
@@ -32,6 +35,7 @@ const SignInSchema = z.object({
 export default function SignInCard() {
   const navigation = useNavigation();
   const logger = useLogger();
+  const { user, refetchUser } = useAuth();
 
 
 //   useEffect(() => {
@@ -66,39 +70,38 @@ export default function SignInCard() {
 // }, []);
 
 
-useFocusEffect(
-  React.useCallback(() => {
-      const validateToken = async () => {
-          try {
-              const token = await AsyncStorage.getItem('PP_TOKEN');
+// useFocusEffect(
+//   React.useCallback(() => {
+//       const validateToken = async () => {
+//           try {
+//               const token = await AsyncStorage.getItem('PP_TOKEN');
 
-              if (!token) {
-                  console.error('No token found');
-                  return; // Handle the case where no token is found
-              }
+//               if (!token) {
+//                   console.error('No token found');
+//                   return; // Handle the case where no token is found
+//               }
 
-              const res = await fetch(`${env.NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
-                  method: 'GET',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${token}`,
-                  },
-              });
+//               const res = await fetch(`${env.NEXT_PUBLIC_AUTH_API_URL}/general/validate_token`, {
+//                   method: 'GET',
+//                   headers: {
+//                       'Content-Type': 'application/json',
+//                       'Authorization': `Bearer ${token}`,
+//                   },
+//               });
 
-              if (!res.ok) {
-                  throw new Error('Token validation failed');
-              }
+//               if (!res.ok) {
+//                   throw new Error('Token validation failed');
+//               }
               
-              // If token is valid, navigate to 'index'
-              navigation.navigate('index');
-          } catch (error) {
-              console.error('Error validating token:', error);
-          }
-      };
+//               // If token is valid, navigate to 'index'
+//               // navigation.navigate('index');
+//           } catch (error) {
+//               console.error('Error validating token:', error);
+//           }
+//       };
 
-      validateToken();
-  }, [navigation])
-);
+//       validateToken();
+//   }, [navigation]));
 
   logger.info('Init');
   const login = useLogin();
@@ -110,19 +113,6 @@ useFocusEffect(
       password: '',
     },
   });
-  const loginSuc = (error) => {
-    logger.info("User logged in");
-    console.log('error')
-    setTimeout(() => {
-      // router.push("/home");
-      navigation.navigate('home')
-    }, 0);
-    return "Login successful";
-  }
-  const loginErr = (error: Error) => {
-    logger.error("Login failed", error);
-    return "Login failed";
-  }
 
   async function onSubmit(values: z.infer<typeof SignInSchema>) {
     // console.log('signIn datas==========>',values);
@@ -137,8 +127,20 @@ useFocusEffect(
         pending: "Logging in...",
         // success: () => loginSuc(), // Pass as a callback
         // error: (error) => loginErr(error), 
-        success: "Login successful", // Pass as a callback
-        error: "Login failed", 
+        success: async () => {
+          const token = await AsyncStorage.getItem('PP_TOKEN');
+          console.log("Navigate is start: ",token)
+          logger.info("User logged in");
+          setTimeout(() => {
+            refetchUser();
+            navigation.navigate("home");
+          }, 0);
+          return "Login successful";
+        },
+        error: (error) => {
+          logger.error("Login failed", error);
+          return "Login failed";
+        },
       },
     );
   }

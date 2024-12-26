@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function Welcome() {
-  const user = useAuth();
+  const {user} = useAuth();
   const userIsVerified = user.clearApproval === 'approved';
   
   // const user = {username: 'Pang', clearApproval: 'approved'}

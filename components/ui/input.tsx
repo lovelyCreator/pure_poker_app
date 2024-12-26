@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
     color: '#9ca3af', // Example muted color
   },
   focus: {
-    outline: 'none',
     borderWidth: 2,
     borderColor: '#63b3ed', // Example ring color
   },

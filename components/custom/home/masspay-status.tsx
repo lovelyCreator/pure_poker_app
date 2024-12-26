@@ -6,7 +6,7 @@ import { toast } from "react-toastify"; // Adjust the import path as necessary
 import { Button } from "@/components/ui/button"; // Adjust the import path as necessary
 
 const MassPayStatus: React.FC = () => {
-  const user = useAuth();
+  const {user} = useAuth();
   const [loading, setLoading] = useState(false);
   const [activationLink, setActivationLink] = useState(user.massPayActivationUrl);
   const [massPayCreated, setMassPayCreated] = useState(!!user.massPayToken && user.massPayToken.length > 0);

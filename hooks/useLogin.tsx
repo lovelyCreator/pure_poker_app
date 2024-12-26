@@ -42,6 +42,7 @@ import { authApi } from '@/api/api'; // Adjust the import based on your file str
 import { handleResponse } from '@/lib/fetch'; // Adjust the import based on your file structure
 import { env } from '@/env';
 import { useNavigation } from '@react-navigation/native';
+import { logger } from 'react-native-reanimated/lib/typescript/logger/logger';
 
 export default async function useLogin() {
   const navigation = useNavigation();
@@ -71,7 +72,8 @@ export default async function useLogin() {
         await Promise.reject(res.message);
       }
       else {
-        navigation.navigate('home');
+        console.log("Navigation to Home!")
+        
       }
     } catch (error) {
       await Promise.reject(error);

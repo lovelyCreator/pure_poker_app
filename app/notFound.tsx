@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const NotFound = () => {
   const navigation = useNavigation();
+  console.log("This is 404 page!!!!")
 
   return (
     <ImageBackground

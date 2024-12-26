@@ -36,7 +36,7 @@ const JoinGameSchema = z.object({
 
   export function JoinGameDialog({ defaultGameId, seatPosition }: { defaultGameId?: string;  seatPosition: number }) {
     const span = useSpan("JoinGameDialog");
-    const user = useAuth();
+    const {user} = useAuth();
 
     const context = useContext(DialogContext);
     if (!context) throw new Error('DialogTrigger must be used within a DialogProvider');
@@ -53,6 +53,7 @@ const JoinGameSchema = z.object({
       {
         share: true,
         onOpen: async () => {
+          console.log('Join Game')
           const token = await AsyncStorage.getItem("PP_TOKEN");
           console.log('tokens tokens', token)
           if (token ) {
@@ -137,7 +138,6 @@ const JoinGameSchema = z.object({
     
   
     const onSubmit = async (values: z.infer<typeof JoinGameSchema>) => {
-      console.log("Close Dialogsssss")
       if (seatPosition === 10) {
         closeDialog();
         navigation.navigate(`playPoker`, { gameId: values.gameId})

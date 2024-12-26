@@ -38,11 +38,12 @@ const BombPotDecision: React.FC<BombPotDecisionProps> = ({
     const [decision, setDecision] = useState<string>(thisPlayerBombPotDecision);
     const [timeBarWidth, setTimeBarWidth] = useState(new Animated.Value(100)); // Start at 100%
 
-    const user = useAuth();
+    const {user} = useAuth();
     const span = useSpan("bombPotDecision");
     const { sendJsonMessage } = useWebSocket(getPokerUrl(span, gameId, user.username), {
         share: true,
         onMessage: (event) => {
+            console.log('BombPot')
             try {
                 const data: WebSocketMessage = JSON.parse(event.data);
                 if (data.action === "bombPotDecision" && data.statusCode !== 200) {

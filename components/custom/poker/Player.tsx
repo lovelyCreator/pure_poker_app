@@ -96,8 +96,9 @@ const Player: React.FC<PlayerProps> = ({
     (index + totalPlayerCount - currentPlayerPosition) %
     totalPlayerCount;
   
-  const user = useAuth();
+  const { user } = useAuth();
   const userIsVerified = user.clearApproval === "approved";
+  console.log(user.clearApproval, "Clear Approval")
 
   const [timeBarWidth, setTimeBarWidth] = useState(100);
   // eslint-disable-next-line
@@ -256,6 +257,7 @@ const Player: React.FC<PlayerProps> = ({
   // If the player is `null`, render the `EmptySeat` view
   if (!player) {
     const isDisabled = !userIsVerified || gameState.players.some((p) => p?.username === user?.username);
+    console.log(isDisabled, 'Is Disabled User', userIsVerified)
     
   const leftPosition = playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.leftPosition;
   const topPosition = playerPositions[totalPlayerCount - 1]?.[rotatedPosition]?.topPosition;
@@ -515,6 +517,8 @@ const Player: React.FC<PlayerProps> = ({
           initialBigBlind={initialBigBlind} // Pass new prop
           handsPlayed={player.handsPlayed}
           vpip={(player.handsPlayed / (player.totalHands + 0.000000001))}
+          totalPlayerCount={totalPlayerCount}
+          playerPosition={player.position}
         />
 
         <PlayerCards
@@ -535,6 +539,8 @@ const Player: React.FC<PlayerProps> = ({
           dealerIndex={dealerIndex}
           rotatedPosition={rotatedPosition}
           screenSize={screenSize}
+          totalPlayerCount={totalPlayerCount}
+          playerPosition={player.position}
         />
         {/* Display the Emote */}
         <Emote emote={activeEmote} isVisible={isEmoteVisible} />

@@ -9,7 +9,7 @@ export default function useUnreadCounts() {
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const user = useAuth();
+  const {user} = useAuth();
 
   useEffect(() => {
     async function fetchUnreadCounts() {

@@ -30,7 +30,6 @@ const AvailableGamesHome: React.FC<AvailableGamesHomeProps> = ({
 
   const handleJoinClick = () => {
     navigation.navigate("playPoker", { gameId: availableGame.gameId });
-    // console.log('Join')
   };
 
   return (

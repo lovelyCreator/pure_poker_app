@@ -3,28 +3,19 @@ import SignInCard from "../components/custom/login/signInCard";
 import { View, StyleSheet } from "react-native";
 import { SpanWrapper } from "@/utils/logging";
 import { ToastContainer } from "react-toastify";
+import { useNavigation } from '@react-navigation/native';
 
 export default function NotLoggedIn() {
+  const navigation = useNavigation();
   console.log('Not LogIned ')
+  useEffect(() => {
+    navigation.navigate('index');
+  })
 
   return (
-    <SpanWrapper name="NotLoggedInScreen">
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
       <View style={{backgroundColor: '#11141D', height: '100%', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <SignInCard />
       </View>
-    </SpanWrapper>
   );
 }
 

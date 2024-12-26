@@ -44,7 +44,6 @@ const Card: React.FC<CardProps> = ({
   shouldShowWin = false,
   isDealing
 }) => {
-  // console.log("HHHHHHAAAAANNNNNNDDDDD", handDescription)
   const CardWrapper = isAnimating ? MotiView : View;
   const animationProps = isAnimating
     ? {
@@ -81,74 +80,26 @@ const Card: React.FC<CardProps> = ({
           gameIsOver={gameIsOver}
           bestHand={bestHand}
           card={card}
-          shouldShowWin={shouldShowWin}
-          
+          shouldShowWin={shouldShowWin}          
         />
       );
     } else if (opponentMustShowCards) {
-      // console.log("Card Shown.")
       const value = card.slice(0, -1).replace("T", "10");
       const suite = card.slice(-1);
       return (
-        // <MotiView
-        //   from = {flipAnimation.from}
-        //   animate = {flipAnimation.animate}
-        //   transition={flipAnimation.transition}
-        //   style = {[{
-        //     height: 60, width: 45, position: 'relative', 
-        //   }, side === "left" ? {marginRight: -9} : {}]}
-        // >
-        //   {/* Back side (CardFaceDown) */}
-        //   <MotiView
-        //     style={{
-        //       backfaceVisibility: "hidden", // Hide the back when the card is flipped
-        //       position: "absolute",
-        //       top: 0,
-        //       left: 0,
-        //       width: "100%",
-        //       height: "100%",
-        //     }}
-        //   >
-        //     <CardFaceDown side={side}/>
-        //   </MotiView>
-
-        //   {/* Front side (CardFaceUp) */}
-        //   <MotiView
-        //     style={{
-        //       backfaceVisibility: "hidden", // Hide the front when the card is flipped
-        //       position: "absolute",
-        //       top: 0,
-        //       left: 0,
-        //       width: "100%",
-        //       height: "100%",
-        //       transform: [{ rotateY: '180deg' }] 
-        //     }}
-        //   >
-        //     <CardFaceUp
-        //       side={side}
-        //       suite={suite}
-        //       value={value}
-        //       gameIsOver={gameIsOver}
-        //       bestHand={bestHand}
-        //       card={card}
-        //       shouldShowWin={shouldShowWin}
-              
-        //     />
-        //   </MotiView>
-        // </MotiView>
         <MotiView
-      from={{ rotateY: '0deg' }}
-      animate={{ rotateY: '180deg' }} // Animate to flip the card
-      transition={{ type: 'timing', duration: 500 }} // Transition duration
-      style={{
-        height: 60,
-        width: 45,
-        position: 'relative',
-        transformStyle: 'preserve-3d', // Enable 3D flip effect
-        perspective: 600, // Add perspective for the 3D effect
-        marginRight: side === "left" ? -6 : 0, // Adjust margin for left side
-      }}
-    >
+        from={{ rotateY: '0deg' }}
+        animate={{ rotateY: '180deg' }} // Animate to flip the card
+        transition={{ type: 'timing', duration: 100 }} // Transition duration
+        style={{
+          height: 60,
+          width: 45,
+          position: 'relative',
+          transformStyle: 'preserve-3d', // Enable 3D flip effect
+          perspective: 600, // Add perspective for the 3D effect
+          marginRight: side === "left" ? -6 : 0, // Adjust margin for left side
+        }}
+      >
       {/* Back side (CardFaceDown) */}
       <MotiView
         style={{

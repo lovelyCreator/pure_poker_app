@@ -17,7 +17,7 @@ interface LeaveGameProps {
 }
 
 const LeaveGame: React.FC<LeaveGameProps> = ({ children, gameId, playerId }) => {
-  const user = useAuth();
+  const {user} = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const span = useSpan("LeaveGame");
   const navigation = useNavigation();
@@ -28,10 +28,10 @@ const LeaveGame: React.FC<LeaveGameProps> = ({ children, gameId, playerId }) => 
     {
       share: true,
       onMessage: (eventString) => {
+        console.log('Leave Game')
         try {
           // assert(typeof eventString.data === "string", "Event is not a string");
           const res = JSON.parse(eventString.data) as PokerActionsFrontend;
-          console.log("LEAVE GAME", res.action)
           if (res.action === "leaveGamePlayer") {
             toast.dismiss();
             toast.success("Successfully left the game!");
